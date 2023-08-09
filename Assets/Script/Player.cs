@@ -41,6 +41,7 @@ public class Player : MonoBehaviour
         playerMove();
         playerJump();
         playerGravity();
+        playerChange();
     }
 
     private void playerMove()
@@ -106,5 +107,10 @@ public class Player : MonoBehaviour
             }
         }
         m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, m_jumpGravity);
+    }
+
+    private void playerChange()
+    {
+
     }
 }
