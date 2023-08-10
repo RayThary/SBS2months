@@ -4,14 +4,28 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float m_speed=2.0f;
+    
+    [Header("체크용 나중에삭제필요")]
+    [SerializeField]private float changeCoolTime=3.0f;
+    private float changeTimer=0.0f;
+    private bool m_playerChangeCoolTime;
 
+    private bool playerRedCheck=false;
+    private bool playerBlueCheck=false;
+    private bool playerGreenCheck=true;
+
+    [SerializeField]private bool playerWaterCheck=false;
+    
+
+    [SerializeField] private float m_speed=2.0f;
     private float m_gravity = 9.81f;
     private float m_jumpGravity = 0f;
     [SerializeField]private float m_playerJump = 5f;
     private bool m_jumpCheck=false;
     private bool m_groundCheck;
 
+
+    private Animator m_anim;
     private Rigidbody2D m_rig2d;
     private Vector3 moveDir;
 
@@ -21,18 +35,30 @@ public class Player : MonoBehaviour
         {
             m_groundCheck = true;
         }
+        else if (collision.gameObject.tag == "Water")
+        {
+            Debug.Log("1");
+            playerWaterCheck = true;
+        }
     }
+
+  
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Ground")
         {
             m_groundCheck = false;
         }
+        if(collision.gameObject.tag == "Water")
+        {
+            playerWaterCheck = false;
+        }
     }
 
     void Start()
     {
         m_rig2d = GetComponent<Rigidbody2D>();
+        m_anim = GetComponent<Animator>();
     }
 
   
@@ -41,7 +67,9 @@ public class Player : MonoBehaviour
         playerMove();
         playerJump();
         playerGravity();
+        playerfloating();
         playerChange();
+        playerChaneTimer();
     }
 
     private void playerMove()
@@ -81,6 +109,12 @@ public class Player : MonoBehaviour
 
     private void playerGravity()
     {
+
+
+        if (playerWaterCheck)
+        {
+            return;
+        }
         if (!m_groundCheck)
         {
             m_jumpGravity -= m_gravity * Time.deltaTime;
@@ -109,8 +143,125 @@ public class Player : MonoBehaviour
         m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, m_jumpGravity);
     }
 
+    private void playerfloating()
+    {
+        if (playerWaterCheck)
+        {
+            float test = 3f;
+            Mathf.Clamp(test, -3f,3f);
+            
+            if (test == 3) 
+            {
+                test -= Time.deltaTime;
+            }
+            else if(test == -3)
+            {
+                test += Time.deltaTime;
+            }
+            m_rig2d.velocity= new Vector2(m_rig2d.velocity.x, test); 
+        }
+    }
     private void playerChange()
     {
-
+        if (m_playerChangeCoolTime)
+        {
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            playerSlimeCheck("Red");
+            if (m_anim.GetBool("Red") == true)
+            {
+                return;
+            }
+            animSetBool("Red");
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            playerSlimeCheck("Blue");
+            if (m_anim.GetBool("Blue") == true)
+            {
+                return;
+            }
+            animSetBool("Blue");
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            playerSlimeCheck("Green");
+            if (m_anim.GetBool("Green") == true)
+            {
+                return;
+            }
+            animSetBool("Green");
+        }       
     }
+    private void animSetBool(string _name)
+    {
+
+        m_anim.SetBool("Red", "Red" == _name);
+        m_anim.SetBool("Blue", "Blue" == _name);
+        m_anim.SetBool("Green", "Green" == _name);
+        m_playerChangeCoolTime = true;
+
+        #region
+        /*
+        if (_name == "Red")
+        {
+            m_anim.SetBool("Red", true);
+            m_anim.SetBool("Blue", false);
+            m_anim.SetBool("Green", false);
+        }
+        else if( _name == "Blue")
+        {
+            m_anim.SetBool("Red", false);
+            m_anim.SetBool("Blue", true);
+            m_anim.SetBool("Green", false);
+        }
+        else if (_name=="Green")
+        {
+            m_anim.SetBool("Red", false);
+            m_anim.SetBool("Blue", false);
+            m_anim.SetBool("Green", true);
+        }
+        m_playerChangeCoolTime = true;
+        */
+        #endregion
+    }
+
+    private void playerSlimeCheck(string _name)
+    {
+        playerRedCheck = _name == "Red";
+        playerBlueCheck = _name == "Blue";
+        playerGreenCheck = _name == "Green";
+/*
+        if (_name == "Red")
+        {
+            playerRedCheck = true;
+            
+        }
+        else if( _name =="Blue")
+        {
+            playerBlueCheck= true;
+        }
+        else if (_name == "Green")
+        {
+            playerGreenCheck= true;
+        }*/
+    }
+
+
+    private void playerChaneTimer()
+    {
+        if (m_playerChangeCoolTime)
+        {
+            changeTimer += Time.deltaTime;
+            if (changeTimer >= changeCoolTime)
+            {
+                changeTimer = 0.0f;
+                m_playerChangeCoolTime = false;
+            }
+        }
+    }
+
+    
 }
