@@ -4,8 +4,16 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    
+    public enum eType
+    {
+        Red,
+        Blue,
+        Green,
+    }
+
     [Header("체크용 나중에삭제필요")]
+    [SerializeField]private eType PlayerType;
+
     [SerializeField]private float changeCoolTime=3.0f;
     private float changeTimer=0.0f;
     private bool m_playerChangeCoolTime;
@@ -15,6 +23,11 @@ public class Player : MonoBehaviour
     private bool playerGreenCheck=true;
 
     [SerializeField]private bool playerWaterCheck=false;
+    [SerializeField]private float floatingTime = 1f;
+
+    [SerializeField] private float floatingMovingMax=0.2f;
+    [SerializeField]private float floatingMoving = 1f;
+    private bool floatingChange = false;
     
 
     [SerializeField] private float m_speed=2.0f;
@@ -37,12 +50,18 @@ public class Player : MonoBehaviour
         }
         else if (collision.gameObject.tag == "Water")
         {
-            Debug.Log("1");
-            playerWaterCheck = true;
+            if(PlayerType == eType.Blue)
+            {
+                playerWaterCheck = true;
+            }
+            else
+            {
+                //나중에 히트기능만들어주기
+            }
         }
     }
 
-  
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Ground")
@@ -68,6 +87,7 @@ public class Player : MonoBehaviour
         playerJump();
         playerGravity();
         playerfloating();
+        floatingTimeChange();
         playerChange();
         playerChaneTimer();
     }
@@ -109,7 +129,7 @@ public class Player : MonoBehaviour
 
     private void playerGravity()
     {
-
+        
 
         if (playerWaterCheck)
         {
@@ -144,21 +164,35 @@ public class Player : MonoBehaviour
     }
 
     private void playerfloating()
+    { 
+        if (playerWaterCheck)
+        {  
+            if (floatingTime >= 1)
+            {
+                floatingMoving = -floatingMovingMax;
+                floatingChange = true;
+            }
+            if (floatingTime <= -1)
+            {
+                floatingMoving = floatingMovingMax;
+                floatingChange = false;
+            }
+            m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, floatingMoving);
+        }    
+    }
+
+    private void floatingTimeChange()
     {
         if (playerWaterCheck)
         {
-            float test = 3f;
-            Mathf.Clamp(test, -3f,3f);
-            
-            if (test == 3) 
+            if (floatingChange)
             {
-                test -= Time.deltaTime;
+                floatingTime -= Time.deltaTime*4;
             }
-            else if(test == -3)
+            if (!floatingChange)
             {
-                test += Time.deltaTime;
+                floatingTime += Time.deltaTime*4;
             }
-            m_rig2d.velocity= new Vector2(m_rig2d.velocity.x, test); 
         }
     }
     private void playerChange()
@@ -169,6 +203,7 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
+            PlayerType = eType.Red;
             playerSlimeCheck("Red");
             if (m_anim.GetBool("Red") == true)
             {
@@ -178,6 +213,7 @@ public class Player : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
+            PlayerType = eType.Blue;
             playerSlimeCheck("Blue");
             if (m_anim.GetBool("Blue") == true)
             {
@@ -187,6 +223,7 @@ public class Player : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
+            PlayerType = eType.Green;
             playerSlimeCheck("Green");
             if (m_anim.GetBool("Green") == true)
             {
@@ -233,20 +270,7 @@ public class Player : MonoBehaviour
         playerRedCheck = _name == "Red";
         playerBlueCheck = _name == "Blue";
         playerGreenCheck = _name == "Green";
-/*
-        if (_name == "Red")
-        {
-            playerRedCheck = true;
-            
-        }
-        else if( _name =="Blue")
-        {
-            playerBlueCheck= true;
-        }
-        else if (_name == "Green")
-        {
-            playerGreenCheck= true;
-        }*/
+
     }
 
 
