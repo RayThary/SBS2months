@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     private Player player;
+    private waterCourse water;
 
     private void Awake()
     {
@@ -19,6 +20,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
         player = FindObjectOfType<Player>();
+        
     }
 
     void Start()
@@ -30,4 +32,5 @@ public class GameManager : MonoBehaviour
     {
         return player.transform;
     }
+   
 }

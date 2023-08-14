@@ -52,11 +52,11 @@ public class waterCourse : MonoBehaviour
         {
             if (water == 0)
             {
-                Instantiate(m_waterHight, TrsSpawnWater.position, Quaternion.identity, TrsSpawnWater);
+                Instantiate(m_waterHight, TrsSpawnWater.position, Quaternion.identity,transform);
             }
             else if(water != waterCount-1)
             {
-                Instantiate(m_waterMid, TrsSpawnWater.position, Quaternion.identity, TrsSpawnWater);
+                Instantiate(m_waterMid, TrsSpawnWater.position, Quaternion.identity, transform);
             }
             else if(water == waterCount-1)
             {
@@ -65,4 +65,8 @@ public class waterCourse : MonoBehaviour
         }
     }
 
+    public int GetWaterCount() 
+    {
+        return waterCount;
+    }
 }
