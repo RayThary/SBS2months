@@ -11,8 +11,12 @@ public class waterCourse : MonoBehaviour
     [SerializeField] private GameObject m_waterHight;
     [SerializeField] private GameObject m_waterMid;
     [SerializeField] private GameObject m_waterLow;
+
     [Header("물줄기 소환개수 위치따라 설정필요")]
-    [SerializeField] private int waterCount=5;
+    [SerializeField] private int waterCount;
+    [SerializeField]private List<Transform> waterMidList = new List<Transform>();
+
+    private Transform m_water;
 
     private BoxCollider2D m_box2d;
     private Animator m_anim;
@@ -21,6 +25,7 @@ public class waterCourse : MonoBehaviour
     {
         m_box2d = GetComponent<BoxCollider2D>();
         m_anim = GetComponent<Animator>();
+        m_water = GetComponentInChildren<Transform>().Find("Water");
     }
 
     void Update()
@@ -52,21 +57,27 @@ public class waterCourse : MonoBehaviour
         {
             if (water == 0)
             {
-                Instantiate(m_waterHight, TrsSpawnWater.position, Quaternion.identity,transform);
+                 Instantiate(m_waterHight, TrsSpawnWater.position, Quaternion.identity, TrsSpawnWater);
             }
             else if(water != waterCount-1)
             {
-                Instantiate(m_waterMid, TrsSpawnWater.position, Quaternion.identity, transform);
+                GameObject obj = Instantiate(m_waterMid, TrsSpawnWater.position, Quaternion.identity, TrsSpawnWater);
+                waterMidList.Add(obj.transform);
             }
             else if(water == waterCount-1)
             {
-                Instantiate(m_waterLow, TrsSpawnWater.position, Quaternion.identity, TrsSpawnWater);
+                 Instantiate(m_waterLow, TrsSpawnWater.position, Quaternion.identity, TrsSpawnWater);
             }
+            
         }
     }
 
     public int GetWaterCount() 
     {
         return waterCount;
+    }
+    public List<Transform> GetWaterMidList()
+    {
+        return waterMidList;
     }
 }

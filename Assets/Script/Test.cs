@@ -13,6 +13,7 @@ public class Test : MonoBehaviour
   
     void Update()
     {
-        transform.position = new Vector2(transform.position.x, transform.position.y + speed * Time.deltaTime);
+        
+        transform.position = new Vector2(transform.position.x, transform.position.y+speed*Time.deltaTime);
     }
 }

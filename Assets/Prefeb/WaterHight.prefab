@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 3330214769365883337}
   - component: {fileID: 6957649493257978310}
   - component: {fileID: -6693165274259622083}
+  - component: {fileID: 4862773129717085881}
   m_Layer: 0
   m_Name: WaterHight
-  m_TagString: Untagged
+  m_TagString: WaterHight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32,7 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3330214769365883337
 SpriteRenderer:
@@ -152,3 +153,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &4862773129717085881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2705667912156713263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3859e3aad6ec5f64dad612c7003dda0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waterType: 0
+  m_waterSpeed: 2
+  midWaterCheck: 0
