@@ -9,7 +9,7 @@ TagManager:
   - End
   - Water
   - Lava
-  - WaterHight
+  - WaterEnd
   layers:
   - Default
   - TransparentFX

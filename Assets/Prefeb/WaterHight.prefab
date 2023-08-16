@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 6957649493257978310}
   - component: {fileID: -6693165274259622083}
   - component: {fileID: 4862773129717085881}
+  - component: {fileID: -5039378250865993252}
   m_Layer: 0
   m_Name: WaterHight
-  m_TagString: WaterHight
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -168,3 +169,30 @@ MonoBehaviour:
   waterType: 0
   m_waterSpeed: 2
   midWaterCheck: 0
+--- !u!50 &-5039378250865993252
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2705667912156713263}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
