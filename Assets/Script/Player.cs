@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     [Header("체크용 나중에삭제필요")]
     [SerializeField]private eType PlayerType;
 
+    //플레이어 슬라임 변경딜레이시간
     [SerializeField]private float changeCoolTime=3.0f;
     private float changeTimer=0.0f;
     private bool m_playerChangeCoolTime;
@@ -21,23 +22,27 @@ public class Player : MonoBehaviour
     private bool playerRedCheck=false;
     private bool playerBlueCheck=false;
     private bool playerGreenCheck=true;
-
-    [SerializeField]private bool playerWaterCheck=false;
-    [SerializeField]private float floatingTime = 1f;
-
-    [SerializeField] private float floatingMovingMax=0.2f;
-    [SerializeField]private float floatingMoving = 1f;
-    private bool floatingChange = false;
-    
+    //물에있는지 확인용
+    private bool playerWaterCheck=false;
+    //물위에서 위아래도 떠다니는시간 내부에서 세부조절할필요도있음 1을변경해서 조정도가능
+    [Header("물위에서있는기능")]
+    [SerializeField] private float floatingTimer = 1.0f;
+    [SerializeField]private float floatingTime = 0f;
+    [SerializeField] private float floatingMovingMax=0.2f;//물떠다니느 최대최소값 
+    private float floatingMoving = 1f;
+    [SerializeField]private bool floatingChange = false;
+    private bool playerWaterJump;
+    private bool playerWaterJumpExitCheck;
 
     [SerializeField] private float m_speed=2.0f;
     private float m_gravity = 9.81f;
     private float m_jumpGravity = 0f;
-    [SerializeField]private float m_playerJump = 5f;
+    [SerializeField]private float m_playerJump = 5f;//점프력
     private bool m_jumpCheck=false;
     private bool m_groundCheck;
 
 
+    private BoxCollider2D m_box2d;
     private Animator m_anim;
     private Rigidbody2D m_rig2d;
     private Vector3 moveDir;
@@ -50,14 +55,11 @@ public class Player : MonoBehaviour
         }
         else if (collision.gameObject.tag == "Water")
         {
-            if(PlayerType == eType.Blue)
-            {
-                playerWaterCheck = true;
-            }
-            else
+           // playerWaterCheck = true;
+            if(PlayerType != eType.Blue)
             {
                 //나중에 히트기능만들어주기
-            }
+            }           
         }
     }
 
@@ -70,19 +72,22 @@ public class Player : MonoBehaviour
         }
         if(collision.gameObject.tag == "Water")
         {
-            playerWaterCheck = false;
+            playerWaterJumpExitCheck = true;
         }
     }
 
     void Start()
     {
+        floatingTime = floatingTimer;
         m_rig2d = GetComponent<Rigidbody2D>();
         m_anim = GetComponent<Animator>();
+        m_box2d = GetComponent<BoxCollider2D>();
     }
 
   
     void Update()
     {
+        playerInWater();
         playerMove();
         playerJump();
         playerGravity();
@@ -117,20 +122,26 @@ public class Player : MonoBehaviour
 
     private void playerJump()
     {
-        if (!m_groundCheck)
+        if (m_groundCheck)
         {
-            return;
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                m_jumpCheck = true;
+            }
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+
+        if (playerWaterCheck)
         {
-            m_jumpCheck = true;
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                playerWaterJump = true;
+            }
         }
+
     }
 
     private void playerGravity()
     {
-        
-
         if (playerWaterCheck)
         {
             return;
@@ -161,24 +172,75 @@ public class Player : MonoBehaviour
             }
         }
         m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, m_jumpGravity);
+        
     }
 
+    private void playerInWater()
+    {
+        if (m_box2d.IsTouchingLayers(LayerMask.GetMask("Water")))
+        {
+            playerWaterCheck = true;
+        }
+        else
+        {
+            playerWaterCheck = false;
+        }
+    }
+
+
+    private void playerWaterGravity()
+    {
+        if (playerWaterJumpExitCheck)
+        {
+            m_jumpGravity -= m_gravity * Time.deltaTime;
+            if (m_jumpGravity < -10f)
+            {
+                m_jumpGravity = -10f;
+            }
+        }
+        else 
+        {
+            if (playerWaterJump)
+            {
+                playerWaterJump = false;
+                m_jumpGravity = m_playerJump;
+            }
+            else if (m_jumpGravity < 0)
+            {
+                m_jumpGravity += m_gravity * Time.deltaTime;
+                if (m_jumpGravity > 0)
+                {
+                    m_jumpGravity = 0;
+                }
+
+            }
+        }
+        
+        m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, m_jumpGravity);
+    }
+    
     private void playerfloating()
-    { 
+    {
+        if (playerWaterJump)
+        {
+            return;
+        }
         if (playerWaterCheck)
         {  
-            if (floatingTime >= 1)
+            if (floatingTime >= floatingTimer)
             {
                 floatingMoving = -floatingMovingMax;
                 floatingChange = true;
             }
-            if (floatingTime <= -1)
+            else if (floatingTime <= -floatingTimer)
             {
                 floatingMoving = floatingMovingMax;
                 floatingChange = false;
             }
             m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, floatingMoving);
-        }    
+            
+        }   
+        
     }
 
     private void floatingTimeChange()
@@ -187,11 +249,11 @@ public class Player : MonoBehaviour
         {
             if (floatingChange)
             {
-                floatingTime -= Time.deltaTime*4;
+                floatingTime -= Time.deltaTime;
             }
             if (!floatingChange)
             {
-                floatingTime += Time.deltaTime*4;
+                floatingTime += Time.deltaTime;
             }
         }
     }
@@ -287,5 +349,9 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void playerDeath()
+    {
+        Destroy(gameObject);
+    }
     
 }
