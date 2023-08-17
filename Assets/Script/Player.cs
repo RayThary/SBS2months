@@ -10,9 +10,15 @@ public class Player : MonoBehaviour
         Blue,
         Green,
     }
+    public enum eGroundType 
+    {
+        Ground,
+        Lava,
+        Water,
+    }
 
-    [Header("체크용 나중에삭제필요")]
-    [SerializeField]private eType PlayerType;
+    private eGroundType GroundType;
+    private eType PlayerType;
 
     //플레이어 슬라임 변경딜레이시간
     [SerializeField]private float changeCoolTime=3.0f;
@@ -27,12 +33,12 @@ public class Player : MonoBehaviour
     //물위에서 위아래도 떠다니는시간 내부에서 세부조절할필요도있음 1을변경해서 조정도가능
     [Header("물위에서있는기능")]
     [SerializeField] private float floatingTimer = 1.0f;
-    [SerializeField]private float floatingTime = 0f;
+    private float floatingTime = 0f;
     [SerializeField] private float floatingMovingMax=0.2f;//물떠다니느 최대최소값 
     private float floatingMoving = 1f;
-    [SerializeField]private bool floatingChange = false;
+    private bool floatingChange = false;
     private bool playerWaterJump;
-    private bool playerWaterJumpExitCheck;
+    [SerializeField]private bool m_groundWaterCheck=false;
 
     [SerializeField] private float m_speed=2.0f;
     private float m_gravity = 9.81f;
@@ -51,15 +57,19 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.tag=="Ground")
         {
+            GroundType = eGroundType.Ground;
+
+
             m_groundCheck = true;
+
         }
         else if (collision.gameObject.tag == "Water")
         {
-           // playerWaterCheck = true;
-            if(PlayerType != eType.Blue)
-            {
-                //나중에 히트기능만들어주기
-            }           
+            GroundType = eGroundType.Water;
+   
+            m_groundWaterCheck = true;
+
+                   
         }
     }
 
@@ -72,7 +82,7 @@ public class Player : MonoBehaviour
         }
         if(collision.gameObject.tag == "Water")
         {
-            playerWaterJumpExitCheck = true;
+            m_groundWaterCheck = false;
         }
     }
 
@@ -91,11 +101,13 @@ public class Player : MonoBehaviour
         playerMove();
         playerJump();
         playerGravity();
+        //playerWaterGravity();
         playerfloating();
         floatingTimeChange();
         playerChange();
         playerChaneTimer();
     }
+
 
     private void playerMove()
     {
@@ -142,37 +154,65 @@ public class Player : MonoBehaviour
 
     private void playerGravity()
     {
-        if (playerWaterCheck)
+        if (GroundType == eGroundType.Ground)
         {
-            return;
-        }
-        if (!m_groundCheck)
-        {
-            m_jumpGravity -= m_gravity * Time.deltaTime;
-            if (m_jumpGravity < -10f)
+            if (!m_groundCheck)
             {
-                m_jumpGravity = -10f;
-            }
-        }
-        else
-        {
-            if (m_jumpCheck)
-            {
-                m_jumpCheck = false;
-                m_jumpGravity = m_playerJump;
-            }
-            else if (m_jumpGravity < 0)
-            {
-                m_jumpGravity += m_gravity * Time.deltaTime;
-                if(m_jumpGravity > 0)
+                m_jumpGravity -= m_gravity * Time.deltaTime;
+                if (m_jumpGravity < -10f)
                 {
-                    m_jumpGravity = 0;
+                    m_jumpGravity = -10f;
                 }
+            }
+            else
+            {
+                if (m_jumpCheck)
+                {
+                    m_jumpCheck = false;
+                    m_jumpGravity = m_playerJump;
+                }
+                else if (m_jumpGravity < 0)
+                {
+                    m_jumpGravity += m_gravity * Time.deltaTime;
+                    if (m_jumpGravity > 0)
+                    {
+                        m_jumpGravity = 0;
+                    }
 
+                }
+            }
+        }
+        else if(GroundType == eGroundType.Water)
+        {
+          
+            if (!m_groundWaterCheck)
+            {
+                m_jumpGravity -= m_gravity * Time.deltaTime;
+                if (m_jumpGravity < -10f)
+                {
+                    m_jumpGravity = -10f;
+                }
+            }
+            else
+            {
+                if (playerWaterJump)
+                {
+                    Invoke("delayWaterJump", 0.5f);
+                    playerWaterCheck = false;
+                    m_jumpGravity = m_playerJump;
+                }
+                else if (m_jumpGravity < 0)
+                {
+                    m_jumpGravity += m_gravity * Time.deltaTime;
+                    if (m_jumpGravity > 0)
+                    {
+                        m_jumpGravity = 0;
+                    }
+
+                }
             }
         }
         m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, m_jumpGravity);
-        
     }
 
     private void playerInWater()
@@ -186,39 +226,11 @@ public class Player : MonoBehaviour
             playerWaterCheck = false;
         }
     }
-
-
-    private void playerWaterGravity()
-    {
-        if (playerWaterJumpExitCheck)
-        {
-            m_jumpGravity -= m_gravity * Time.deltaTime;
-            if (m_jumpGravity < -10f)
-            {
-                m_jumpGravity = -10f;
-            }
-        }
-        else 
-        {
-            if (playerWaterJump)
-            {
-                playerWaterJump = false;
-                m_jumpGravity = m_playerJump;
-            }
-            else if (m_jumpGravity < 0)
-            {
-                m_jumpGravity += m_gravity * Time.deltaTime;
-                if (m_jumpGravity > 0)
-                {
-                    m_jumpGravity = 0;
-                }
-
-            }
-        }
-        
-        m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, m_jumpGravity);
-    }
     
+    private void delayWaterJump()
+    {
+        playerWaterJump = false;
+    }
     private void playerfloating()
     {
         if (playerWaterJump)
@@ -226,7 +238,9 @@ public class Player : MonoBehaviour
             return;
         }
         if (playerWaterCheck)
-        {  
+        {
+            m_groundWaterCheck = true;
+
             if (floatingTime >= floatingTimer)
             {
                 floatingMoving = -floatingMovingMax;
@@ -238,7 +252,6 @@ public class Player : MonoBehaviour
                 floatingChange = false;
             }
             m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, floatingMoving);
-            
         }   
         
     }
@@ -354,4 +367,9 @@ public class Player : MonoBehaviour
         Destroy(gameObject);
     }
     
+    private void playerHit()
+    {
+        //플레이어 hp 감소시켜줄곳 
+        //아마 이미지로 -1되면 한개씩없어지게만들듯함 +1되면 하트가 다시생기는느낌? 
+    }
 }

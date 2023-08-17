@@ -23,8 +23,11 @@ public class WaterHight : MonoBehaviour
     private List<Transform> m_listWaterMid;
     private bool midcheck=true;
     private bool m_stopWaterMove=false;
-    private bool m_waterFall = false;
+    private bool m_waterMoveCheck;
+    private float m_waterFallSpeed = 1f;
     //여기까지
+
+    private Animator anim;
 
     //플레이어 관련
     private Transform m_trsPlayer;
@@ -39,7 +42,15 @@ public class WaterHight : MonoBehaviour
     {
         if(collision.gameObject.tag == "WaterEnd")
         {
-            Destroy(gameObject);
+            m_waterFallSpeed = 0;
+
+
+
+
+            if (transform == m_listWaterMid[midWaterCount - 1])
+            {
+                m_waterMoveCheck = true;
+            }
         }
     }
     void Start()
@@ -64,7 +75,7 @@ public class WaterHight : MonoBehaviour
     {
         waterMove();
         playerWaterMove();
-
+        
     }
 
     private void waterMove()
@@ -89,7 +100,7 @@ public class WaterHight : MonoBehaviour
     }
     private void lateWaterMove()
     {
-        m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, -1);
+        m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, -m_waterFallSpeed);
     }
 
     private void WaterMoving()
@@ -119,8 +130,7 @@ public class WaterHight : MonoBehaviour
             {
                 if (transform == m_listWaterMid[i])
                 {
-                    Vector2 targer = new Vector2(m_vecTarget.x, m_vecTarget.y - (i + 1));
-                    m_vecTarget = targer;
+                    m_vecTarget = new Vector2(m_vecTarget.x, m_vecTarget.y - (i + 1));
                     midcheck = false;
                     break;
                 }
@@ -131,9 +141,10 @@ public class WaterHight : MonoBehaviour
 
     private void playerWaterMove()
     {
+        //선행조건 waterhight 일땐 다른조건주기
         if (m_box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
         {
-            //m_rig2dPlayer.velocity = new Vector2()
+            m_rig2dPlayer.velocity = new Vector2(m_rig2dPlayer.velocity.x, 1.5f);
         }
     }
 }

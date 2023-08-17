@@ -14,7 +14,8 @@ public class waterCourse : MonoBehaviour
 
     [Header("물줄기 소환개수 위치따라 설정필요")]
     [SerializeField] private int waterCount;
-    [SerializeField]private List<Transform> waterMidList = new List<Transform>();
+    private List<Transform> waterMidList = new List<Transform>();
+    private bool noLever = false;
 
     private Transform m_water;
 
@@ -31,15 +32,30 @@ public class waterCourse : MonoBehaviour
     void Update()
     {
         CheckLever();
+        Debug.Log(waterMidList.Count);
+        //checkRemoveWaterList();
     }
+
+
     private void CheckLever()
     {
+        if (noLever)
+        {
+            return;
+        }
         if (m_box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 m_anim.SetBool("Lever", true);
-                spawnWaterCourse();
+                if (waterMidList == null)
+                {
+                    spawnWaterCourse();
+                }
+                else if (waterMidList !=null)
+                {
+                    //다시위로올려줄것
+                }
                 StartCoroutine(checkReturnLever());
             }
         }
@@ -57,21 +73,34 @@ public class waterCourse : MonoBehaviour
         {
             if (water == 0)
             {
-                 Instantiate(m_waterHight, TrsSpawnWater.position, Quaternion.identity, TrsSpawnWater);
+                 Instantiate(m_waterHight, TrsSpawnWater.position, Quaternion.Euler(new Vector3(0, 0, 180f)), TrsSpawnWater);
             }
             else if(water != waterCount-1)
             {
-                GameObject obj = Instantiate(m_waterMid, TrsSpawnWater.position, Quaternion.identity, TrsSpawnWater);
+                GameObject obj = Instantiate(m_waterMid, TrsSpawnWater.position, Quaternion.Euler(new Vector3(0,0,180f)), TrsSpawnWater);
                 waterMidList.Add(obj.transform);
             }
             else if(water == waterCount-1)
             {
-                 Instantiate(m_waterLow, TrsSpawnWater.position, Quaternion.identity, TrsSpawnWater);
+                 Instantiate(m_waterLow, TrsSpawnWater.position, Quaternion.Euler(new Vector3(0, 0, 180f)), TrsSpawnWater);
             }
             
         }
     }
 
+    //private void checkRemoveWaterList()
+    //{
+    //    int count = waterMidList.Count;
+        
+    //    if (waterMidList!=null && waterMidList.Count > 0) //&&마지막이 트리거작동했을때 waterMidList[count-1] == null)
+    //    {
+    //        noLever = true;
+    //    }
+    //    else
+    //    {
+    //        noLever = false;
+    //    }
+    //}
     public int GetWaterCount() 
     {
         return waterCount;

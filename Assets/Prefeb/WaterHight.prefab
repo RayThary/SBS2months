@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2705667912156713263
+--- !u!1 &4319213140600995670
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,12 +8,12 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7675914170699599539}
-  - component: {fileID: 3330214769365883337}
-  - component: {fileID: 6957649493257978310}
-  - component: {fileID: -6693165274259622083}
-  - component: {fileID: 4862773129717085881}
-  - component: {fileID: -5039378250865993252}
+  - component: {fileID: 3931196772455157568}
+  - component: {fileID: 4620391785079537083}
+  - component: {fileID: 4096658655282177871}
+  - component: {fileID: 4021855004599434783}
+  - component: {fileID: 912063651008691863}
+  - component: {fileID: -2194360341826381332}
   m_Layer: 0
   m_Name: WaterHight
   m_TagString: Untagged
@@ -21,28 +21,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7675914170699599539
+--- !u!4 &3931196772455157568
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2705667912156713263}
+  m_GameObject: {fileID: 4319213140600995670}
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
---- !u!212 &3330214769365883337
+--- !u!212 &4620391785079537083
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2705667912156713263}
+  m_GameObject: {fileID: 4319213140600995670}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -76,8 +76,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -1
-  m_Sprite: {fileID: 1293767794761137435, guid: d4e3ef3f5231f1a4e93bc54d607aac40, type: 3}
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 7892924296050668406, guid: d4e3ef3f5231f1a4e93bc54d607aac40, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -88,17 +88,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &6957649493257978310
+--- !u!95 &4096658655282177871
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2705667912156713263}
+  m_GameObject: {fileID: 4319213140600995670}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 14d27f251372a264883f57f3a87070b3, type: 2}
+  m_Controller: {fileID: 9100000, guid: c2436f21251b3d843a7b83d03dd70553, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -109,13 +109,13 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!61 &-6693165274259622083
+--- !u!61 &4021855004599434783
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2705667912156713263}
+  m_GameObject: {fileID: 4319213140600995670}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
@@ -154,13 +154,13 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &4862773129717085881
+--- !u!114 &912063651008691863
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2705667912156713263}
+  m_GameObject: {fileID: 4319213140600995670}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3859e3aad6ec5f64dad612c7003dda0b, type: 3}
@@ -168,15 +168,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waterType: 0
   m_waterSpeed: 2
-  m_anim: {fileID: 0}
---- !u!50 &-5039378250865993252
+--- !u!50 &-2194360341826381332
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2705667912156713263}
+  m_GameObject: {fileID: 4319213140600995670}
   m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
