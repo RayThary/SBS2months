@@ -76,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -1
+  m_SortingOrder: -2
   m_Sprite: {fileID: 1293767794761137435, guid: d4e3ef3f5231f1a4e93bc54d607aac40, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -166,8 +166,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3859e3aad6ec5f64dad612c7003dda0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waterType: 2
   m_waterSpeed: 2
+  m_waterFallSpeed: 1
+  m_waterFallTimer: 20
 --- !u!50 &-5039378250865993252
 Rigidbody2D:
   serializedVersion: 4

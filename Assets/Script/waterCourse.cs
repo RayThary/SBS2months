@@ -14,9 +14,10 @@ public class waterCourse : MonoBehaviour
 
     [Header("물줄기 소환개수 위치따라 설정필요")]
     [SerializeField] private int waterCount;
-    private List<Transform> waterMidList = new List<Transform>();
+    [SerializeField] private int m_waterFallTimer;
+    private List<Transform> waterList = new List<Transform>();
     private bool noLever = false;
-
+    private bool noSpawn = false;
     private Transform m_water;
 
     private BoxCollider2D m_box2d;
@@ -32,57 +33,70 @@ public class waterCourse : MonoBehaviour
     void Update()
     {
         CheckLever();
-        Debug.Log(waterMidList.Count);
+        
         //checkRemoveWaterList();
     }
 
 
     private void CheckLever()
     {
-        if (noLever)
+        if ( m_anim.GetBool("Lever") == true) 
         {
+            //StartCoroutine(checkReturnLever());
             return;
         }
+        
         if (m_box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 m_anim.SetBool("Lever", true);
-                if (waterMidList == null)
-                {
-                    spawnWaterCourse();
-                }
-                else if (waterMidList !=null)
-                {
-                    //다시위로올려줄것
-                }
-                StartCoroutine(checkReturnLever());
+                spawnWaterCourse();
             }
         }
     }
     
-    IEnumerator checkReturnLever()
-    {
-        yield return new WaitForSeconds(8f);
-        m_anim.SetBool("Lever", false);
-    }
+    //IEnumerator checkReturnLever()
+    //{
+        
+    //    yield return new WaitForSeconds(8f);
+    //    //yield return new WaitUntil(()=>불문 ==true)true가되면 통과
+    //    //yield return new WaitWhile(()=> 불문==true)false 가되면 통과
+
+    //    //yield return new WaitUntil(() =>
+    //    //{
+    //    //    return 불값 == false; 
+    //    //})
+
+    //    m_anim.SetBool("Lever", false);
+        
+    //    yield return null;
+    //}
     
     private void spawnWaterCourse()
     {
-        for(int water = 0; water < waterCount; water++)
+        if (noSpawn)
+        {
+            return;
+        }
+        GameObject obj = null;
+        for (int water = 0; water < waterCount; water++)
         {
             if (water == 0)
             {
-                 Instantiate(m_waterHight, TrsSpawnWater.position, Quaternion.Euler(new Vector3(0, 0, 180f)), TrsSpawnWater);
+                obj =  Instantiate(m_waterHight, TrsSpawnWater.position, Quaternion.Euler(new Vector3(0, 0, 180f)), TrsSpawnWater);
+                waterList.Add(obj.transform);
             }
             else if(water != waterCount-1)
             {
-                GameObject obj = Instantiate(m_waterMid, TrsSpawnWater.position, Quaternion.Euler(new Vector3(0,0,180f)), TrsSpawnWater);
-                waterMidList.Add(obj.transform);
+                obj = Instantiate(m_waterMid, TrsSpawnWater.position, Quaternion.Euler(new Vector3(0,0,180f)), TrsSpawnWater);
+                waterList.Add(obj.transform);
             }
             else if(water == waterCount-1)
             {
-                 Instantiate(m_waterLow, TrsSpawnWater.position, Quaternion.Euler(new Vector3(0, 0, 180f)), TrsSpawnWater);
+                 obj =Instantiate(m_waterLow, TrsSpawnWater.position, Quaternion.Euler(new Vector3(0, 0, 180f)), TrsSpawnWater);
+                waterList.Add(obj.transform);
+                noSpawn = true;
             }
             
         }
@@ -107,6 +121,10 @@ public class waterCourse : MonoBehaviour
     }
     public List<Transform> GetWaterMidList()
     {
-        return waterMidList;
+        return waterList;
+    }
+    public int GetWaterFallTimer()
+    {
+        return m_waterFallTimer;
     }
 }

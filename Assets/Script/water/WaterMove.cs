@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WaterHight : MonoBehaviour
+public class WaterMove : MonoBehaviour
 {
     public enum eWaterType
     {
@@ -10,7 +10,7 @@ public class WaterHight : MonoBehaviour
         Mid,
         Low,
     }
-    public eWaterType waterType;
+    private eWaterType waterType;
     //물관련
     [SerializeField] private float m_waterSpeed = 2.0f;
 
@@ -19,12 +19,14 @@ public class WaterHight : MonoBehaviour
     private Animator m_anim;
 
     private int waterCount;
-    private int midWaterCount;
-    private List<Transform> m_listWaterMid;
+    private int ListWaterCount;
+    private List<Transform> m_listWater;
     private bool midcheck=true;
     private bool m_stopWaterMove=false;
-    private bool m_waterMoveCheck;
-    private float m_waterFallSpeed = 1f;
+    private bool m_readyWater;
+    //물떨어지는시간
+    [SerializeField]private float m_waterFallSpeed = 1f;
+    private int m_waterFallTimer;
     //여기까지
 
     private Animator anim;
@@ -44,12 +46,10 @@ public class WaterHight : MonoBehaviour
         {
             m_waterFallSpeed = 0;
 
-
-
-
-            if (transform == m_listWaterMid[midWaterCount - 1])
+            if (waterType == eWaterType.Hight)
             {
-                m_waterMoveCheck = true;
+                m_readyWater = true;
+                m_anim.SetBool("Lever", false);
             }
         }
     }
@@ -61,14 +61,36 @@ public class WaterHight : MonoBehaviour
         water = GetComponentInParent<waterCourse>();
         m_parentWater = transform.root;
         waterCount = water.GetWaterCount();
-        m_listWaterMid = water.GetWaterMidList();
+        m_listWater = water.GetWaterMidList();
+        m_waterFallTimer = water.GetWaterFallTimer();
         m_anim = water.GetComponent<Animator>();
 
-        midWaterCount = m_listWaterMid.Count;
+        ListWaterCount = m_listWater.Count;
         m_vecTarget = new Vector2(transform.position.x, transform.position.y + waterCount-1);
+        //m_vecTarget = new Vector2(transform.position.x, transform.position.y + m_listWater.IndexOf(transform));
+
+        waterTypeCheck();
+
 
         m_box2d = GetComponent<BoxCollider2D>();
         m_rig2d = GetComponent<Rigidbody2D>();
+    }
+
+    private void waterTypeCheck()
+    {
+        if (transform == m_listWater[0])
+        {
+            waterType = eWaterType.Hight;
+        }
+        else if (transform == m_listWater[waterCount - 1])
+        {
+            waterType = eWaterType.Low;
+        }
+        else
+        {
+            waterType = eWaterType.Mid;
+        }
+
     }
 
     void Update()
@@ -84,24 +106,11 @@ public class WaterHight : MonoBehaviour
         {
             WaterMoving();
         }
+        Invoke("fallWaterCheck", m_waterFallTimer);
+        
+    }
 
-        if (m_anim.GetBool("Lever") == false)
-        {
-            m_stopWaterMove = true;
-            if (waterType != eWaterType.Low)
-            {
-                lateWaterMove();
-            }
-            else
-            {
-                Invoke("lateWaterMove", 1f);
-            }
-        }
-    }
-    private void lateWaterMove()
-    {
-        m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, -m_waterFallSpeed);
-    }
+    
 
     private void WaterMoving()
     {
@@ -116,29 +125,41 @@ public class WaterHight : MonoBehaviour
         
         if (waterType == eWaterType.Mid)
         {
-            Invoke("midWaterMove", 0.4f);
+            Invoke("WaterTargetMove", 0.4f);
+            //transform.position = Vector2.MoveTowards(transform.position, m_vecTarget, m_waterSpeed * Time.deltaTime);
         }
 
         
     }
 
-    private void midWaterMove()
+    private void WaterTargetMove()
     {
-        if (midcheck)
+
+        for (int i = 1; i < ListWaterCount; i++)
         {
-            for (int i = 0; i < midWaterCount; i++)
+            if (midcheck)
             {
-                if (transform == m_listWaterMid[i])
+                if (transform == m_listWater[i])
                 {
-                    m_vecTarget = new Vector2(m_vecTarget.x, m_vecTarget.y - (i + 1));
+                    m_vecTarget = new Vector2(m_vecTarget.x, m_vecTarget.y - (i));
                     midcheck = false;
-                    break;
                 }
             }
         }
+        
         transform.position = Vector2.MoveTowards(transform.position, m_vecTarget, m_waterSpeed * Time.deltaTime);
     }
+    private void lateWaterMove()
+    {
+        m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, -m_waterFallSpeed);
 
+    }
+
+    private void fallWaterCheck()
+    {
+        m_stopWaterMove = true;
+        lateWaterMove();
+    }
     private void playerWaterMove()
     {
         //선행조건 waterhight 일땐 다른조건주기
