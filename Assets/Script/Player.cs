@@ -16,10 +16,19 @@ public class Player : MonoBehaviour
         Lava,
         Water,
     }
+    public enum eHitType//추가바람
+    {
+        None,
+        Ground,
+        Lava,
+        Water,
+    }
 
     private eGroundType GroundType;
     private eType PlayerType;
-
+    private eHitType HitType;
+    
+    [SerializeField,Range(0,3)]private int playerHp = 3;
     //플레이어 슬라임 변경딜레이시간
     [SerializeField]private float changeCoolTime=3.0f;
     private float changeTimer=0.0f;
@@ -51,6 +60,13 @@ public class Player : MonoBehaviour
     private bool m_groundCheck;
 
 
+    //대미지입는용도 부분
+    [SerializeField] private float m_HitTime = 3.0f;
+    private float m_hitTimer = 0.0f;//삭제필요
+    private bool hitCheck;
+
+
+
     private BoxCollider2D m_box2d;
     private Animator m_anim;
     private Rigidbody2D m_rig2d;
@@ -61,31 +77,42 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag=="Ground")
         {
             GroundType = eGroundType.Ground;
-
-
+            HitType = eHitType.Ground;
             m_groundCheck = true;
 
         }
         else if (collision.gameObject.tag == "Water")
         {
             GroundType = eGroundType.Water;
-   
-            m_groundWaterCheck = true;
-
-                   
+            HitType = eHitType.Water;
+            m_groundWaterCheck = true; 
         }
+        else if (collision.gameObject.tag == "Lava")
+        {
+            HitType = eHitType.Lava;
+        }
+
+       
     }
 
+  
+   
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Ground")
         {
+            HitType = eHitType.None;
             m_groundCheck = false;
         }
         if(collision.gameObject.tag == "Water")
         {
+            HitType = eHitType.None;
             m_groundWaterCheck = false;
+        }
+        if (collision.gameObject.tag == "Lava")
+        {
+            HitType = eHitType.None;
         }
     }
 
@@ -100,6 +127,11 @@ public class Player : MonoBehaviour
   
     void Update()
     {
+        playerDeathMotion();
+        if (playerHp == 0)//플레이어가죽으면 끝
+        {
+            return;
+        }
         playerInWater();
         playerMove();
         playerJump();
@@ -110,6 +142,8 @@ public class Player : MonoBehaviour
         playerChange();
         playerChaneTimer();
         playerCheckWaterHight();
+        playerHitCheck();
+        playerHitTime();
     }
 
 
@@ -379,10 +413,14 @@ public class Player : MonoBehaviour
         if (m_box2d.IsTouchingLayers(LayerMask.GetMask("WaterCourse")))
         {
             m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, 1.5f);
+            m_jumpCheck = false;
+            playerWaterJump = false;
         }
 
         if (m_box2d.IsTouchingLayers(LayerMask.GetMask("WaterHight")))
         {
+            m_jumpCheck = false;
+            playerWaterJump = false;
             m_isWaterCourse = true;
         }
         else
@@ -391,14 +429,107 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void playerHitCheck()
+    {
+        if (PlayerType == eType.Green)
+        {
+            if (HitType == eHitType.Ground)//닿았을떄 피가안다는 슬라임인지체크한다 만약 맞으면 히트시간을 초기화해주는부분각자 괞찮은부분을 추가해주길바람
+            {
+                hitCheck = false;
+                m_hitTimer = 0;
+            }
+            if (HitType != eHitType.None || HitType != eHitType.Ground)//그린일때 대미지를안입을경우 여기에추가
+            {
+                hitCheck = true;
+            }
+        }
+
+        if (PlayerType == eType.Blue)
+        {
+            if (HitType == eHitType.Water)//닿았을떄 피가안다는 슬라임인지체크한다 만약 맞으면 히트시간을 초기화해주는부분각자 괞찮은부분을 추가해주길바람
+            {
+                hitCheck = false;
+                m_hitTimer = 0;
+            }
+            if (HitType != eHitType.None || HitType != eHitType.Water)//블루일때 대미지를안입을경우 여기에추가
+            {
+                hitCheck = true;
+            }
+        }
+
+        if (PlayerType == eType.Red)
+        {
+            if (HitType == eHitType.Lava)//닿았을떄 피가안다는 슬라임인지체크한다 만약 맞으면 히트시간을 초기화해주는부분각자 괞찮은부분을 추가해주길바람
+            {
+                hitCheck = false;
+                m_hitTimer = 0;
+            }
+            if (HitType != eHitType.None || HitType != eHitType.Lava)//레드일때 대미지를안입을경우 여기에추가
+            {
+                hitCheck = true;
+            }
+        }
+    }
+
+    private void playerHitTime()
+    {
+        if (!hitCheck)
+        {
+            return;
+        }
+        m_hitTimer += Time.deltaTime;
+        if (m_hitTimer >= m_HitTime)
+        {
+            if (PlayerType == eType.Blue)
+            {
+                m_anim.SetTrigger("BlueHit");
+            }
+            else if (PlayerType == eType.Red)
+            {
+                m_anim.SetTrigger("RedHit");
+            }
+            else if (PlayerType == eType.Green)
+            {
+                m_anim.SetTrigger("GreenHit");
+            }
+            m_hitTimer = 0;
+        }
+    }
+
+    private void playerDeathMotion()
+    {
+        if (playerHp == 0)
+        {
+            m_rig2d.velocity = new Vector2(0, 0);
+            if (PlayerType == eType.Blue)
+            {
+                m_anim.SetTrigger("BlueDeath");
+            }
+            else if (PlayerType == eType.Red)
+            {
+                m_anim.SetTrigger("RedDeath");
+            }
+            else if (PlayerType == eType.Green)
+            {
+                m_anim.SetTrigger("GreenDeath");
+            }
+        }
+    }
+
+    //애니메이터용은 이아래로 애니메이터에서 체크해줄부분임 
     private void playerDeath()
     {
-        Destroy(gameObject);
+        Destroy(gameObject);// 플레이어 데스모션에서 죽음모션일때 마지막이벤트에넣어놈 
     }
-    
+
     private void playerHit()
     {
-        //플레이어 hp 감소시켜줄곳 
-        //아마 이미지로 -1되면 한개씩없어지게만들듯함 +1되면 하트가 다시생기는느낌? 
+        playerHp -= 1;
     }
+    //여기까지
+    public int PlayerHp()
+    {
+        return playerHp;
+    }
+   
 }

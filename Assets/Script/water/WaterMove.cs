@@ -34,10 +34,9 @@ public class WaterMove : MonoBehaviour
 
     //플레이어 관련
     private Transform m_trsPlayer;
-    private Rigidbody2D m_rig2dPlayer;
+    
     //여기까지
     private Rigidbody2D m_rig2d;
-    private BoxCollider2D m_box2d;
 
     Vector2 m_vecTarget;
     Vector2 m_vecLowTarger;
@@ -56,7 +55,7 @@ public class WaterMove : MonoBehaviour
         
             waterFallCheck = true;
         m_trsPlayer = GameManager.instance.GetPlayerTransform();
-        m_rig2dPlayer = m_trsPlayer.GetComponent<Rigidbody2D>();
+        
 
         water = GetComponentInParent<waterCourse>();
         m_parentWater = transform.root;
@@ -76,7 +75,6 @@ public class WaterMove : MonoBehaviour
             m_vecLowTarger = new Vector2(transform.position.x, transform.position.y);
         }
 
-        m_box2d = GetComponent<BoxCollider2D>();
         m_rig2d = GetComponent<Rigidbody2D>();
     }
 
@@ -101,7 +99,6 @@ public class WaterMove : MonoBehaviour
     {
         waterMove();
         leverCheck();
-        playerWaterMove();
     }
 
     private void waterMove()
@@ -186,14 +183,7 @@ public class WaterMove : MonoBehaviour
         transform.position = Vector2.MoveTowards(transform.position, m_vecTarget, m_waterSpeed * Time.deltaTime);
     }
    
-    private void playerWaterMove()
-    {
-        //선행조건 waterhight 일땐 다른조건주기
-        if (m_box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
-        {
-            m_rig2dPlayer.velocity = new Vector2(m_rig2dPlayer.velocity.x, 1.5f);
-        }
-    }
+ 
     
   
     

@@ -27,9 +27,10 @@ public class Test : MonoBehaviour
     {
         if (check)
         {
+            yield break;
+        }
             yield return new WaitForSeconds(speed);
             Debug.Log("1");
             yield break;
-        }
     }
 }

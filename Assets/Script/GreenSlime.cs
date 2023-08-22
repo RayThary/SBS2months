@@ -52,6 +52,7 @@ public class GreenSlime : MonoBehaviour
             PlayerCheck = true;
         }
     }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (!isSlime)
