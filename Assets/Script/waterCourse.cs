@@ -6,6 +6,7 @@ public class waterCourse : MonoBehaviour
 {
     private Transform playerTrs;
     private Rigidbody2D playerRig2d;
+
     [SerializeField] private Transform TrsSpawnWater;
 
     [SerializeField] private GameObject m_waterHight;
@@ -16,9 +17,14 @@ public class waterCourse : MonoBehaviour
     [SerializeField] private int waterCount;
     [SerializeField] private int m_waterFallTimer;
     private List<Transform> waterList = new List<Transform>();
-    private bool noLever = false;
     private bool noSpawn = false;
-    private Transform m_water;
+    private bool leverCheck;
+    private bool leverReady;
+
+    private float timer = 0.0f;
+    [SerializeField]private float time = 10f;
+
+    [SerializeField]private Transform m_water;
 
     private BoxCollider2D m_box2d;
     private Animator m_anim;
@@ -32,17 +38,53 @@ public class waterCourse : MonoBehaviour
 
     void Update()
     {
-        CheckLever();
         
-        //checkRemoveWaterList();
+        CheckLever();
+        checkZ();
+        noFristCheckLever();
     }
 
+    private void checkZ()
+    {
+        if (noSpawn)
+        {
+            if (!leverCheck && !leverReady) 
+            {
+                timer += Time.deltaTime;
+                if (timer >= time)
+                {
+                    leverReady = true;
+                    leverReady = true;
+                    timer = 0.0f;
+                }
+            }
+        }
+    }
 
+    private void noFristCheckLever()
+    {
+        if (!noSpawn)
+        {
+            return;
+        }
+        //여기서 조건하나를추가해줘야할듯 몇초뒤에작동할지 걍여기서정해주는게좋은거같음 아마 false 되면 
+        if ((m_anim.GetBool("Lever") == false)&& leverReady)//&& bool값하나 추가해서 몇초뒤에작동하는코드에 그떄서야 불값on해주는걸로하면될듯
+        {
+            if (m_box2d.IsTouchingLayers(LayerMask.GetMask("Player")) && Input.GetKeyDown(KeyCode.Z)) 
+            {
+                leverCheck = true;
+                m_anim.SetBool("Lever", true);
+                Invoke("CheckWaterMove", m_waterFallTimer); 
+            }
+        }
+        
+    }
+    
+    
     private void CheckLever()
     {
-        if ( m_anim.GetBool("Lever") == true) 
+        if (m_anim.GetBool("Lever") == true || noSpawn == true) 
         {
-            //StartCoroutine(checkReturnLever());
             return;
         }
         
@@ -50,12 +92,23 @@ public class waterCourse : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
+                leverCheck = true;
                 m_anim.SetBool("Lever", true);
+                Invoke("CheckWaterMove", m_waterFallTimer);
                 spawnWaterCourse();
             }
         }
     }
     
+    private void CheckWaterMove()
+    {
+        if (leverCheck)
+        {
+            leverCheck = false;
+            m_anim.SetBool("Lever", false);
+        }
+
+    }
     //IEnumerator checkReturnLever()
     //{
         
@@ -86,6 +139,7 @@ public class waterCourse : MonoBehaviour
             {
                 obj =  Instantiate(m_waterHight, TrsSpawnWater.position, Quaternion.Euler(new Vector3(0, 0, 180f)), TrsSpawnWater);
                 waterList.Add(obj.transform);
+                
             }
             else if(water != waterCount-1)
             {
@@ -101,6 +155,8 @@ public class waterCourse : MonoBehaviour
             
         }
     }
+
+  
 
     //private void checkRemoveWaterList()
     //{
@@ -119,6 +175,7 @@ public class waterCourse : MonoBehaviour
     {
         return waterCount;
     }
+    
     public List<Transform> GetWaterMidList()
     {
         return waterList;

@@ -5,15 +5,31 @@ using UnityEngine;
 public class Test : MonoBehaviour
 {
     public float speed;
+    public bool check;
+    private Rigidbody2D rb;
+    private Vector2 ve;
     void Start()
     {
-        
+        rb= GetComponent<Rigidbody2D>();
     }
 
   
     void Update()
     {
+        ve = new Vector2(rb.velocity.x, speed);
+        rb.velocity = ve;
+            //StartCoroutine("fallWater");
         
-        transform.position = new Vector2(transform.position.x, transform.position.y+speed*Time.deltaTime);
+        
+    }
+
+    IEnumerator fallWater()
+    {
+        if (check)
+        {
+            yield return new WaitForSeconds(speed);
+            Debug.Log("1");
+            yield break;
+        }
     }
 }

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -6693165274259622083}
   - component: {fileID: 4862773129717085881}
   - component: {fileID: -5039378250865993252}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: WaterLow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -166,9 +166,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3859e3aad6ec5f64dad612c7003dda0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  waterType: 0
   m_waterSpeed: 2
+  m_stopWaterMove: 0
   m_waterFallSpeed: 1
-  m_waterFallTimer: 20
+  waterFallCheck: 0
 --- !u!50 &-5039378250865993252
 Rigidbody2D:
   serializedVersion: 4

@@ -38,7 +38,10 @@ public class Player : MonoBehaviour
     private float floatingMoving = 1f;
     private bool floatingChange = false;
     private bool playerWaterJump;
-    [SerializeField]private bool m_groundWaterCheck=false;
+    private bool m_groundWaterCheck=false;
+
+    private bool m_isWaterCourse;
+    private float m_waterHightJumping = 3.0f;
 
     [SerializeField] private float m_speed=2.0f;
     private float m_gravity = 9.81f;
@@ -106,6 +109,7 @@ public class Player : MonoBehaviour
         floatingTimeChange();
         playerChange();
         playerChaneTimer();
+        playerCheckWaterHight();
     }
 
 
@@ -154,6 +158,7 @@ public class Player : MonoBehaviour
 
     private void playerGravity()
     {
+        
         if (GroundType == eGroundType.Ground)
         {
             if (!m_groundCheck)
@@ -212,6 +217,13 @@ public class Player : MonoBehaviour
                 }
             }
         }
+        if (m_isWaterCourse)
+        {
+            m_jumpCheck = true;
+            playerWaterJump = true;
+            m_jumpGravity = m_playerJump;
+        }
+        
         m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, m_jumpGravity);
     }
 
@@ -359,6 +371,23 @@ public class Player : MonoBehaviour
                 changeTimer = 0.0f;
                 m_playerChangeCoolTime = false;
             }
+        }
+    }
+
+    private void playerCheckWaterHight()
+    {
+        if (m_box2d.IsTouchingLayers(LayerMask.GetMask("WaterCourse")))
+        {
+            m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, 1.5f);
+        }
+
+        if (m_box2d.IsTouchingLayers(LayerMask.GetMask("WaterHight")))
+        {
+            m_isWaterCourse = true;
+        }
+        else
+        {
+            m_isWaterCourse = false;
         }
     }
 

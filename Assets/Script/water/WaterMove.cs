@@ -10,7 +10,7 @@ public class WaterMove : MonoBehaviour
         Mid,
         Low,
     }
-    private eWaterType waterType;
+    [SerializeField]private eWaterType waterType;
     //물관련
     [SerializeField] private float m_waterSpeed = 2.0f;
 
@@ -22,14 +22,15 @@ public class WaterMove : MonoBehaviour
     private int ListWaterCount;
     private List<Transform> m_listWater;
     private bool midcheck=true;
-    private bool m_stopWaterMove=false;
-    private bool m_readyWater;
+    [SerializeField]private bool m_stopWaterMove=false;
     //물떨어지는시간
     [SerializeField]private float m_waterFallSpeed = 1f;
     private int m_waterFallTimer;
+    [SerializeField]private bool waterFallCheck;
     //여기까지
 
-    private Animator anim;
+    private bool leverReadyCheck;
+    private bool checkWaterEnd;
 
     //플레이어 관련
     private Transform m_trsPlayer;
@@ -39,22 +40,21 @@ public class WaterMove : MonoBehaviour
     private BoxCollider2D m_box2d;
 
     Vector2 m_vecTarget;
-
+    Vector2 m_vecLowTarger;
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.tag == "WaterEnd")
         {
-            m_waterFallSpeed = 0;
-
-            if (waterType == eWaterType.Hight)
-            {
-                m_readyWater = true;
-                m_anim.SetBool("Lever", false);
-            }
+            m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, 0);
+            checkWaterEnd = true;
         }
     }
+
     void Start()
     {
+        
+            waterFallCheck = true;
         m_trsPlayer = GameManager.instance.GetPlayerTransform();
         m_rig2dPlayer = m_trsPlayer.GetComponent<Rigidbody2D>();
 
@@ -71,6 +71,10 @@ public class WaterMove : MonoBehaviour
 
         waterTypeCheck();
 
+        if (waterType == eWaterType.Low)
+        {
+            m_vecLowTarger = new Vector2(transform.position.x, transform.position.y);
+        }
 
         m_box2d = GetComponent<BoxCollider2D>();
         m_rig2d = GetComponent<Rigidbody2D>();
@@ -96,28 +100,50 @@ public class WaterMove : MonoBehaviour
     void Update()
     {
         waterMove();
+        leverCheck();
         playerWaterMove();
-        
     }
 
     private void waterMove()
     {
-        if (!m_stopWaterMove)
+        if (m_stopWaterMove) 
         {
-            WaterMoving();
+            return;
         }
-        Invoke("fallWaterCheck", m_waterFallTimer);
-        
+            WaterMoving();
+        StartCoroutine("fallWater");
     }
 
-    
+    IEnumerator fallWater()
+    {
+        if (waterFallCheck)
+        {
+            waterFallCheck = false;
+            leverReadyCheck = true;
+            yield return new WaitForSeconds(m_waterFallTimer);
+            m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, -m_waterFallSpeed);
+        }
+    }
 
+    private void leverCheck()
+    {
+
+        if (m_anim.GetBool("Lever") == true && leverReadyCheck && checkWaterEnd)
+        {
+            waterFallCheck = true;
+            checkWaterEnd = false;
+            leverReadyCheck = false;
+            m_stopWaterMove = false;
+        }
+        
+        
+    }
     private void WaterMoving()
     {
         if (waterType == eWaterType.Hight)
         {
             transform.position = Vector2.MoveTowards(transform.position, m_vecTarget, m_waterSpeed * Time.deltaTime);
-            if(transform.position.y== m_vecTarget.y)
+            if (transform.position.y >= m_vecTarget.y) 
             {
                 m_stopWaterMove = true;
             }
@@ -126,9 +152,16 @@ public class WaterMove : MonoBehaviour
         if (waterType == eWaterType.Mid)
         {
             Invoke("WaterTargetMove", 0.4f);
-            //transform.position = Vector2.MoveTowards(transform.position, m_vecTarget, m_waterSpeed * Time.deltaTime);
         }
 
+        if(waterType == eWaterType.Low) 
+        {
+            transform.position = Vector2.MoveTowards(transform.position, m_vecLowTarger, m_waterSpeed * Time.deltaTime);
+            if (transform.position.y >= m_vecLowTarger.y)
+            {
+                m_stopWaterMove = true;
+            }
+        }
         
     }
 
@@ -146,20 +179,13 @@ public class WaterMove : MonoBehaviour
                 }
             }
         }
-        
+        if (transform.position.y >= m_vecTarget.y)
+        {
+            m_stopWaterMove = true;
+        }
         transform.position = Vector2.MoveTowards(transform.position, m_vecTarget, m_waterSpeed * Time.deltaTime);
     }
-    private void lateWaterMove()
-    {
-        m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, -m_waterFallSpeed);
-
-    }
-
-    private void fallWaterCheck()
-    {
-        m_stopWaterMove = true;
-        lateWaterMove();
-    }
+   
     private void playerWaterMove()
     {
         //선행조건 waterhight 일땐 다른조건주기
@@ -168,4 +194,7 @@ public class WaterMove : MonoBehaviour
             m_rig2dPlayer.velocity = new Vector2(m_rig2dPlayer.velocity.x, 1.5f);
         }
     }
+    
+  
+    
 }
