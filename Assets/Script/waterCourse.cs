@@ -24,7 +24,7 @@ public class waterCourse : MonoBehaviour
     private float timer = 0.0f;
     [SerializeField]private float time = 10f;
 
-    [SerializeField]private Transform m_water;
+    private Transform m_water;//아마안쓸듯? 나숙에삭제필요
 
     private BoxCollider2D m_box2d;
     private Animator m_anim;

@@ -7048,8 +7048,8 @@ MonoBehaviour:
   m_waterMid: {fileID: 8958326697533952664, guid: 5790ae99be36c944890511753240b061, type: 3}
   m_waterLow: {fileID: 2705667912156713263, guid: 68a31c995a46792428a9b0cacdc98556, type: 3}
   waterCount: 7
-  m_waterFallTimer: 5
-  time: 5
+  m_waterFallTimer: 8
+  time: 8
   m_water: {fileID: 0}
 --- !u!95 &1354943214
 Animator:
