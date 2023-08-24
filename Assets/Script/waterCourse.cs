@@ -17,11 +17,11 @@ public class waterCourse : MonoBehaviour
     [SerializeField] private int waterCount;
     [SerializeField] private int m_waterFallTimer;
     private List<Transform> waterList = new List<Transform>();
-    private bool noSpawn = false;
-    private bool leverCheck;//쓸모없음 삭제필요일단나뚬
-    private bool leverReady;
+    [SerializeField] private bool noSpawn = false;
+    private bool leverCheck;
+    [SerializeField]private bool leverReady;
 
-    private float timer = 0.0f;
+    [SerializeField]private float timer = 0.0f;
     [SerializeField]private float time = 10f;
 
     private Transform m_water;//아마안쓸듯? 나숙에삭제필요
@@ -38,17 +38,15 @@ public class waterCourse : MonoBehaviour
 
     void Update()
     {
-        
         CheckLever();
         checkZ();
-        //noFristCheckLever();
     }
 
     private void checkZ()
     {
         if (noSpawn)
         {
-            if (!leverReady) 
+            if (!leverReady && !leverCheck) 
             {
                 timer += Time.deltaTime;
                 if (timer >= time)
@@ -60,25 +58,7 @@ public class waterCourse : MonoBehaviour
         }
     }
 
-    private void noFristCheckLever()
-    {
-        if (!noSpawn)
-        {
-            return;
-        }
-        //여기서 조건하나를추가해줘야할듯 몇초뒤에작동할지 걍여기서정해주는게좋은거같음 아마 false 되면 
-        if ((m_anim.GetBool("Lever") == false)&& leverReady)//&& bool값하나 추가해서 몇초뒤에작동하는코드에 그떄서야 불값on해주는걸로하면될듯
-        {
-            if (m_box2d.IsTouchingLayers(LayerMask.GetMask("Player")) && Input.GetKeyDown(KeyCode.Z)) 
-            {
-                leverReady = false;
-                m_anim.SetBool("Lever", true);
-                Invoke("CheckWaterMove", m_waterFallTimer); 
-            }
-        }
-        
-    }
-    
+   
     
     private void CheckLever()
     {
@@ -86,13 +66,13 @@ public class waterCourse : MonoBehaviour
         {
             return;
         }
-        if (noSpawn == true)
+        if (noSpawn == false)
         {
             if (m_box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
             {
                 if (Input.GetKeyDown(KeyCode.Z))
                 {
-                    
+                    leverCheck = true;
                     leverReady = false;
                     m_anim.SetBool("Lever", true);
                     Invoke("CheckWaterMove", m_waterFallTimer);
@@ -100,12 +80,13 @@ public class waterCourse : MonoBehaviour
                 }
             }
         }
-        else
+        else if(noSpawn)
         {
             if((m_anim.GetBool("Lever") == false) && leverReady)//&& bool값하나 추가해서 몇초뒤에작동하는코드에 그떄서야 불값on해주는걸로하면될듯
-        {
+            {
                 if (m_box2d.IsTouchingLayers(LayerMask.GetMask("Player")) && Input.GetKeyDown(KeyCode.Z))
                 {
+                    leverCheck = true;
                     leverReady = false;
                     m_anim.SetBool("Lever", true);
                     Invoke("CheckWaterMove", m_waterFallTimer);
@@ -142,10 +123,6 @@ public class waterCourse : MonoBehaviour
     
     private void spawnWaterCourse()
     {
-        if (noSpawn)
-        {
-            return;
-        }
         GameObject obj = null;
         for (int water = 0; water < waterCount; water++)
         {

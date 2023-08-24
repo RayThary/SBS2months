@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -24,7 +25,7 @@ public class Player : MonoBehaviour
         Water,
     }
 
-    private eGroundType GroundType;
+    [SerializeField]private eGroundType GroundType;
     private eType PlayerType;
     private eHitType HitType;
     
@@ -52,12 +53,19 @@ public class Player : MonoBehaviour
     private bool m_isWaterCourse;
     private float m_waterHightJumping = 3.0f;
 
+
+    //땅&기본기능
     [SerializeField] private float m_speed=2.0f;
     private float m_gravity = 9.81f;
     private float m_jumpGravity = 0f;
     [SerializeField]private float m_playerJump = 5f;//점프력
     private bool m_jumpCheck=false;
     private bool m_groundCheck;
+
+
+    //용암
+    private bool m_groundLavaCheck;
+    private bool m_lavaJumpCheck;
 
 
     //대미지입는용도 부분
@@ -89,7 +97,9 @@ public class Player : MonoBehaviour
         }
         else if (collision.gameObject.tag == "Lava")
         {
+            GroundType = eGroundType.Lava;
             HitType = eHitType.Lava;
+            m_groundLavaCheck = true;
         }
 
        
@@ -113,6 +123,7 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == "Lava")
         {
             HitType = eHitType.None;
+            m_groundLavaCheck = false;
         }
     }
 
@@ -132,18 +143,19 @@ public class Player : MonoBehaviour
         {
             return;
         }
-        playerInWater();
-        playerMove();
-        playerJump();
-        playerGravity();
-        //playerWaterGravity();
-        playerfloating();
-        floatingTimeChange();
-        playerChange();
-        playerChaneTimer();
-        playerCheckWaterHight();
-        playerHitCheck();
-        playerHitTime();
+        playerInWater();//물안에있는지?
+        playerMove();//이동
+        playerJump();//모든점프를체크하는곳
+        playerGravity();//모든 점프를통한 중력값을 여기서정해준다 
+        //playerWaterGravity();//몰?루
+        playerfloating();//물위에서 떠있을때 알고리즘을담았습니다
+        floatingTimeChange();//물위에서떠다닐때 위아래움직임의 시간체크하는부분
+        playerLavefloating();//용암에있을때 어떻게떠있을지 
+        playerChange();//플레이어슬라임타입을 바꾸는곳
+        playerChaneTimer();//플레이어 슬라임타입의 쿨타임을정해주는곳
+        playerCheckWaterHight();//물줄기를 만나면 솓아오르는용도로만들어줌
+        playerHitCheck();//피격판정
+        playerHitTime();//맞은뒤 무적시간같은부분
     }
 
 
@@ -185,6 +197,14 @@ public class Player : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
                 playerWaterJump = true;
+            }
+        }
+
+        if (m_groundLavaCheck)
+        {
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                m_lavaJumpCheck = true;
             }
         }
 
@@ -251,6 +271,35 @@ public class Player : MonoBehaviour
                 }
             }
         }
+        else if(GroundType == eGroundType.Lava)
+        {
+            if (!m_groundLavaCheck)
+            {
+                m_jumpGravity -= m_gravity * Time.deltaTime;
+                if (m_jumpGravity < -10f)
+                {
+                    m_jumpGravity = -10f;
+                }
+            }
+            else
+            {
+                if (m_lavaJumpCheck)
+                {
+
+                    m_lavaJumpCheck = false;//라바점프체크로바꿔줄것
+                    m_jumpGravity = m_playerJump;
+                }
+                else if (m_jumpGravity < 0)
+                {
+                    m_jumpGravity += m_gravity * Time.deltaTime;
+                    if (m_jumpGravity > 0)
+                    {
+                        m_jumpGravity = 0;
+                    }
+
+                }
+            }
+        }
         if (m_isWaterCourse)
         {
             m_jumpCheck = true;
@@ -283,23 +332,25 @@ public class Player : MonoBehaviour
         {
             return;
         }
-        if (playerWaterCheck)
+        if (GroundType == eGroundType.Water)
         {
-            m_groundWaterCheck = true;
+            if (playerWaterCheck)
+            {
+                m_groundWaterCheck = true;
 
-            if (floatingTime >= floatingTimer)
-            {
-                floatingMoving = -floatingMovingMax;
-                floatingChange = true;
+                if (floatingTime >= floatingTimer)
+                {
+                    floatingMoving = -floatingMovingMax;
+                    floatingChange = true;
+                }
+                else if (floatingTime <= -floatingTimer)
+                {
+                    floatingMoving = floatingMovingMax;
+                    floatingChange = false;
+                }
+                m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, floatingMoving);
             }
-            else if (floatingTime <= -floatingTimer)
-            {
-                floatingMoving = floatingMovingMax;
-                floatingChange = false;
-            }
-            m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, floatingMoving);
-        }   
-        
+        }
     }
 
     private void floatingTimeChange()
@@ -314,6 +365,14 @@ public class Player : MonoBehaviour
             {
                 floatingTime += Time.deltaTime;
             }
+        }
+    }
+
+    private void playerLavefloating()
+    {
+        if (m_groundLavaCheck) 
+        {
+            m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, -0.2f);
         }
     }
     private void playerChange()
