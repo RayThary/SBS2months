@@ -7,7 +7,7 @@ public class waterCourse : MonoBehaviour
     private Transform playerTrs;
     private Rigidbody2D playerRig2d;
 
-    [SerializeField] private Transform TrsSpawnWater;
+    private Transform TrsSpawnWater;
 
     [SerializeField] private GameObject m_waterHight;
     [SerializeField] private GameObject m_waterMid;
@@ -17,14 +17,12 @@ public class waterCourse : MonoBehaviour
     [SerializeField] private int waterCount;
     [SerializeField] private int m_waterFallTimer;
     private List<Transform> waterList = new List<Transform>();
-    [SerializeField] private bool noSpawn = false;
+    private bool noSpawn = false;
     private bool leverCheck;
-    [SerializeField]private bool leverReady;
+    private bool leverReady;
 
-    [SerializeField]private float timer = 0.0f;
-    [SerializeField]private float time = 10f;
-
-    private Transform m_water;//아마안쓸듯? 나숙에삭제필요
+    private float timer = 0.0f;
+    [SerializeField] private float time = 10f;
 
     private BoxCollider2D m_box2d;
     private Animator m_anim;
@@ -33,7 +31,7 @@ public class waterCourse : MonoBehaviour
     {
         m_box2d = GetComponent<BoxCollider2D>();
         m_anim = GetComponent<Animator>();
-        m_water = GetComponentInChildren<Transform>().Find("Water");
+        TrsSpawnWater = GetComponentInChildren<Transform>().Find("Water");
     }
 
     void Update()

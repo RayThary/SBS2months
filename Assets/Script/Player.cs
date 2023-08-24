@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [Header("테스트용 hit 로 체력감소만안달게하기")]
+    public bool NoHit=false;
     public enum eType
     {
         Red,
@@ -17,7 +19,7 @@ public class Player : MonoBehaviour
         Lava,
         Water,
     }
-    public enum eHitType//추가바람
+    public enum eHitGroundType//추가바람
     {
         None,
         Ground,
@@ -27,7 +29,7 @@ public class Player : MonoBehaviour
 
     [SerializeField]private eGroundType GroundType;
     private eType PlayerType;
-    private eHitType HitType;
+    private eHitGroundType HitType;
     
     [SerializeField,Range(0,3)]private int playerHp = 3;
     //플레이어 슬라임 변경딜레이시간
@@ -51,26 +53,29 @@ public class Player : MonoBehaviour
     private bool m_groundWaterCheck=false;
 
     private bool m_isWaterCourse;
-    private float m_waterHightJumping = 3.0f;
+    
 
 
     //땅&기본기능
     [SerializeField] private float m_speed=2.0f;
     private float m_gravity = 9.81f;
     private float m_jumpGravity = 0f;
-    [SerializeField]private float m_playerJump = 5f;//점프력
+    [SerializeField]private float m_playerJump = 5f;//플레이어의 점프력
+    [SerializeField] private float m_playerInLavaJump = 3f;//용암속에서의 점프력 아마 저항있는부분에서의 점프력일듯 다른곳에서 사용시 이름바꿀필요가있음
     private bool m_jumpCheck=false;
     private bool m_groundCheck;
 
 
     //용암
-    private bool m_groundLavaCheck;
-    private bool m_lavaJumpCheck;
+    private bool m_groundLavaCheck;//용암에서의 점프를담당할예정근데아마 용암밖에나갔을때 써줄예정
+    [SerializeField]private bool m_inLavaCheck;//용암안에있는지체크용 용암안에있을때 중력값정해줄용도의불값
+    private bool m_lavaJumpCheck;//용암안에서의 점프를할거같음 
+    private bool m_lavaGravityCheck;
 
 
     //대미지입는용도 부분
     [SerializeField] private float m_HitTime = 3.0f;
-    private float m_hitTimer = 0.0f;//삭제필요
+    private float m_hitTimer = 0.0f;
     private bool hitCheck;
 
 
@@ -85,21 +90,22 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag=="Ground")
         {
             GroundType = eGroundType.Ground;
-            HitType = eHitType.Ground;
+            HitType = eHitGroundType.Ground;
             m_groundCheck = true;
 
         }
         else if (collision.gameObject.tag == "Water")
         {
             GroundType = eGroundType.Water;
-            HitType = eHitType.Water;
+            HitType = eHitGroundType.Water;
             m_groundWaterCheck = true; 
         }
         else if (collision.gameObject.tag == "Lava")
         {
             GroundType = eGroundType.Lava;
-            HitType = eHitType.Lava;
-            m_groundLavaCheck = true;
+            HitType = eHitGroundType.Lava;
+            //m_inLavaCheck= true;
+        
         }
 
        
@@ -112,18 +118,18 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.tag == "Ground")
         {
-            HitType = eHitType.None;
+            HitType = eHitGroundType.None;
             m_groundCheck = false;
         }
         if(collision.gameObject.tag == "Water")
         {
-            HitType = eHitType.None;
+            HitType = eHitGroundType.None;
             m_groundWaterCheck = false;
         }
         if (collision.gameObject.tag == "Lava")
         {
-            HitType = eHitType.None;
-            m_groundLavaCheck = false;
+            HitType = eHitGroundType.None;
+            //m_inLavaCheck = false;
         }
     }
 
@@ -147,7 +153,7 @@ public class Player : MonoBehaviour
         playerMove();//이동
         playerJump();//모든점프를체크하는곳
         playerGravity();//모든 점프를통한 중력값을 여기서정해준다 
-        //playerWaterGravity();//몰?루
+        //playerWaterGravity();//없는듯한데 왜있지
         playerfloating();//물위에서 떠있을때 알고리즘을담았습니다
         floatingTimeChange();//물위에서떠다닐때 위아래움직임의 시간체크하는부분
         playerLavefloating();//용암에있을때 어떻게떠있을지 
@@ -178,8 +184,14 @@ public class Player : MonoBehaviour
         {
             moveDir.x = 0;
         }
-
-        m_rig2d.velocity = moveDir * m_speed;
+        if (m_inLavaCheck)
+        {
+            m_rig2d.velocity = moveDir *0.5f* m_speed;
+        }
+        else
+        {
+            m_rig2d.velocity = moveDir * m_speed;
+        }
     }
 
     private void playerJump()
@@ -200,7 +212,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (m_groundLavaCheck)
+        if (m_inLavaCheck)
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
@@ -273,7 +285,32 @@ public class Player : MonoBehaviour
         }
         else if(GroundType == eGroundType.Lava)
         {
-            if (!m_groundLavaCheck)
+            if (m_inLavaCheck)
+            {
+                if (m_lavaJumpCheck)
+                {
+                    m_lavaGravityCheck = false;
+                    m_groundLavaCheck = false;
+                    m_lavaJumpCheck = false;
+                    m_jumpGravity = m_playerInLavaJump;
+                }
+                else if (!m_groundLavaCheck)
+                {
+                    m_jumpGravity -= m_gravity * Time.deltaTime;
+                    if (m_jumpGravity < -3f)
+                    {
+                        m_jumpGravity += m_gravity * 1.5f * Time.deltaTime;
+                        if (m_jumpGravity < -0.4f)
+                        {
+                            m_jumpGravity = -0.4f;
+                            m_groundLavaCheck = true;
+                            m_lavaGravityCheck = true;
+                        }
+                    }
+                }
+                
+            }
+            else
             {
                 m_jumpGravity -= m_gravity * Time.deltaTime;
                 if (m_jumpGravity < -10f)
@@ -281,29 +318,11 @@ public class Player : MonoBehaviour
                     m_jumpGravity = -10f;
                 }
             }
-            else
-            {
-                if (m_lavaJumpCheck)
-                {
-
-                    m_lavaJumpCheck = false;//라바점프체크로바꿔줄것
-                    m_jumpGravity = m_playerJump;
-                }
-                else if (m_jumpGravity < 0)
-                {
-                    m_jumpGravity += m_gravity * Time.deltaTime;
-                    if (m_jumpGravity > 0)
-                    {
-                        m_jumpGravity = 0;
-                    }
-
-                }
-            }
         }
         if (m_isWaterCourse)
         {
-            m_jumpCheck = true;
-            playerWaterJump = true;
+            m_jumpCheck =false;
+            playerWaterJump = false;
             m_jumpGravity = m_playerJump;
         }
         
@@ -368,11 +387,24 @@ public class Player : MonoBehaviour
         }
     }
 
+    
     private void playerLavefloating()
     {
-        if (m_groundLavaCheck) 
+        RaycastHit2D lavaHit = Physics2D.Raycast(transform.position, Vector2.zero, 0, LayerMask.GetMask("Lava"));
+        if (lavaHit.collider != null)
         {
-            m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, -0.2f);
+            m_inLavaCheck = true;
+        }
+        else
+        {
+            m_inLavaCheck = false;
+        }
+        if (m_inLavaCheck) 
+        {
+            if (m_lavaGravityCheck)
+            {
+                m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, -0.4f);
+            }
         }
     }
     private void playerChange()
@@ -492,12 +524,12 @@ public class Player : MonoBehaviour
     {
         if (PlayerType == eType.Green)
         {
-            if (HitType == eHitType.Ground)//닿았을떄 피가안다는 슬라임인지체크한다 만약 맞으면 히트시간을 초기화해주는부분각자 괞찮은부분을 추가해주길바람
+            if (HitType == eHitGroundType.Ground)//닿았을떄 피가안다는 슬라임인지체크한다 만약 맞으면 히트시간을 초기화해주는부분각자 괞찮은부분을 추가해주길바람
             {
                 hitCheck = false;
                 m_hitTimer = 0;
             }
-            if (HitType != eHitType.None || HitType != eHitType.Ground)//그린일때 대미지를안입을경우 여기에추가
+            if (HitType != eHitGroundType.None || HitType != eHitGroundType.Ground)//그린일때 대미지를안입을경우 여기에추가
             {
                 hitCheck = true;
             }
@@ -505,12 +537,12 @@ public class Player : MonoBehaviour
 
         if (PlayerType == eType.Blue)
         {
-            if (HitType == eHitType.Water)//닿았을떄 피가안다는 슬라임인지체크한다 만약 맞으면 히트시간을 초기화해주는부분각자 괞찮은부분을 추가해주길바람
+            if (HitType == eHitGroundType.Water)//닿았을떄 피가안다는 슬라임인지체크한다 만약 맞으면 히트시간을 초기화해주는부분각자 괞찮은부분을 추가해주길바람
             {
                 hitCheck = false;
                 m_hitTimer = 0;
             }
-            if (HitType != eHitType.None || HitType != eHitType.Water)//블루일때 대미지를안입을경우 여기에추가
+            if (HitType != eHitGroundType.None || HitType != eHitGroundType.Water)//블루일때 대미지를안입을경우 여기에추가
             {
                 hitCheck = true;
             }
@@ -518,12 +550,12 @@ public class Player : MonoBehaviour
 
         if (PlayerType == eType.Red)
         {
-            if (HitType == eHitType.Lava)//닿았을떄 피가안다는 슬라임인지체크한다 만약 맞으면 히트시간을 초기화해주는부분각자 괞찮은부분을 추가해주길바람
+            if (HitType == eHitGroundType.Lava)//닿았을떄 피가안다는 슬라임인지체크한다 만약 맞으면 히트시간을 초기화해주는부분각자 괞찮은부분을 추가해주길바람
             {
                 hitCheck = false;
                 m_hitTimer = 0;
             }
-            if (HitType != eHitType.None || HitType != eHitType.Lava)//레드일때 대미지를안입을경우 여기에추가
+            if (HitType != eHitGroundType.None || HitType != eHitGroundType.Lava)//레드일때 대미지를안입을경우 여기에추가
             {
                 hitCheck = true;
             }
@@ -583,6 +615,10 @@ public class Player : MonoBehaviour
 
     private void playerHit()
     {
+        if (NoHit)
+        {
+            return;
+        }
         playerHp -= 1;
     }
     //여기까지
