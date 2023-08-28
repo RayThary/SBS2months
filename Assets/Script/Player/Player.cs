@@ -78,7 +78,9 @@ public class Player : MonoBehaviour
     private float m_hitTimer = 0.0f;
     private bool hitCheck;
 
-
+    //아이템부분 많이쓸거같으면 json으로 인벤토리구현을해줄필요있음 아니면 불값으로 on/off체크해주는방법이좋을듯함
+    [SerializeField]private bool PlayerIsKey = false;
+    private bool doorLockisOpen = false;
 
     private BoxCollider2D m_box2d;
     private Animator m_anim;
@@ -161,6 +163,7 @@ public class Player : MonoBehaviour
         playerChaneTimer();//플레이어 슬라임타입의 쿨타임을정해주는곳
         playerCheckWaterHight();//물줄기를 만나면 솓아오르는용도로만들어줌
         playerHitCheck();//피격판정
+        playerKeyDel();
         playerHitTime();//맞은뒤 무적시간같은부분
     }
 
@@ -562,6 +565,7 @@ public class Player : MonoBehaviour
         }
     }
 
+
     private void playerHitTime()
     {
         if (!hitCheck)
@@ -584,6 +588,18 @@ public class Player : MonoBehaviour
                 m_anim.SetTrigger("GreenHit");
             }
             m_hitTimer = 0;
+        }
+    }
+
+   
+    private void playerKeyDel()
+    {
+        if (doorLockisOpen)
+        {
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                Debug.Log("1");
+            }
         }
     }
 
@@ -622,9 +638,58 @@ public class Player : MonoBehaviour
         playerHp -= 1;
     }
     //여기까지
+
+    public void OnTriggerPlayer(PlayerHitBox.HitBoxType _state, PlayerHitBox.HitType _hitType, Collider2D _collision)
+    {
+        switch (_state)
+        {
+            case PlayerHitBox.HitBoxType.Enter:
+                switch (_hitType)
+                {
+                    case PlayerHitBox.HitType.Item:
+                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Key"))
+                        {
+                            PlayerIsKey = true;
+                        }
+                        if (_collision.gameObject.layer == LayerMask.NameToLayer("DoorLock"))
+                        {
+                            doorLockisOpen = true;
+                        }
+                            break;
+                }
+                break;
+
+            
+            case PlayerHitBox.HitBoxType.Exit:
+                switch (_hitType)
+                {
+                    case PlayerHitBox.HitType.Item:
+                        if (_collision.gameObject.layer == LayerMask.NameToLayer("DoorLock"))
+                        {
+                            doorLockisOpen = false;
+                        }
+                        break;
+                }
+                break;
+        }  
+    }
+
+
+
+    //외부에서 필요한데이터
     public int PlayerHp()
     {
         return playerHp;
     }
    
+    //안쓸듯 안쓰면삭제해주셈 키부분에서 문이랑 키만쓰면될듯함 
+    public bool PlayerKeyCheck()
+    {
+        return PlayerIsKey;
+    }
+    
+    public bool PlayerDoorLockOpenCheck()
+    {
+        return doorLockisOpen;
+    }
 }
