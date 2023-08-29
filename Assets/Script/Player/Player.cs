@@ -598,7 +598,7 @@ public class Player : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                Debug.Log("1");
+                PlayerIsKey = false;
             }
         }
     }

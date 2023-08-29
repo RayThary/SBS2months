@@ -52,7 +52,7 @@ public class Item : MonoBehaviour
             {
                 return;
             }
-            
+            gameObject.layer = LayerMask.NameToLayer("UseKey");//사용함 어떻게쓸지 고민필요
         }
     }
 

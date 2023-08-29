@@ -7,6 +7,9 @@ public class Door : MonoBehaviour
     private Player player;
     private Transform playerTrs;
 
+    [SerializeField] private Transform doorPillarTrs;
+    private BoxCollider2D doorPillarBox2d;
+
     private bool playerKeyCheck;
     private bool OpenDoor = false;
     private BoxCollider2D box2d;
@@ -17,9 +20,11 @@ public class Door : MonoBehaviour
     void Start()
     {
         box2d = GetComponent<BoxCollider2D>();
+        doorPillarBox2d = doorPillarTrs.GetComponent<BoxCollider2D>();
         Transform playerTrs = GameManager.instance.GetPlayerTransform();
         player = playerTrs.GetComponent<Player>();
         box2dchile = GetComponentInChildren<BoxCollider2D>(); 
+
     }
 
     
@@ -49,7 +54,7 @@ public class Door : MonoBehaviour
         }
         else
         {
-            gameObject.SetActive(false);
+            doorPillarBox2d.enabled = false;
         }
     }
 }
