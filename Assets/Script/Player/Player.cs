@@ -79,8 +79,9 @@ public class Player : MonoBehaviour
     private bool hitCheck;
 
     //아이템부분 많이쓸거같으면 json으로 인벤토리구현을해줄필요있음 아니면 불값으로 on/off체크해주는방법이좋을듯함
-    [SerializeField]private bool PlayerIsKey = false;
+    private bool PlayerIsKey = false;
     private bool doorLockisOpen = false;
+    private bool doorKeyCheck = false;
 
     private BoxCollider2D m_box2d;
     private Animator m_anim;
@@ -599,6 +600,11 @@ public class Player : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 PlayerIsKey = false;
+                doorKeyCheck = true;
+            }
+            else
+            {
+                doorKeyCheck = false;
             }
         }
     }
@@ -688,8 +694,8 @@ public class Player : MonoBehaviour
         return PlayerIsKey;
     }
     
-    public bool PlayerDoorLockOpenCheck()
+    public bool PlayerdoorKeyCheck()
     {
-        return doorLockisOpen;
+        return doorKeyCheck;
     }
 }
