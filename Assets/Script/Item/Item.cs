@@ -6,6 +6,9 @@ public class Item : MonoBehaviour
 {
     private Transform playerTrs;
     private Player player;
+    private Transform ItemParentTrs;
+    private Rigidbody2D playerRig2d;
+
     public enum ItemName
     {
         Key,
@@ -19,30 +22,24 @@ public class Item : MonoBehaviour
     [SerializeField] private float ItemStandingSpeed;
     private Vector3 ItemPos;
 
-    [SerializeField] private Vector3 followPos;
-    [SerializeField] private int followDelay;
-    [SerializeField] private Queue<Vector3> playerPos;
+    [SerializeField] private float followSpeed;
+    [SerializeField]private bool right;
 
     private bool playerItemTouch;
 
     private bool playerKeyTouch = false;
     private bool doorCheck;
-
     private Collider2D collider2d;
 
-    private void Awake()
-    {
-        playerPos = new Queue<Vector3>();
-    }
 
     void Start()
     {
         ItemPos = transform.position;
         playerTrs = GameManager.instance.GetPlayerTransform();
         player = playerTrs.GetComponent<Player>();
-        
-
-        collider2d = GetComponent<Collider2D>();        
+        playerRig2d = playerTrs.GetComponent<Rigidbody2D>();
+        collider2d = GetComponent<Collider2D>();
+        ItemParentTrs = playerTrs.GetComponentInChildren<Transform>().Find("ItemParent");
     }
 
 
@@ -59,13 +56,8 @@ public class Item : MonoBehaviour
 
     private void ItemMove()
     {
-        if (collider2d.IsTouchingLayers(LayerMask.GetMask("Player")))
-        {
-            playerItemTouch = true;
-        }
         if (playerItemTouch)
         {
-            watch();
             follow();
         }
         else
@@ -74,31 +66,46 @@ public class Item : MonoBehaviour
             dirPos.y += moveMax * Mathf.Sin(Time.time * ItemStandingSpeed);
             transform.position = dirPos;
         }
-    }
-    private void watch()
-    {
-        if (!playerPos.Contains(playerTrs.position))
+        if (playerKeyTouch)
         {
-            playerPos.Enqueue(playerTrs.position);
+            return;
         }
-
-        if (playerPos.Count > followDelay)
+        if (collider2d.IsTouchingLayers(LayerMask.GetMask("Player")))
         {
-            followPos = playerPos.Dequeue();
-        }
-        else if (playerPos.Count < followDelay)
-        {
-            followPos = playerTrs.position;
+            playerItemTouch = true;
         }
     }
+   
 
     private void follow()
-    {
-        transform.position = followPos;
+    {        
+        Vector2 TargetPos = ItemParentTrs.position;
+        Debug.Log($"1:{TargetPos}");
+        if (playerRig2d.velocity.x > 0)
+        {
+            right = false;
+        }
+        else if(playerRig2d.velocity.x < 0)
+        {
+            right = true;
+        }
+
+        if (right)
+        {
+            TargetPos.x += 1;
+        }
+        else
+        {
+            TargetPos.x -= 1;
+        }
+
+        Debug.Log($":{TargetPos}");
+        transform.position = Vector2.MoveTowards(transform.position, TargetPos, followSpeed * Time.deltaTime);
     }
 
     private void Key()
     {
+        
         if (playerItemTouch)
         {
             doorCheck = player.PlayerdoorKeyCheck();
