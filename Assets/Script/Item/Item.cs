@@ -12,7 +12,6 @@ public class Item : MonoBehaviour
     public enum ItemName
     {
         Key,
-
     }
     
     //일단 지정해서써주는데 나중에 자기자신의 레이어or태그를 확인후 자기가어떤아이템인지확인으로 바꿔줄지고민필요 
@@ -80,7 +79,6 @@ public class Item : MonoBehaviour
     private void follow()
     {        
         Vector2 TargetPos = ItemParentTrs.position;
-        Debug.Log($"1:{TargetPos}");
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             right = false;
@@ -99,7 +97,6 @@ public class Item : MonoBehaviour
             TargetPos.x -= 1;
         }
 
-        Debug.Log($":{TargetPos}");
         transform.position = Vector2.MoveTowards(transform.position, TargetPos, followSpeed * Time.deltaTime);
     }
 

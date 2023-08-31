@@ -10,8 +10,6 @@ public class PlayerHitBox : MonoBehaviour
     public enum HitType 
     {
         Ground,
-        Water,
-        Lava,
         Item,
     }
 

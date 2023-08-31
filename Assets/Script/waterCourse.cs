@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class waterCourse : MonoBehaviour
 {
-    private Transform playerTrs;
-    private Rigidbody2D playerRig2d;
-
     private Transform TrsSpawnWater;
-
+    private Transform TrsEndWater;
     [SerializeField] private GameObject m_waterHight;
     [SerializeField] private GameObject m_waterMid;
     [SerializeField] private GameObject m_waterLow;
@@ -32,6 +29,7 @@ public class waterCourse : MonoBehaviour
         m_box2d = GetComponent<BoxCollider2D>();
         m_anim = GetComponent<Animator>();
         TrsSpawnWater = GetComponentInChildren<Transform>().Find("Water");
+        TrsEndWater = GetComponentInChildren<Transform>().Find("WaterEnd");
     }
 
     void Update()
@@ -44,7 +42,7 @@ public class waterCourse : MonoBehaviour
     {
         if (noSpawn)
         {
-            if (!leverReady && !leverCheck) 
+            if (!leverReady && !leverCheck)
             {
                 timer += Time.deltaTime;
                 if (timer >= time)
@@ -56,11 +54,11 @@ public class waterCourse : MonoBehaviour
         }
     }
 
-   
-    
+
+
     private void CheckLever()
     {
-        if (m_anim.GetBool("Lever") == true) 
+        if (m_anim.GetBool("Lever") == true)
         {
             return;
         }
@@ -78,9 +76,9 @@ public class waterCourse : MonoBehaviour
                 }
             }
         }
-        else if(noSpawn)
+        else if (noSpawn)
         {
-            if((m_anim.GetBool("Lever") == false) && leverReady)//&& bool값하나 추가해서 몇초뒤에작동하는코드에 그떄서야 불값on해주는걸로하면될듯
+            if ((m_anim.GetBool("Lever") == false) && leverReady)//&& bool값하나 추가해서 몇초뒤에작동하는코드에 그떄서야 불값on해주는걸로하면될듯
             {
                 if (m_box2d.IsTouchingLayers(LayerMask.GetMask("Player")) && Input.GetKeyDown(KeyCode.Z))
                 {
@@ -92,7 +90,7 @@ public class waterCourse : MonoBehaviour
             }
         }
     }
-    
+
     private void CheckWaterMove()
     {
         if (leverCheck)
@@ -102,23 +100,7 @@ public class waterCourse : MonoBehaviour
         }
 
     }
-    //IEnumerator checkReturnLever()
-    //{
-        
-    //    yield return new WaitForSeconds(8f);
-    //    //yield return new WaitUntil(()=>불문 ==true)true가되면 통과
-    //    //yield return new WaitWhile(()=> 불문==true)false 가되면 통과
 
-    //    //yield return new WaitUntil(() =>
-    //    //{
-    //    //    return 불값 == false; 
-    //    //})
-
-    //    m_anim.SetBool("Lever", false);
-        
-    //    yield return null;
-    //}
-    
     private void spawnWaterCourse()
     {
         GameObject obj = null;
@@ -126,51 +108,39 @@ public class waterCourse : MonoBehaviour
         {
             if (water == 0)
             {
-                obj =  Instantiate(m_waterHight, TrsSpawnWater.position, Quaternion.Euler(new Vector3(0, 0, 180f)), TrsSpawnWater);
-                waterList.Add(obj.transform);
-                
+                obj = Instantiate(m_waterHight, TrsSpawnWater.position, Quaternion.Euler(new Vector3(0, 0, 180f)), TrsSpawnWater);
             }
-            else if(water != waterCount-1)
+            else if (water != waterCount - 1)
             {
-                obj = Instantiate(m_waterMid, TrsSpawnWater.position, Quaternion.Euler(new Vector3(0,0,180f)), TrsSpawnWater);
-                waterList.Add(obj.transform);
+                obj = Instantiate(m_waterMid, TrsSpawnWater.position, Quaternion.Euler(new Vector3(0, 0, 180f)), TrsSpawnWater);
             }
-            else if(water == waterCount-1)
+            else if (water == waterCount - 1)
             {
-                 obj =Instantiate(m_waterLow, TrsSpawnWater.position, Quaternion.Euler(new Vector3(0, 0, 180f)), TrsSpawnWater);
-                waterList.Add(obj.transform);
+                obj = Instantiate(m_waterLow, TrsSpawnWater.position, Quaternion.Euler(new Vector3(0, 0, 180f)), TrsSpawnWater);
                 noSpawn = true;
             }
-            
+            waterList.Add(obj.transform);
         }
     }
 
-  
 
-    //private void checkRemoveWaterList()
-    //{
-    //    int count = waterMidList.Count;
-        
-    //    if (waterMidList!=null && waterMidList.Count > 0) //&&마지막이 트리거작동했을때 waterMidList[count-1] == null)
-    //    {
-    //        noLever = true;
-    //    }
-    //    else
-    //    {
-    //        noLever = false;
-    //    }
-    //}
-    public int GetWaterCount() 
+
+
+    public int GetWaterCount()
     {
         return waterCount;
     }
-    
-    public List<Transform> GetWaterMidList()
+
+    public List<Transform> GetWaterList()
     {
         return waterList;
     }
     public int GetWaterFallTimer()
     {
         return m_waterFallTimer;
+    }
+    public Transform GetWaterEndTrs()
+    {
+        return TrsEndWater;
     }
 }
