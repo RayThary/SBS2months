@@ -1224,6 +1224,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!4 &225043217 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7675914170699599539, guid: 68a31c995a46792428a9b0cacdc98556, type: 3}
+  m_PrefabInstance: {fileID: 852427356}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &236806140
 GameObject:
   m_ObjectHideFlags: 0
@@ -3457,6 +3462,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!4 &494303951 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3931196772455157568, guid: 5541fc574bc1f7b4bab6c98ff5b06c2d, type: 3}
+  m_PrefabInstance: {fileID: 1988208197}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -5088,8 +5098,8 @@ Transform:
   - {fileID: 550002011}
   - {fileID: 1793032118}
   - {fileID: 998691434}
-  - {fileID: 998426231}
-  - {fileID: 1361169487}
+  - {fileID: 494303951}
+  - {fileID: 225043217}
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6126,11 +6136,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!4 &998426231 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7675914170699599539, guid: 5541fc574bc1f7b4bab6c98ff5b06c2d, type: 3}
-  m_PrefabInstance: {fileID: 1988208197}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &998691434 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3792370869396741255, guid: 5790ae99be36c944890511753240b061, type: 3}
@@ -10115,9 +10120,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efbce219db9e44348bcd48d170679069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_waterHight: {fileID: 4319213140600995670, guid: 68a31c995a46792428a9b0cacdc98556, type: 3}
+  m_waterHight: {fileID: 4319213140600995670, guid: 5541fc574bc1f7b4bab6c98ff5b06c2d, type: 3}
   m_waterMid: {fileID: 8958326697533952664, guid: 5790ae99be36c944890511753240b061, type: 3}
-  m_waterLow: {fileID: 2705667912156713263, guid: 5541fc574bc1f7b4bab6c98ff5b06c2d, type: 3}
+  m_waterLow: {fileID: 2705667912156713263, guid: 68a31c995a46792428a9b0cacdc98556, type: 3}
   waterCount: 7
   m_waterFallTimer: 8
   time: 8
@@ -10187,11 +10192,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.0587902, y: 0.80403316}
   m_EdgeRadius: 0
---- !u!4 &1361169487 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3931196772455157568, guid: 68a31c995a46792428a9b0cacdc98556, type: 3}
-  m_PrefabInstance: {fileID: 852427356}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1407029260
 GameObject:
   m_ObjectHideFlags: 0

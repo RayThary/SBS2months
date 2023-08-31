@@ -81,11 +81,11 @@ public class Item : MonoBehaviour
     {        
         Vector2 TargetPos = ItemParentTrs.position;
         Debug.Log($"1:{TargetPos}");
-        if (playerRig2d.velocity.x > 0)
+        if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             right = false;
         }
-        else if(playerRig2d.velocity.x < 0)
+        else if(Input.GetKeyDown(KeyCode.LeftArrow))
         {
             right = true;
         }
