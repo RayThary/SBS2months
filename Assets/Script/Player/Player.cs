@@ -168,7 +168,7 @@ public class Player : MonoBehaviour
         playerChaneTimer();//플레이어 슬라임타입의 쿨타임을정해주는곳
         playerCheckWaterHight();//물줄기를 만나면 솓아오르는용도로만들어줌
         playerHitCheck();//피격판정
-        playerKeyDel();
+        playerKeyDel();//문열었는지확인후 키삭제불값보내주는용도
         playerHitTime();//맞은뒤 무적시간같은부분
     }
 
@@ -345,10 +345,6 @@ public class Player : MonoBehaviour
     }
 
 
-    private void delayWaterJump()
-    {
-        playerWaterJump = false;
-    }
     private void playerfloating()
     {
         if (playerWaterJump)
@@ -420,7 +416,10 @@ public class Player : MonoBehaviour
         }
         else
         {
-            GroundType = beforGroundType;
+            if(GroundType == eGroundType.WaterCourse)
+            {
+                GroundType = beforGroundType;
+            }
         }
         if (m_box2d.IsTouchingLayers(LayerMask.GetMask("WaterHight")))
         {
@@ -434,7 +433,7 @@ public class Player : MonoBehaviour
 
     private void BeforGroundTypeCheck()
     {
-        if (beforGroundType == eGroundType.Ground)
+        if (beforGroundType == eGroundType.WaterCourse)
         {
             return;
         }
