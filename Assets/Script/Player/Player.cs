@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
     private eType PlayerType;
     private eHitGroundType HitType;
 
-    [SerializeField]private eGroundType beforGroundType;//serializeField 삭제필요
+    [SerializeField] private eGroundType beforGroundType;//serializeField 삭제필요
 
     [SerializeField, Range(0, 3)] private int playerHp = 3;
     //플레이어 슬라임 변경딜레이시간
@@ -327,7 +327,7 @@ public class Player : MonoBehaviour
                 }
             }
         }
-        else if(GroundType == eGroundType.WaterCourse)
+        else if (GroundType == eGroundType.WaterCourse)
         {
             m_jumpGravity = 1.5f;
         }
@@ -411,6 +411,36 @@ public class Player : MonoBehaviour
             }
         }
     }
+    private void playerCheckWaterHight()
+    {
+        if (m_box2d.IsTouchingLayers(LayerMask.GetMask("WaterCourse")))
+        {
+            GroundType = eGroundType.WaterCourse;
+            BeforGroundTypeCheck();
+        }
+        else
+        {
+            GroundType = beforGroundType;
+        }
+        if (m_box2d.IsTouchingLayers(LayerMask.GetMask("WaterHight")))
+        {
+            waterHightCheck = true;
+        }
+        else
+        {
+            waterHightCheck = false;
+        }
+    }
+
+    private void BeforGroundTypeCheck()
+    {
+        if (beforGroundType == eGroundType.Ground)
+        {
+            return;
+        }
+        beforGroundType = GroundType;
+    }
+
     private void playerChange()
     {
         if (m_playerChangeCoolTime)
@@ -503,35 +533,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void playerCheckWaterHight()
-    {
-        if (m_box2d.IsTouchingLayers(LayerMask.GetMask("WaterCourse")))
-        {
-            GroundType = eGroundType.WaterCourse;
-            BeforGroundTypeCheck();
-        }
-        else
-        {
-            GroundType = beforGroundType;
-        }
-        if (m_box2d.IsTouchingLayers(LayerMask.GetMask("WaterHight")))
-        {
-            waterHightCheck = true;
-        }
-        else
-        {
-            waterHightCheck = false;
-        }
-    }
-
-    private void BeforGroundTypeCheck()
-    {
-        if (beforGroundType == eGroundType.Ground)
-        {
-            return;
-        }
-        beforGroundType = GroundType;
-    }
+   
 
     private void playerHitCheck()
     {
