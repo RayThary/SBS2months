@@ -355,7 +355,7 @@ public class Player : MonoBehaviour
         {
             if (playerWaterCheck)
             {
-                m_groundWaterCheck = true;
+                //m_groundWaterCheck = true;??몰루 왜있는지
 
                 if (floatingTime >= floatingTimer)
                 {
@@ -411,15 +411,12 @@ public class Player : MonoBehaviour
     {
         if (m_box2d.IsTouchingLayers(LayerMask.GetMask("WaterCourse")))
         {
-            GroundType = eGroundType.WaterCourse;
             BeforGroundTypeCheck();
+            GroundType = eGroundType.WaterCourse;
         }
-        else
+        else if(GroundType == eGroundType.WaterCourse)
         {
-            if(GroundType == eGroundType.WaterCourse)
-            {
-                GroundType = beforGroundType;
-            }
+            GroundType = beforGroundType;
         }
         if (m_box2d.IsTouchingLayers(LayerMask.GetMask("WaterHight")))
         {
