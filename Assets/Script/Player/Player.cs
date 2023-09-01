@@ -387,6 +387,10 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void delayWaterJump()
+    {
+        playerWaterJump = false;
+    }
 
     private void playerLavefloating()
     {
