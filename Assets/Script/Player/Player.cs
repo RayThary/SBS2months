@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
         Ground,
         Lava,
         Water,
+        WaterCourse,
     }
 
     [SerializeField] private eGroundType GroundType;//serializeField 삭제필요
@@ -418,9 +419,12 @@ public class Player : MonoBehaviour
             BeforGroundTypeCheck();
             GroundType = eGroundType.WaterCourse;
         }
-        else if(GroundType == eGroundType.WaterCourse)
+        else 
         {
-            GroundType = beforGroundType;
+            if(GroundType == eGroundType.WaterCourse)
+            {
+                GroundType = beforGroundType;
+            }
         }
         if (m_box2d.IsTouchingLayers(LayerMask.GetMask("WaterHight")))
         {
@@ -434,11 +438,11 @@ public class Player : MonoBehaviour
 
     private void BeforGroundTypeCheck()
     {
-        if (beforGroundType == eGroundType.WaterCourse)
+        if(GroundType !=eGroundType.WaterCourse)
         {
-            return;
+            beforGroundType = GroundType;
         }
-        beforGroundType = GroundType;
+        
     }
 
     private void playerChange()
@@ -544,7 +548,7 @@ public class Player : MonoBehaviour
                 hitCheck = false;
                 m_hitTimer = 0;
             }
-            if (HitType != eHitGroundType.None || HitType != eHitGroundType.Ground)//그린일때 대미지를안입을경우 여기에추가
+            if (HitType != eHitGroundType.None && HitType != eHitGroundType.Ground)//그린일때 대미지를안입을경우 여기에추가
             {
                 hitCheck = true;
             }
@@ -552,15 +556,16 @@ public class Player : MonoBehaviour
 
         if (PlayerType == eType.Blue)
         {
-            if (HitType == eHitGroundType.Water)//닿았을떄 피가안다는 슬라임인지체크한다 만약 맞으면 히트시간을 초기화해주는부분각자 괞찮은부분을 추가해주길바람
+            if (HitType == eHitGroundType.Water || HitType == eHitGroundType.WaterCourse)//닿았을떄 피가안다는 슬라임인지체크한다 만약 맞으면 히트시간을 초기화해주는부분각자 괞찮은부분을 추가해주길바람
             {
                 hitCheck = false;
                 m_hitTimer = 0;
             }
-            if (HitType != eHitGroundType.None || HitType != eHitGroundType.Water)//블루일때 대미지를안입을경우 여기에추가
+            if (HitType != eHitGroundType.None && HitType != eHitGroundType.Water)//블루일때 대미지를안입을경우 여기에추가
             {
                 hitCheck = true;
             }
+            
         }
 
         if (PlayerType == eType.Red)
@@ -570,7 +575,7 @@ public class Player : MonoBehaviour
                 hitCheck = false;
                 m_hitTimer = 0;
             }
-            if (HitType != eHitGroundType.None || HitType != eHitGroundType.Lava)//레드일때 대미지를안입을경우 여기에추가
+            if (HitType != eHitGroundType.None && HitType != eHitGroundType.Lava)//레드일때 대미지를안입을경우 여기에추가
             {
                 hitCheck = true;
             }
@@ -580,7 +585,7 @@ public class Player : MonoBehaviour
 
     private void playerHitTime()
     {
-        if (!hitCheck)
+        if (!hitCheck )
         {
             return;
         }
@@ -684,6 +689,11 @@ public class Player : MonoBehaviour
                             HitType = eHitGroundType.Lava;
                             //m_inLavaCheck= true;
                         }
+                        else if (_collision.gameObject.layer == LayerMask.NameToLayer("WaterCourse"))
+                        {
+                            HitType = eHitGroundType.WaterCourse;
+                        }
+
                         break;
 
                     case PlayerHitBox.HitType.Item:
@@ -709,18 +719,22 @@ public class Player : MonoBehaviour
                             m_groundCheck = false;
                             waterCourseCheck = false;
                         }
-                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Water"))
+                        else if (_collision.gameObject.layer == LayerMask.NameToLayer("Water"))
                         {
                             HitType = eHitGroundType.None;
                             playerWaterCheck = false;
                             m_groundWaterCheck = false;
                             waterCourseCheck = false;
                         }
-                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Lava"))
+                        else if (_collision.gameObject.layer == LayerMask.NameToLayer("Lava"))
                         {
                             HitType = eHitGroundType.None;
                             waterCourseCheck = false;
                             //m_inLavaCheck = false;
+                        }
+                        else if (_collision.gameObject.layer == LayerMask.NameToLayer("WaterCourse"))
+                        {
+                            HitType = eHitGroundType.None;
                         }
                         break;
 
