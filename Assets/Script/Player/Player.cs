@@ -88,6 +88,9 @@ public class Player : MonoBehaviour
     private bool doorLockisOpen = false;
     private bool doorKeyCheck = false;
 
+    [SerializeField] private bool stageChangeCheck = false;//스테이지 변경했을때로딩중 움직이지못하게만드는코드
+    private bool playerStop = false;//플레이어가 멈춰있으라는용도 업데이트문맨위에있을예정이므로 움직이면안될경우에쓸필요있음
+
     private BoxCollider2D m_box2d;
     private Animator m_anim;
     private Rigidbody2D m_rig2d;
@@ -143,6 +146,7 @@ public class Player : MonoBehaviour
     //    }
     //}
     #endregion
+
     void Start()
     {
         floatingTime = floatingTimer;
@@ -154,8 +158,9 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+
         playerDeathMotion();
-        if (playerHp == 0)//플레이어가죽으면 끝
+        if (playerStop)//플레이어가죽으면 끝
         {
             return;
         }
@@ -171,6 +176,7 @@ public class Player : MonoBehaviour
         playerHitCheck();//피격판정
         playerKeyDel();//문열었는지확인후 키삭제불값보내주는용도
         playerHitTime();//맞은뒤 무적시간같은부분
+        playerStopCheck();//움직이면안되는부분이있으면추가해줄필요있음
     }
 
 
@@ -419,9 +425,9 @@ public class Player : MonoBehaviour
             BeforGroundTypeCheck();
             GroundType = eGroundType.WaterCourse;
         }
-        else 
+        else
         {
-            if(GroundType == eGroundType.WaterCourse)
+            if (GroundType == eGroundType.WaterCourse)
             {
                 GroundType = beforGroundType;
             }
@@ -438,11 +444,11 @@ public class Player : MonoBehaviour
 
     private void BeforGroundTypeCheck()
     {
-        if(GroundType !=eGroundType.WaterCourse)
+        if (GroundType != eGroundType.WaterCourse)
         {
             beforGroundType = GroundType;
         }
-        
+
     }
 
     private void playerChange()
@@ -537,7 +543,6 @@ public class Player : MonoBehaviour
         }
     }
 
-   
 
     private void playerHitCheck()
     {
@@ -565,7 +570,7 @@ public class Player : MonoBehaviour
             {
                 hitCheck = true;
             }
-            
+
         }
 
         if (PlayerType == eType.Red)
@@ -585,7 +590,7 @@ public class Player : MonoBehaviour
 
     private void playerHitTime()
     {
-        if (!hitCheck )
+        if (!hitCheck)
         {
             return;
         }
@@ -622,6 +627,14 @@ public class Player : MonoBehaviour
             {
                 doorKeyCheck = false;
             }
+        }
+    }
+
+    private void playerStopCheck()
+    {
+        if (playerHp == 0)
+        {
+            playerStop = true;
         }
     }
 
@@ -705,6 +718,7 @@ public class Player : MonoBehaviour
                         {
                             doorLockisOpen = true;
                         }
+
                         break;
                 }
                 break;
@@ -743,6 +757,7 @@ public class Player : MonoBehaviour
                         {
                             doorLockisOpen = false;
                         }
+
                         break;
                 }
                 break;
@@ -766,5 +781,10 @@ public class Player : MonoBehaviour
     public bool PlayerdoorKeyCheck()
     {
         return doorKeyCheck;
+    }
+
+    public void SetPlayerStop(bool _value)
+    {
+        playerStop = _value;
     }
 }

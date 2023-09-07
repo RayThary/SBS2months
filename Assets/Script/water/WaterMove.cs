@@ -185,9 +185,9 @@ public class WaterMove : MonoBehaviour
             m_stopWaterMove = true;
         }
         //transform.position = Vector2.MoveTowards(transform.position, m_vecTarget, m_waterSpeed * Time.deltaTime);
-        
+
         transform.position += new Vector3(0, m_waterSpeed * Time.deltaTime, 0);
-        
+
     }
 
     private void waterStop()

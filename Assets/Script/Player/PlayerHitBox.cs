@@ -7,7 +7,7 @@ public class PlayerHitBox : MonoBehaviour
     private Player player;
     [SerializeField] protected HitType hitType;
 
-    public enum HitType 
+    public enum HitType
     {
         Ground,
         Item,
@@ -22,11 +22,11 @@ public class PlayerHitBox : MonoBehaviour
     void Start()
     {
         //player = GameManager.instance.GetPlayerTransform().GetComponent<Player>();
-        
+
         player = GetComponentInParent<Player>();
     }
 
- 
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         player.OnTriggerPlayer(HitBoxType.Enter, hitType, collision);

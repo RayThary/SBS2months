@@ -13,7 +13,7 @@ public class Item : MonoBehaviour
     {
         Key,
     }
-    
+
     //일단 지정해서써주는데 나중에 자기자신의 레이어or태그를 확인후 자기가어떤아이템인지확인으로 바꿔줄지고민필요 
     [SerializeField] private ItemName itemName;
 
@@ -22,7 +22,7 @@ public class Item : MonoBehaviour
     private Vector3 ItemPos;
 
     [SerializeField] private float followSpeed;
-    [SerializeField]private bool right;
+    [SerializeField] private bool right;
 
     private bool playerItemTouch;
 
@@ -45,8 +45,8 @@ public class Item : MonoBehaviour
     void Update()
     {
         ItemMove();
-        
-        if(itemName == ItemName.Key)
+
+        if (itemName == ItemName.Key)
         {
             playerKeyTouch = player.PlayerKeyCheck();
             Key();
@@ -74,16 +74,16 @@ public class Item : MonoBehaviour
             playerItemTouch = true;
         }
     }
-   
+
 
     private void follow()
-    {        
+    {
         Vector2 TargetPos = ItemParentTrs.position;
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             right = false;
         }
-        else if(Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             right = true;
         }
@@ -102,7 +102,7 @@ public class Item : MonoBehaviour
 
     private void Key()
     {
-        
+
         if (playerItemTouch)
         {
             doorCheck = player.PlayerdoorKeyCheck();

@@ -13,7 +13,7 @@ public class Door : MonoBehaviour
     private bool playerKeyCheck;
     private bool OpenDoor = false;
     private BoxCollider2D box2d;
-    [SerializeField]private BoxCollider2D box2dchile;
+    [SerializeField] private BoxCollider2D box2dchile;
 
     [SerializeField] private float speed = 4;
 
@@ -23,14 +23,14 @@ public class Door : MonoBehaviour
         doorPillarBox2d = doorPillarTrs.GetComponent<BoxCollider2D>();
         Transform playerTrs = GameManager.instance.GetPlayerTransform();
         player = playerTrs.GetComponent<Player>();
-        box2dchile = GetComponentInChildren<BoxCollider2D>(); 
+        box2dchile = GetComponentInChildren<BoxCollider2D>();
 
     }
 
-    
+
     void Update()
     {
-       
+
         playerKeyCheck = player.PlayerKeyCheck();
         if (box2d.IsTouchingLayers(LayerMask.GetMask("Player")) && playerKeyCheck)
         {

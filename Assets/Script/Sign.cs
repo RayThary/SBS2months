@@ -14,10 +14,10 @@ public class Sign : MonoBehaviour
     void Start()
     {
         box2d = GetComponent<BoxCollider2D>();
-        signText= GetComponentInChildren<TextMeshPro>();
+        signText = GetComponentInChildren<TextMeshPro>();
     }
 
-    
+
     void Update()
     {
         if (box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
@@ -35,7 +35,7 @@ public class Sign : MonoBehaviour
 
     private void checkTutorialUI()
     {
-        if (Input.GetKeyDown(KeyCode.Z)&&!tutorialUICheck) 
+        if (Input.GetKeyDown(KeyCode.Z) && !tutorialUICheck)
         {
             tutorialUI.SetActive(true);
             tutorialUICheck = true;
