@@ -8,30 +8,23 @@ public class Test : MonoBehaviour
     public bool check;
     private Rigidbody2D rb;
     private Vector2 ve;
+    private BoxCollider2D box2d;
     void Start()
     {
-        rb= GetComponent<Rigidbody2D>();
+      box2d = GetComponent<BoxCollider2D>();
     }
 
   
     void Update()
     {
-        ve = new Vector2(rb.velocity.x, speed);
-        rb.velocity = ve;
-            //StartCoroutine("fallWater");
+        if (box2d.IsTouchingLayers(LayerMask.GetMask("GreenSlime")))
+        {
+            Debug.Log("2");
+        }
         
         
     }
 
-    IEnumerator fallWater()
-    {
-        if (check)
-        {
-            yield break;
-        }
-            yield return new WaitForSeconds(speed);
-            Debug.Log("1");
-            yield break;
-    }
+
     
 }

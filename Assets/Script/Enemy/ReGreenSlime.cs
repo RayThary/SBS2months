@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GreenSlime : MonoBehaviour
+/// <summary>
+///실험용으로만든 스크립트 테스트용
+/// </summary>
+public class ReGreenSlime : MonoBehaviour
 {
     public enum SlimeType
     {
@@ -10,14 +13,14 @@ public class GreenSlime : MonoBehaviour
         Grass,
         Slime,
     }
-    [SerializeField]private SlimeType eSlimeType;
+    public SlimeType eSlimeType;
     private int checkSlime;
-
 
     [SerializeField] private Sprite m_SprHideing;
     private SpriteRenderer m_Spr;
 
     [SerializeField] private float m_moveSpeed = 4.0f;
+    private bool m_checkPlayer = false;
     private Animator m_anim;
 
     private bool PlayerCheck = false;
@@ -36,12 +39,13 @@ public class GreenSlime : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-       
+        
         if (collision.gameObject.tag == "Player")
         {
             returnStart = false;
             m_timerStart = false;
             m_timer = 0.0f;
+            
             m_anim.enabled = true;
             PlayerCheck = true;
         }
@@ -49,7 +53,7 @@ public class GreenSlime : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-  
+        
         if (collision.gameObject.tag == "Player")
         {
             m_timerStart = true;
@@ -69,13 +73,14 @@ public class GreenSlime : MonoBehaviour
         }
         else if (eSlimeType == SlimeType.Grass)
         {
-            GetComponent<GreenSlime>().enabled = false;
+            checkSlime = 1;
         }
 
         if (checkSlime == 1)
         {
-            GetComponent<GreenSlime>().enabled = false;
+            GetComponent<ReGreenSlime>().enabled = false;
         }
+
         m_vecStartPoint = transform.position;
         m_anim = GetComponent<Animator>();
         m_anim.enabled = false;
@@ -88,18 +93,16 @@ public class GreenSlime : MonoBehaviour
 
     void Update()
     {
-        slimeCheck();
-        checkPlayer();
+        slimeCheck();//돌아왔을때 자신이 슬라임인지 체크해줄곳
+
+        checkPlayer();//플레이어쪽으로 움직이기
         checkTimer();
         backStartPos();
     }
 
     private void slimeCheck()
     {
-        if (checkSlime == 1)
-        {
-            GetComponent<GreenSlime>().enabled = false;
-        }
+        
     }
     private void checkPlayer()
     {
@@ -155,9 +158,8 @@ public class GreenSlime : MonoBehaviour
             }
         }
     }
-    public bool GetPlayerCheck()
-    {
-        return PlayerCheck;
-    }
+
     
 }
+
+

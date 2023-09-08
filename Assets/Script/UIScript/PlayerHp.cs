@@ -38,7 +38,7 @@ public class PlayerHp : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        m_playerHp = player.PlayerHp();
+        m_playerHp = player.GetPlayerHp();
         if (m_playerHp == 3)
         {
             m_imgHP1.sprite = m_HpOn;

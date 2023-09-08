@@ -58,7 +58,6 @@ public class Player : MonoBehaviour
 
     private bool m_isWaterCourse;//물줄기위에있는지체크
 
-    private bool waterCourseCheck;
     private bool waterHightCheck;
 
     //땅&기본기능
@@ -88,7 +87,6 @@ public class Player : MonoBehaviour
     private bool doorLockisOpen = false;
     private bool doorKeyCheck = false;
 
-    [SerializeField] private bool stageChangeCheck = false;//스테이지 변경했을때로딩중 움직이지못하게만드는코드
     private bool playerStop = false;//플레이어가 멈춰있으라는용도 업데이트문맨위에있을예정이므로 움직이면안될경우에쓸필요있음
 
     private BoxCollider2D m_box2d;
@@ -173,7 +171,8 @@ public class Player : MonoBehaviour
         playerChange();//플레이어슬라임타입을 바꾸는곳
         playerChaneTimer();//플레이어 슬라임타입의 쿨타임을정해주는곳
         playerCheckWaterHight();//물줄기를 만나면 솓아오르는용도로만들어줌
-        playerHitCheck();//피격판정
+        playerHitCheck();//지형에따른피격판정
+        playerEnemyHitCheck();
         playerKeyDel();//문열었는지확인후 키삭제불값보내주는용도
         playerHitTime();//맞은뒤 무적시간같은부분
         playerStopCheck();//움직이면안되는부분이있으면추가해줄필요있음
@@ -542,7 +541,10 @@ public class Player : MonoBehaviour
             }
         }
     }
-
+    private void playerEnemyHitCheck()
+    {
+        //적에맞았을때 체력다는부분을만들어줄것
+    }
 
     private void playerHitCheck()
     {
@@ -632,7 +634,7 @@ public class Player : MonoBehaviour
 
     private void playerStopCheck()
     {
-        if (playerHp == 0)
+        if (playerHp <= 0)
         {
             playerStop = true;
         }
@@ -640,7 +642,7 @@ public class Player : MonoBehaviour
 
     private void playerDeathMotion()
     {
-        if (playerHp == 0)
+        if (playerHp <= 0)
         {
             m_rig2d.velocity = new Vector2(0, 0);
             if (PlayerType == eType.Blue)
@@ -731,19 +733,16 @@ public class Player : MonoBehaviour
                         {
                             HitType = eHitGroundType.None;
                             m_groundCheck = false;
-                            waterCourseCheck = false;
                         }
                         else if (_collision.gameObject.layer == LayerMask.NameToLayer("Water"))
                         {
                             HitType = eHitGroundType.None;
                             playerWaterCheck = false;
                             m_groundWaterCheck = false;
-                            waterCourseCheck = false;
                         }
                         else if (_collision.gameObject.layer == LayerMask.NameToLayer("Lava"))
                         {
                             HitType = eHitGroundType.None;
-                            waterCourseCheck = false;
                             //m_inLavaCheck = false;
                         }
                         else if (_collision.gameObject.layer == LayerMask.NameToLayer("WaterCourse"))
@@ -767,9 +766,15 @@ public class Player : MonoBehaviour
 
 
     //외부에서 필요한데이터
-    public int PlayerHp()
+    public int GetPlayerHp()
     {
         return playerHp;
+    }
+
+    //체력깍는용도 벨류값만큼 대미지를입는다 대부분1일듯함h
+    public void SetPlayerHp(int _value)
+    {
+        playerHp -= _value;
     }
 
     //안쓸듯 안쓰면삭제해주셈 키부분에서 문이랑 키만쓰면될듯함 
