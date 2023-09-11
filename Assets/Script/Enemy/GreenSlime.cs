@@ -10,7 +10,7 @@ public class GreenSlime : MonoBehaviour
         Grass,
         Slime,
     }
-    [SerializeField]private SlimeType eSlimeType;
+    [SerializeField] private SlimeType eSlimeType;
     private int checkSlime;
 
 
@@ -21,35 +21,47 @@ public class GreenSlime : MonoBehaviour
     private Animator m_anim;
 
     private bool PlayerCheck = false;
+    private bool playerHitCheck;
 
+    //플레이어가 인식범위로나갔을때 몇초뒤에 돌아갈지 체크해주는부분
     private bool m_timerStart = false;
     private float m_timer = 0.0f;
     [SerializeField] private float m_forgetPlayerTime = 3f;
-    private bool returnStart;
+    [SerializeField] private bool returnStart;
 
+    //플레이어를인식했을때의자리
     private Vector3 m_vecStartPoint;
+
+    private bool enemyDeathCheck = false;
 
     private Transform m_playerTrs;
     private BoxCollider2D m_box2d;
     private Rigidbody2D m_rig2d;
 
+    private Player player;
+    private EnemyHitBox hitBox;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-       
+
         if (collision.gameObject.tag == "Player")
         {
+            if (player.GetPlayerType() != Player.eType.Green)
+            {
+                return;
+            }
+            m_vecStartPoint = transform.position;
             returnStart = false;
             m_timerStart = false;
+            PlayerCheck = true;
             m_timer = 0.0f;
             m_anim.enabled = true;
-            PlayerCheck = true;
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-  
+
         if (collision.gameObject.tag == "Player")
         {
             m_timerStart = true;
@@ -69,14 +81,9 @@ public class GreenSlime : MonoBehaviour
         }
         else if (eSlimeType == SlimeType.Grass)
         {
-            GetComponent<GreenSlime>().enabled = false;
+            checkSlime = 1;
         }
 
-        if (checkSlime == 1)
-        {
-            GetComponent<GreenSlime>().enabled = false;
-        }
-        m_vecStartPoint = transform.position;
         m_anim = GetComponent<Animator>();
         m_anim.enabled = false;
         m_Spr = GetComponent<SpriteRenderer>();
@@ -84,12 +91,25 @@ public class GreenSlime : MonoBehaviour
         m_rig2d = GetComponent<Rigidbody2D>();
         m_Spr.sprite = m_SprHideing;
 
+        hitBox = GetComponentInChildren<EnemyHitBox>();
+        player = GameManager.instance.GetPlayerTransform().GetComponent<Player>();
+
+        if (checkSlime == 1)
+        {
+            m_box2d.enabled = false;
+            GetComponentInChildren<EnemyHitBox>().enabled = false;
+            GetComponent<GreenSlime>().enabled = false;
+        }
     }
 
     void Update()
     {
+        if (enemyDeathCheck)
+        {
+            return;
+        }
         slimeCheck();
-        checkPlayer();
+        checkPlayerAndSlimeMove();
         checkTimer();
         backStartPos();
     }
@@ -98,27 +118,40 @@ public class GreenSlime : MonoBehaviour
     {
         if (checkSlime == 1)
         {
+            m_box2d.enabled = false;
             GetComponent<GreenSlime>().enabled = false;
+            GetComponentInChildren<EnemyHitBox>().enabled = false;
         }
     }
-    private void checkPlayer()
+    private void checkPlayerAndSlimeMove()
     {
-
-        if (PlayerCheck)
+        if (returnStart)
         {
-            m_playerTrs = GameManager.instance.GetPlayerTransform();
-            if (transform.position.x - m_playerTrs.position.x > 0)
-            {
-                m_rig2d.velocity = new Vector2(-1 * m_moveSpeed, m_rig2d.velocity.y);
-            }
-            else if (transform.position.x - m_playerTrs.position.x < 0)
-            {
-                m_rig2d.velocity = new Vector2(1 * m_moveSpeed, m_rig2d.velocity.y);
-            }
+            return;
         }
-        if (!PlayerCheck)
+        playerHitCheck = hitBox.GetPlayerHitCeck();
+        if (playerHitCheck)
         {
-            m_rig2d.velocity = new Vector2(0, m_rig2d.velocity.y);
+            m_rig2d.velocity = new Vector2(0, 0);
+        }
+        else
+        {
+            if (PlayerCheck)
+            {
+                m_playerTrs = GameManager.instance.GetPlayerTransform();
+                if (transform.position.x - m_playerTrs.position.x > 0)
+                {
+                    m_rig2d.velocity = new Vector2(-1 * m_moveSpeed, m_rig2d.velocity.y);
+                }
+                else if (transform.position.x - m_playerTrs.position.x < 0)
+                {
+                    m_rig2d.velocity = new Vector2(1 * m_moveSpeed, m_rig2d.velocity.y);
+                }
+            }
+            else
+            {
+                m_rig2d.velocity = new Vector2(0, m_rig2d.velocity.y);
+            }
         }
     }
     private void checkTimer()
@@ -138,12 +171,12 @@ public class GreenSlime : MonoBehaviour
     {
         if (returnStart)
         {
+            m_rig2d.velocity = new Vector2(0, m_rig2d.velocity.y);
             transform.position = Vector2.MoveTowards(transform.position, m_vecStartPoint, 2f * Time.deltaTime);
             Vector2 slimePos = transform.position;
             slimePos.y = 0;
             Vector2 movePos = m_vecStartPoint;
             movePos.y = 0;
-
             float distance = Vector2.Distance(slimePos, movePos);
             if (distance < 0.1f)
             {
@@ -159,5 +192,18 @@ public class GreenSlime : MonoBehaviour
     {
         return PlayerCheck;
     }
-    
+
+    public void SetReturnStart(bool _value)
+    {
+        returnStart = _value;
+    }
+
+    private void EnemyDeathCheck()
+    {
+        enemyDeathCheck = true;
+    }
+    private void EnemyGreenDeath()
+    {
+        Destroy(gameObject);
+    }
 }

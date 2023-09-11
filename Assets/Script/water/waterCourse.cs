@@ -40,6 +40,7 @@ public class waterCourse : MonoBehaviour
 
     private void checkZ()
     {
+        
         if (noSpawn)
         {
             if (!leverReady && !leverCheck)

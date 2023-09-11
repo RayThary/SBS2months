@@ -18,27 +18,30 @@ public class EnemyHitBox : MonoBehaviour
     [SerializeField] private SlimeType slimeType;
 
     private Player player;
-    
-   
+
+
     private bool PlayerCheck;
     private bool playerHitCheck = false;
-    private bool playerHpReMoveCheck = false;
+
     private PolygonCollider2D poly2D;
+    private Animator m_anim2d;
 
     private void Start()
     {
-        if(slimeType== SlimeType.GreenSlime)
+        if (slimeType == SlimeType.GreenSlime)
         {
             greenSlime = GetComponentInParent<GreenSlime>();
         }
-        else if(slimeType == SlimeType.RedSlime)
+        else if (slimeType == SlimeType.RedSlime)
         {
             //레드슬라임 스크립트
         }
-        else if(slimeType == SlimeType.BlueSlime)
+        else if (slimeType == SlimeType.BlueSlime)
         {
             //블루스라임 스크립트
         }
+
+        m_anim2d = GetComponentInParent<Animator>();
         poly2D = GetComponent<PolygonCollider2D>();
         player = GameManager.instance.GetPlayerTransform().GetComponent<Player>();
     }
@@ -56,16 +59,17 @@ public class EnemyHitBox : MonoBehaviour
 
     private void playerHpReMove()
     {
-        if (playerHitCheck&& playerHpReMoveCheck)
+        if (playerHitCheck)
         {
-            player.SetPlayerHp(1); 
-            playerHpReMoveCheck = false;
+            player.SetPlayerHp(1);
+            m_anim2d.SetTrigger("Death");
+            Destroy(gameObject);
         }
     }
 
     private void isGreenSlime()
     {
-        if(slimeType != SlimeType.GreenSlime)
+        if (slimeType != SlimeType.GreenSlime)
         {
             return;
         }
@@ -74,19 +78,30 @@ public class EnemyHitBox : MonoBehaviour
         {
             if (poly2D.IsTouchingLayers(LayerMask.GetMask("Player")))
             {
-                playerHitCheck = true;
-                playerHpReMoveCheck = true;
+                if (player.GetPlayerType() == Player.eType.Green)
+                {
+                    playerHitCheck = true;
+                }
+                else
+                {
+                    greenSlime.SetReturnStart(true);
+                }
             }
         }
     }
     private void isRedSlime()
     {
-        
+
     }
 
     private void isBlueSlime()
     {
 
+    }
+
+    public bool GetPlayerHitCeck()
+    {
+        return playerHitCheck;
     }
 }
 
