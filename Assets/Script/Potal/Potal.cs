@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+/// <summary>
+/// 이포탈은 스테이지 바꾸는용도라서 맵안에서의 텔레포트를만들고싶으면 쿨타임을주어서 바꾸는게나을듯함
+/// </summary>
 public class Potal : MonoBehaviour
 {
     private Transform m_TrsPotal1;// 포탈1의 위치 

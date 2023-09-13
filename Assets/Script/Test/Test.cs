@@ -17,7 +17,7 @@ public class Test : MonoBehaviour
   
     void Update()
     {
-        if (box2d.IsTouchingLayers(LayerMask.GetMask("GreenSlime")))
+        if (box2d.IsTouchingLayers(LayerMask.GetMask("test")))
         {
             Debug.Log("2");
         }
