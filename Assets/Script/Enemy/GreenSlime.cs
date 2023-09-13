@@ -27,7 +27,7 @@ public class GreenSlime : MonoBehaviour
     private bool m_timerStart = false;
     private float m_timer = 0.0f;
     [SerializeField] private float m_forgetPlayerTime = 3f;
-    [SerializeField] private bool returnStart;
+    private bool returnStart;
 
     //플레이어를인식했을때의자리
     private Vector3 m_vecStartPoint;
@@ -50,6 +50,7 @@ public class GreenSlime : MonoBehaviour
             {
                 return;
             }
+
             m_vecStartPoint = transform.position;
             returnStart = false;
             m_timerStart = false;
@@ -64,8 +65,11 @@ public class GreenSlime : MonoBehaviour
 
         if (collision.gameObject.tag == "Player")
         {
-            m_timerStart = true;
-            PlayerCheck = false;
+            if (PlayerCheck)
+            {
+                m_timerStart = true;
+                PlayerCheck = false;
+            }
         }
     }
 
@@ -120,7 +124,6 @@ public class GreenSlime : MonoBehaviour
         {
             m_box2d.enabled = false;
             GetComponent<GreenSlime>().enabled = false;
-            GetComponentInChildren<EnemyHitBox>().enabled = false;
         }
     }
     private void checkPlayerAndSlimeMove()
@@ -197,7 +200,12 @@ public class GreenSlime : MonoBehaviour
     {
         returnStart = _value;
     }
+    public int GetSlimeType()
+    {
+        return checkSlime;
+    }
 
+    //애니메이션용
     private void EnemyDeathCheck()
     {
         enemyDeathCheck = true;

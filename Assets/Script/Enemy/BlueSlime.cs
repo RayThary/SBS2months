@@ -20,10 +20,15 @@ public class BlueSlime : MonoBehaviour
 
     private bool playerCheck = false;//플레이어 인식범위체크용
     private bool playerOutCheck = false;//플레이어 나갔는지체크용
-    private bool playerInOutCheck; //플레이어가 들어왔다가 나갔는지체크용
+    private bool checkPlayerInBox2d = true;
 
-    private float m_forgetPlayerTimer = 1.5f;
-    private float m_forgerPlayerTime = 0.0f;
+    private bool slimeAttackCheck;
+
+    private bool returnStart;//원래자리로돌아갈지체크하는부분
+    private Vector3 m_vecStartPoint;
+
+    [SerializeField] private float m_forgetPlayerTime = 1.5f;
+    [SerializeField] private float m_forgetPlayerTimer = 0.0f;
 
     //본인
     private Animator m_anim;
@@ -34,29 +39,35 @@ public class BlueSlime : MonoBehaviour
     private Player player;
     private Transform m_playerTrs;
 
+    #region
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (collision.gameObject.tag == "Player")
+    //    {
+    //        if (player.GetPlayerType() != Player.eType.Blue)
+    //        {
+    //            return;
+    //        }
+    //        m_vecStartPoint = transform.position;
+    //        m_forgetPlayerTimer = 0.0f;
+    //        m_anim.enabled = true;
+    //        playerOutCheck = false;
+    //        playerCheck = true;
+    //    }
+    //}
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            if (player.GetPlayerType() != Player.eType.Blue)
-            {
-                return;
-            }
-            m_anim.enabled = true;
-            playerCheck = true;
-            playerInOutCheck = true;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            playerCheck = false;
-            playerOutCheck = true;
-        }
-    }
+    //private void OnTriggerExit2D(Collider2D collision)
+    //{
+    //    if (collision.gameObject.tag == "Player")
+    //    {
+    //        if (playerCheck)
+    //        {
+    //            playerCheck = false;
+    //            playerOutCheck = true;
+    //        }
+    //    }
+    //}
+    #endregion
     void Start()
     {
         if (eSlimeType == SlimeType.Random)
@@ -106,35 +117,103 @@ public class BlueSlime : MonoBehaviour
 
     void Update()
     {
+        blueSlimePerceive();
         blueSlimeMove();
+        blueSlimeBox2dOutCheck();
+        backStartPos();
     }
 
+    private void blueSlimePerceive()
+    {
+        if (m_box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
+        {
+            if (player.GetPlayerType() != Player.eType.Blue)
+            {
+                return;
+            }
+            m_forgetPlayerTimer = 0.0f;
+            m_anim.enabled = true;
+            playerOutCheck = false;
+            playerCheck = true;
+            if (checkPlayerInBox2d)
+            {
+                m_vecStartPoint = transform.position;
+            }
+            checkPlayerInBox2d = false;
+        }
+        else
+        {
+            if (playerCheck)
+            {
+                playerCheck = false;
+                playerOutCheck = true;
+            }
+        }
+    }
     private void blueSlimeMove()
     {
-        if (!playerCheck)
+        if (returnStart)
         {
             return;
         }
-        m_playerTrs = GameManager.instance.GetPlayerTransform();
-        if (transform.position.x - m_playerTrs.position.x > 0)
+        if (playerCheck)
         {
-            m_rig2d.velocity = new Vector2(-1 * m_moveSpeed, m_rig2d.velocity.y);
+            m_playerTrs = GameManager.instance.GetPlayerTransform();
+            if (transform.position.x - m_playerTrs.position.x > 0)
+            {
+                m_rig2d.velocity = new Vector2(-1 * m_moveSpeed, m_rig2d.velocity.y);
+            }
+            else if (transform.position.x - m_playerTrs.position.x < 0)
+            {
+                m_rig2d.velocity = new Vector2(1 * m_moveSpeed, m_rig2d.velocity.y);
+            }
         }
-        else if (transform.position.x - m_playerTrs.position.x < 0)
+        else
         {
-            m_rig2d.velocity = new Vector2(1 * m_moveSpeed, m_rig2d.velocity.y);
+            m_rig2d.velocity = new Vector2(0, m_rig2d.velocity.y);
         }
     }
 
     private void blueSlimeBox2dOutCheck()
     {
-        if (playerOutCheck && playerInOutCheck)
+        if (playerOutCheck)
         {
             m_forgetPlayerTimer += Time.deltaTime;
-            if (m_forgetPlayerTimer >= m_forgerPlayerTime)
+            if (m_forgetPlayerTimer >= m_forgetPlayerTime)
             {
-                //처음자리로돌아가는스크립트 and 풀인지 지정해주는코드 만들어줄것
+                returnStart = true;
             }
         }
+    }
+
+    private void backStartPos()
+    {
+        if (returnStart)
+        {
+            m_rig2d.velocity = new Vector2(0, m_rig2d.velocity.y);
+            transform.position = Vector2.MoveTowards(transform.position, m_vecStartPoint, 2f * Time.deltaTime);
+            Vector2 slimePos = transform.position;
+            slimePos.y = 0;
+            Vector2 movePos = m_vecStartPoint;
+            movePos.y = 0;
+            float distance = Vector2.Distance(slimePos, movePos);
+            if (distance <= 0.1f)
+            {
+                returnStart = false;
+                checkPlayerInBox2d = true;
+            }
+        }
+    }
+
+
+    public int GetSlimeType()
+    {
+        return slimeCheck;
+    }
+
+    //애니메이션용
+    private void blueAttackOff()
+    {
+        m_anim.SetBool("blueAttack", false);
     }
 }

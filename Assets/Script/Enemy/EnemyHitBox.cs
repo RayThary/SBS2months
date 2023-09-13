@@ -7,7 +7,7 @@ using UnityEngine;
 public class EnemyHitBox : MonoBehaviour
 {
     private GreenSlime greenSlime;//그린슬라임 히트박스용으로 점점늘려줄필요있음 슬라임타입은3개
-
+    private BlueSlime blueSlime;
 
     public enum SlimeType
     {
@@ -21,9 +21,12 @@ public class EnemyHitBox : MonoBehaviour
 
 
     private bool PlayerCheck;
-    private bool playerHitCheck = false;
+    private bool playerGreenSlimeHitCheck = false;
 
-    private PolygonCollider2D poly2D;
+    private bool blueSlimeAttackCheck;
+
+    private PolygonCollider2D poly2D;//그린슬라임용도 레드슬라임도 쓸듯?
+    private BoxCollider2D box2d;//공격범위안에있는지체크용 블루슬라임용도
     private Animator m_anim2d;
 
     private void Start()
@@ -31,18 +34,19 @@ public class EnemyHitBox : MonoBehaviour
         if (slimeType == SlimeType.GreenSlime)
         {
             greenSlime = GetComponentInParent<GreenSlime>();
+            poly2D = GetComponent<PolygonCollider2D>();
+        }
+        else if (slimeType == SlimeType.BlueSlime)
+        {
+            blueSlime = GetComponentInParent<BlueSlime>();
+            box2d = GetComponent<BoxCollider2D>();
         }
         else if (slimeType == SlimeType.RedSlime)
         {
             //레드슬라임 스크립트
         }
-        else if (slimeType == SlimeType.BlueSlime)
-        {
-            //블루스라임 스크립트
-        }
 
         m_anim2d = GetComponentInParent<Animator>();
-        poly2D = GetComponent<PolygonCollider2D>();
         player = GameManager.instance.GetPlayerTransform().GetComponent<Player>();
     }
 
@@ -54,12 +58,12 @@ public class EnemyHitBox : MonoBehaviour
         isRedSlime();//각각 맞는히트타입을가져온후에 적용해줄것
         isBlueSlime();
 
-
+        isSlimeCheck();
     }
 
     private void playerHpReMove()
     {
-        if (playerHitCheck)
+        if (playerGreenSlimeHitCheck)
         {
             player.SetPlayerHp(1);
             m_anim2d.SetTrigger("Death");
@@ -80,7 +84,7 @@ public class EnemyHitBox : MonoBehaviour
             {
                 if (player.GetPlayerType() == Player.eType.Green)
                 {
-                    playerHitCheck = true;
+                    playerGreenSlimeHitCheck = true;
                 }
                 else
                 {
@@ -96,12 +100,62 @@ public class EnemyHitBox : MonoBehaviour
 
     private void isBlueSlime()
     {
+        if (slimeType != SlimeType.BlueSlime)
+        {
+            return;
+        }
+        if (box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
+        {
+            if(player.GetPlayerType() == Player.eType.Blue)
+            {
+                blueSlimeAttackCheck = true;
+            }
+            else
+            {
+                blueSlimeAttackCheck = false;
+            }
+        }
+    }
 
+
+    private void isSlimeCheck()
+    {
+        if (slimeType == SlimeType.GreenSlime)
+        {
+            if (greenSlime.GetSlimeType() != 0)
+            {
+                Destroy(gameObject);
+            }
+        }
+        else if (slimeType == SlimeType.BlueSlime)
+        {
+            if(blueSlime.GetSlimeType() != 0)
+            {
+                Destroy(gameObject);
+            }
+        }
+        else if (slimeType == SlimeType.RedSlime)
+        {
+            //레드슬람임이 무엇인지체크용
+        }
     }
 
     public bool GetPlayerHitCeck()
     {
-        return playerHitCheck;
+        return playerGreenSlimeHitCheck;
     }
+
+    public bool GetBlueAttackCheck()
+    {
+        return blueSlimeAttackCheck;
+    }
+
+    // 블루 애니메이션용
+
+
+   
+
+  
+
 }
 
