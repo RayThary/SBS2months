@@ -35,7 +35,7 @@ public class GreenSlime : MonoBehaviour
     private bool enemyDeathCheck = false;
 
     private Transform m_playerTrs;
-    private BoxCollider2D m_box2d;
+    private BoxCollider2D m_box2d;//플레이어의 인식범위 박스크기로 밖에서조절해주면됨
     private Rigidbody2D m_rig2d;
 
     private Player player;
