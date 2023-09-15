@@ -162,6 +162,7 @@ public class BlueSlime : MonoBehaviour
             if (transform.position.x - m_playerTrs.position.x > 0)
             {
                 m_rig2d.velocity = new Vector2(-1 * m_moveSpeed, m_rig2d.velocity.y);
+                
             }
             else if (transform.position.x - m_playerTrs.position.x < 0)
             {
@@ -205,6 +206,10 @@ public class BlueSlime : MonoBehaviour
         }
     }
 
+    public void SetReturnStart(bool _value)
+    {
+        returnStart = _value;
+    }
 
     public int GetSlimeType()
     {
@@ -216,4 +221,10 @@ public class BlueSlime : MonoBehaviour
     {
         m_anim.SetBool("blueAttack", false);
     }
+
+    private void slimeDestroy()
+    {
+        Destroy(gameObject);
+    }
+
 }

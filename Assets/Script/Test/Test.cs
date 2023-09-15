@@ -9,6 +9,10 @@ public class Test : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 ve;
     private BoxCollider2D box2d;
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log("1");
+    }
     void Start()
     {
       box2d = GetComponent<BoxCollider2D>();
