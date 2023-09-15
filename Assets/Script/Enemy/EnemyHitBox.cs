@@ -23,9 +23,9 @@ public class EnemyHitBox : MonoBehaviour
     private bool PlayerCheck;
     private bool playerGreenSlimeHitCheck = false;
 
-    private bool oneHitCheck=false;
+    private bool oneHitCheck = false;
 
-    [SerializeField]private bool blueSlimeAttackCheck;
+    [SerializeField] private bool blueSlimeAttackCheck;
 
     private PolygonCollider2D poly2D;
     private BoxCollider2D box2d;//공격범위안에있는지체크용 블루슬라임용도
@@ -49,7 +49,7 @@ public class EnemyHitBox : MonoBehaviour
         {
             //레드슬라임 스크립트
         }
-        
+
         m_anim2d = GetComponentInParent<Animator>();
         player = GameManager.instance.GetPlayerTransform().GetComponent<Player>();
     }
@@ -61,7 +61,7 @@ public class EnemyHitBox : MonoBehaviour
         isGreenSlime();
         isRedSlime();//각각 맞는히트타입을가져온후에 적용해줄것
         isBlueSlime();
-        blueSlimeAttack();//블루슬라임의 대미지입히는부분
+        
 
         isSlimeCheck();
     }
@@ -77,7 +77,7 @@ public class EnemyHitBox : MonoBehaviour
 
         if (blueSlimeAttackCheck)
         {
-            m_anim2d.SetBool("BlueAttack", true);
+            
             if (poly2D.IsTouchingLayers(LayerMask.GetMask("Player")))
             {
                 if (!oneHitCheck)
@@ -88,6 +88,7 @@ public class EnemyHitBox : MonoBehaviour
                 }
                 //여기는 플레이어가 대미지를입는부분 만약도중에닿는다면 bluedeath넣어줄것
             }
+
         }
     }
 
@@ -126,9 +127,10 @@ public class EnemyHitBox : MonoBehaviour
         }
         if (box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
         {
-            if(player.GetPlayerType() == Player.eType.Blue)
+            if (player.GetPlayerType() == Player.eType.Blue)
             {
                 blueSlimeAttackCheck = true;
+                
                 poly2D.enabled = true;
             }
             else
@@ -139,17 +141,7 @@ public class EnemyHitBox : MonoBehaviour
         }
     }
 
-    private void blueSlimeAttack()
-    {
-        if (blueSlimeAttackCheck)
-        {
-            m_anim2d.SetBool("BlueAttack", true);
-            if (poly2D.IsTouchingLayers(LayerMask.GetMask("Player")))
-            {
-                //여기는 플레이어가 대미지를입는부분 만약도중에닿는다면 bluedeath넣어줄것
-            }
-        }
-    }
+   
 
 
     private void isSlimeCheck()
@@ -163,7 +155,7 @@ public class EnemyHitBox : MonoBehaviour
         }
         else if (slimeType == SlimeType.BlueSlime)
         {
-            if(blueSlime.GetSlimeType() != 0)
+            if (blueSlime.GetSlimeType() != 0)
             {
                 Destroy(gameObject);
             }

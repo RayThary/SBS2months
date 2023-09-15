@@ -18,13 +18,15 @@ public class BlueSlime : MonoBehaviour
     private SpriteRenderer m_Spr;
     private int grassType;//무슨풀인지정할부분
 
-    private bool playerCheck = false;//플레이어 인식범위체크용
+    [SerializeField] private bool playerCheck = false;//플레이어 인식범위체크용
     private bool playerOutCheck = false;//플레이어 나갔는지체크용
     private bool checkPlayerInBox2d = true;
+    private bool right;//슬라임 좌우 체크용도
 
+    private bool attackAfterReturn = false;
     private bool slimeAttackCheck;
 
-    private bool returnStart;//원래자리로돌아갈지체크하는부분
+    [SerializeField] private bool returnStart;//원래자리로돌아갈지체크하는부분
     private Vector3 m_vecStartPoint;
 
     [SerializeField] private float m_forgetPlayerTime = 1.5f;
@@ -34,6 +36,10 @@ public class BlueSlime : MonoBehaviour
     private Animator m_anim;
     private BoxCollider2D m_box2d;
     private Rigidbody2D m_rig2d;
+    private BlueSlime m_blueSlime;
+    //자식
+    private EnemyHitBox m_hitbox;
+    private bool m_hiyboxCheck = true;
 
     //플레이어
     private Player player;
@@ -84,13 +90,14 @@ public class BlueSlime : MonoBehaviour
         }
 
         player = GameManager.instance.GetPlayerTransform().GetComponent<Player>();
-
+        
         m_Spr = GetComponent<SpriteRenderer>();
         m_anim = GetComponent<Animator>();
         m_box2d = GetComponent<BoxCollider2D>();
         m_rig2d = GetComponent<Rigidbody2D>();
-
+        m_hitbox = GetComponentInChildren<EnemyHitBox>();
         m_anim.enabled = false;
+        m_blueSlime = GetComponent<BlueSlime>();
 
         grassType = Random.Range(0, 3);
         if (grassType == 0)
@@ -117,12 +124,27 @@ public class BlueSlime : MonoBehaviour
 
     void Update()
     {
+        if (m_hitbox.GetBlueAttackCheck() == true)
+        {
+            blueSlimeAttackCherck();
+            return;
+        }
+        blueSlimeCheck();
         blueSlimePerceive();
         blueSlimeMove();
+        blueSlimeSee();
         blueSlimeBox2dOutCheck();
         backStartPos();
-    }
 
+    }
+    private void blueSlimeCheck()
+    {
+        if (slimeCheck == 1)
+        {
+            m_box2d.enabled = false;
+            m_blueSlime.enabled = false;
+        }
+    }
     private void blueSlimePerceive()
     {
         if (m_box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
@@ -162,11 +184,12 @@ public class BlueSlime : MonoBehaviour
             if (transform.position.x - m_playerTrs.position.x > 0)
             {
                 m_rig2d.velocity = new Vector2(-1 * m_moveSpeed, m_rig2d.velocity.y);
-                
+                right = false;
             }
             else if (transform.position.x - m_playerTrs.position.x < 0)
             {
                 m_rig2d.velocity = new Vector2(1 * m_moveSpeed, m_rig2d.velocity.y);
+                right = true;
             }
         }
         else
@@ -177,6 +200,7 @@ public class BlueSlime : MonoBehaviour
 
     private void blueSlimeBox2dOutCheck()
     {
+
         if (playerOutCheck)
         {
             m_forgetPlayerTimer += Time.deltaTime;
@@ -185,8 +209,19 @@ public class BlueSlime : MonoBehaviour
                 returnStart = true;
             }
         }
-    }
 
+    }
+    private void blueSlimeSee()
+    {
+        if (right)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+        else
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+    }
     private void backStartPos()
     {
         if (returnStart)
@@ -202,9 +237,48 @@ public class BlueSlime : MonoBehaviour
             {
                 returnStart = false;
                 checkPlayerInBox2d = true;
+                m_anim.enabled = false;
+                slimeCheck = Random.Range(0, 2);
+                m_Spr.sprite = m_LWaterGrass[grassType];
             }
         }
     }
+
+    private void blueSlimeAttackCherck()
+    {
+
+        if (m_hiyboxCheck)
+        {
+            m_anim.SetBool("BlueAttack", true);
+        }
+        m_hiyboxCheck = false;
+        if (slimeAttackCheck)
+        {
+            m_playerTrs = GameManager.instance.GetPlayerTransform();
+            attackAfterReturn = true;
+            if (!right)
+            {
+                m_rig2d.velocity = new Vector2(-1 * m_moveSpeed * 3, m_rig2d.velocity.y);
+            }
+            else if (right)
+            {
+                m_rig2d.velocity = new Vector2(1 * m_moveSpeed * 3, m_rig2d.velocity.y);
+            }
+        }
+        else
+        {
+            m_rig2d.velocity = new Vector2(0, m_rig2d.velocity.y);
+            if (attackAfterReturn)
+            {
+                m_hitbox.SetBlueAttackCheck(false);
+                playerOutCheck = true;
+                m_hiyboxCheck = true;
+                attackAfterReturn = false;
+                slimeCheck = Random.Range(0, 2);
+            }
+        }
+    }
+
 
     public void SetReturnStart(bool _value)
     {
@@ -219,12 +293,21 @@ public class BlueSlime : MonoBehaviour
     //애니메이션용
     private void blueAttackOff()
     {
-        m_anim.SetBool("blueAttack", false);
+        m_anim.SetBool("BlueAttack", false);
+    }
+
+    private void blueAttackMoveTrue()
+    {
+        slimeAttackCheck = true;
+    }
+    private void blueAttackMoveFalse()
+    {
+        slimeAttackCheck = false;
     }
 
     private void slimeDestroy()
     {
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 
 }

@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
     private bool playerGreenCheck = true;
 
     //물에서점프를하기위한용도
-    private bool playerWaterJumpCheck = false;
+    [SerializeField] private bool playerWaterJumpCheck = false;
     private bool playerWaterCheck = false;
     private bool playerNoContinuityJunp;
 
@@ -59,6 +59,8 @@ public class Player : MonoBehaviour
     private bool floatingChange = false;
     private bool playerWaterJump;
     private bool m_groundWaterCheck = false;
+    private bool m_nofloating;
+    private bool m_fristWaterTouch;
 
     private bool m_isWaterCourse;//물줄기위에있는지체크
 
@@ -100,57 +102,6 @@ public class Player : MonoBehaviour
     private Animator m_anim;
     private Rigidbody2D m_rig2d;
     private Vector3 moveDir;
-
-    //ontrigger 자식 히트박스때문에 안쓰는용 버그일어나면 체크할용도로쓰임
-    #region 
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if (collision.gameObject.tag=="Ground")
-    //    {
-    //        GroundType = eGroundType.Ground;
-    //        HitType = eHitGroundType.Ground;
-    //        m_groundCheck = true;
-
-    //    }
-    //    else if (collision.gameObject.tag == "Water")
-    //    {
-    //        GroundType = eGroundType.Water;
-    //        HitType = eHitGroundType.Water;
-    //        m_groundWaterCheck = true; 
-    //    }
-    //    else if (collision.gameObject.tag == "Lava")
-    //    {
-    //        GroundType = eGroundType.Lava;
-    //        HitType = eHitGroundType.Lava;
-    //        //m_inLavaCheck= true;
-
-    //    }
-
-
-    //}
-
-
-
-
-    //private void OnTriggerExit2D(Collider2D collision)
-    //{
-    //    if (collision.gameObject.tag == "Ground")
-    //    {
-    //        HitType = eHitGroundType.None;
-    //        m_groundCheck = false;
-    //    }
-    //    if(collision.gameObject.tag == "Water")
-    //    {
-    //        HitType = eHitGroundType.None;
-    //        m_groundWaterCheck = false;
-    //    }
-    //    if (collision.gameObject.tag == "Lava")
-    //    {
-    //        HitType = eHitGroundType.None;
-    //        //m_inLavaCheck = false;
-    //    }
-    //}
-    #endregion
 
     void Start()
     {
@@ -237,6 +188,7 @@ public class Player : MonoBehaviour
                         playerWaterJump = true;
                         playerWaterCheck = false;
                         playerNoContinuityJunp = false;
+                        m_nofloating = true;
                     }
 
                 }
@@ -292,15 +244,23 @@ public class Player : MonoBehaviour
                 playerWaterJump = false;
                 m_jumpGravity = m_playerJump;
                 playerWaterJumpCheck = true;
+
             }
             if (playerWaterJumpCheck)
             {
                 m_jumpGravity -= m_gravity * Time.deltaTime;
+
+                if (m_jumpGravity < 0)
+                {
+                    m_nofloating = false;
+                }
+
                 if (m_jumpGravity < -10f)
                 {
                     m_jumpGravity = -10f;
                 }
             }
+
 
 
 
@@ -361,10 +321,11 @@ public class Player : MonoBehaviour
 
     private void playerfloating()
     {
-        if (playerWaterJump)
+        if (m_nofloating)
         {
             return;
         }
+
         if (GroundType == eGroundType.Water)
         {
             if (!playerWaterCheck)
@@ -373,17 +334,26 @@ public class Player : MonoBehaviour
             }
             if (floatingTime >= floatingTimer)
             {
-                floatingMoving = -floatingMovingMax;
+                if (m_fristWaterTouch)
+                {
+                    floatingMoving = -floatingMovingMax - 0.1f;
+                }
+                else
+                {
+                    floatingMoving = -floatingMovingMax;
+                }
                 floatingChange = true;
             }
-            else if (floatingTime <= -floatingTimer)
+            else if (floatingTime < -floatingTimer)
             {
                 floatingMoving = floatingMovingMax;
                 floatingChange = false;
             }
+
             m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, floatingMoving);
         }
     }
+
 
     private void floatingTimeChange()
     {
@@ -391,11 +361,16 @@ public class Player : MonoBehaviour
         {
             if (floatingChange)
             {
+                if (m_fristWaterTouch)
+                {
+                    m_fristWaterTouch = false;
+                }
                 floatingTime -= Time.deltaTime;
             }
             if (!floatingChange)
             {
                 floatingTime += Time.deltaTime;
+
             }
         }
     }
@@ -718,7 +693,8 @@ public class Player : MonoBehaviour
                         {
                             GroundType = eGroundType.Water;
                             HitType = eHitGroundType.Water;
-                            floatingTimer = 0.5f;//외부에서맞춰준시간대로맞춰줄것
+                            floatingTime = 0.5f;//외부에서맞춰준시간대로맞춰줄것
+                            m_fristWaterTouch = true;
                             playerNoContinuityJunp = true;
                             playerWaterJumpCheck = false;
                             playerWaterJump = false;
