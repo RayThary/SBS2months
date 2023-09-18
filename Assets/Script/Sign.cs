@@ -23,7 +23,7 @@ public class Sign : MonoBehaviour
         if (box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
         {
             checkTutorialUI();
-            signText.text = "Press the \"z\" key";
+            signText.text = "표지판 열기 z키";
         }
         else
         {

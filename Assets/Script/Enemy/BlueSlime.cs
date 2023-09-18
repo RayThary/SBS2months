@@ -40,40 +40,13 @@ public class BlueSlime : MonoBehaviour
     //자식
     private EnemyHitBox m_hitbox;
     private bool m_hiyboxCheck = true;
+    private Transform bluePhy2d;
+    [SerializeField]private PolygonCollider2D m_poly2d;
 
     //플레이어
     private Player player;
     private Transform m_playerTrs;
 
-    #region
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if (collision.gameObject.tag == "Player")
-    //    {
-    //        if (player.GetPlayerType() != Player.eType.Blue)
-    //        {
-    //            return;
-    //        }
-    //        m_vecStartPoint = transform.position;
-    //        m_forgetPlayerTimer = 0.0f;
-    //        m_anim.enabled = true;
-    //        playerOutCheck = false;
-    //        playerCheck = true;
-    //    }
-    //}
-
-    //private void OnTriggerExit2D(Collider2D collision)
-    //{
-    //    if (collision.gameObject.tag == "Player")
-    //    {
-    //        if (playerCheck)
-    //        {
-    //            playerCheck = false;
-    //            playerOutCheck = true;
-    //        }
-    //    }
-    //}
-    #endregion
     void Start()
     {
         if (eSlimeType == SlimeType.Random)
@@ -98,6 +71,9 @@ public class BlueSlime : MonoBehaviour
         m_hitbox = GetComponentInChildren<EnemyHitBox>();
         m_anim.enabled = false;
         m_blueSlime = GetComponent<BlueSlime>();
+
+        bluePhy2d = GetComponentInChildren<Transform>().Find("BlueSlimePhy");
+        m_poly2d = bluePhy2d.GetComponent<PolygonCollider2D>();
 
         grassType = Random.Range(0, 3);
         if (grassType == 0)
@@ -124,7 +100,6 @@ public class BlueSlime : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(m_vecStartPoint);
         if (m_anim.GetBool("BlueDeath") == true)
         {
             m_rig2d.velocity = new Vector2(0, 0);
@@ -148,6 +123,7 @@ public class BlueSlime : MonoBehaviour
         if (slimeCheck == 1)
         {
             m_box2d.enabled = false;
+            m_poly2d.enabled = false;
             m_blueSlime.enabled = false;
         }
     }
@@ -161,6 +137,7 @@ public class BlueSlime : MonoBehaviour
             }
             m_forgetPlayerTimer = 0.0f;
             m_anim.enabled = true;
+            m_poly2d.enabled = true;
             playerOutCheck = false;
             playerCheck = true;
             if (checkPlayerInBox2d)
@@ -251,6 +228,7 @@ public class BlueSlime : MonoBehaviour
             {
                 checkPlayerInBox2d = true;
                 returnStart = false;
+                m_poly2d.enabled = false;
                 m_anim.enabled = false;
                 slimeCheck = Random.Range(0, 2);
                 m_Spr.sprite = m_LWaterGrass[grassType];
@@ -317,6 +295,8 @@ public class BlueSlime : MonoBehaviour
     {
         slimeAttackCheck = false;
     }
+
+  
 
     private void slimeDestroy()
     {

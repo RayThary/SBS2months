@@ -224,6 +224,7 @@ SpriteAtlas:
     - d4e3ef3f5231f1a4e93bc54d607aac40: -6247007954747600601
     - d4e3ef3f5231f1a4e93bc54d607aac40: -8755658357376114724
     - d4e3ef3f5231f1a4e93bc54d607aac40: 1606191026905108572
+    - d4e3ef3f5231f1a4e93bc54d607aac40: 1018704307
     - d4e3ef3f5231f1a4e93bc54d607aac40: 6050315443593549696
     - d4e3ef3f5231f1a4e93bc54d607aac40: -6735415089238527364
     - d4e3ef3f5231f1a4e93bc54d607aac40: -3274377802644897015
@@ -436,6 +437,7 @@ SpriteAtlas:
   - {fileID: -6247007954747600601, guid: d4e3ef3f5231f1a4e93bc54d607aac40, type: 3}
   - {fileID: -8755658357376114724, guid: d4e3ef3f5231f1a4e93bc54d607aac40, type: 3}
   - {fileID: 1606191026905108572, guid: d4e3ef3f5231f1a4e93bc54d607aac40, type: 3}
+  - {fileID: 1018704307, guid: d4e3ef3f5231f1a4e93bc54d607aac40, type: 3}
   - {fileID: 6050315443593549696, guid: d4e3ef3f5231f1a4e93bc54d607aac40, type: 3}
   - {fileID: -6735415089238527364, guid: d4e3ef3f5231f1a4e93bc54d607aac40, type: 3}
   - {fileID: -3274377802644897015, guid: d4e3ef3f5231f1a4e93bc54d607aac40, type: 3}
@@ -647,6 +649,7 @@ SpriteAtlas:
   - S_Water&Background_23
   - S_Water&Background_38
   - S_Water&Background_22
+  - S_Water&Background_54
   - S_Water&Background_39
   - S_Water&Background_25
   - S_Water&Background_24

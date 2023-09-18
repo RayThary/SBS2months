@@ -116,6 +116,7 @@ public class Player : MonoBehaviour
         playerInvincibilityTime();//피격시 무적시간
         if (playerStop)//플레이어가죽으면 끝
         {
+            m_rig2d.velocity = new Vector2(0, 0);
             return;
         }
         playerMove();//이동
