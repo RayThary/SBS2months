@@ -24,7 +24,7 @@ public class BlueSlime : MonoBehaviour
     private bool right;//슬라임 좌우 체크용도
 
     private bool attackAfterReturn = false;
-    private bool slimeAttackCheck;
+    [SerializeField]private bool slimeAttackCheck;
 
     [SerializeField] private bool returnStart;//원래자리로돌아갈지체크하는부분
     private Vector3 m_vecStartPoint;
@@ -90,7 +90,7 @@ public class BlueSlime : MonoBehaviour
         }
 
         player = GameManager.instance.GetPlayerTransform().GetComponent<Player>();
-        
+
         m_Spr = GetComponent<SpriteRenderer>();
         m_anim = GetComponent<Animator>();
         m_box2d = GetComponent<BoxCollider2D>();
@@ -174,7 +174,7 @@ public class BlueSlime : MonoBehaviour
     }
     private void blueSlimeMove()
     {
-        if (returnStart)
+        if (returnStart || slimeAttackCheck)
         {
             return;
         }

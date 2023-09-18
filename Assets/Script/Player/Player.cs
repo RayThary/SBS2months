@@ -57,12 +57,9 @@ public class Player : MonoBehaviour
     [SerializeField] private float floatingMovingMax = 0.2f;//물떠다니느 최대최소값 
     private float floatingMoving = 1f;
     private bool floatingChange = false;
-    private bool playerWaterJump;
-    private bool m_groundWaterCheck = false;
+    private bool playerWaterJump = false;
     private bool m_nofloating;
     private bool m_fristWaterTouch;
-
-    private bool m_isWaterCourse;//물줄기위에있는지체크
 
     private bool waterHightCheck;
 
@@ -185,10 +182,10 @@ public class Player : MonoBehaviour
                 {
                     if (Input.GetKeyDown(KeyCode.UpArrow))
                     {
-                        playerWaterJump = true;
-                        playerWaterCheck = false;
-                        playerNoContinuityJunp = false;
-                        m_nofloating = true;
+                        playerWaterJump = true;//물에서 점프눌렀는지
+                        playerWaterCheck = false;//물위에있는지
+                        playerNoContinuityJunp = false;//두번점프금지용
+                        m_nofloating = true;//물에떠있는코드 안들어게가기용도
                     }
 
                 }
@@ -241,10 +238,7 @@ public class Player : MonoBehaviour
         {
             if (playerWaterJump)
             {
-                playerWaterJump = false;
                 m_jumpGravity = m_playerJump;
-                playerWaterJumpCheck = true;
-
             }
             if (playerWaterJumpCheck)
             {
@@ -311,7 +305,6 @@ public class Player : MonoBehaviour
             //m_jumpCheck = false;
             // playerWaterJump = false;
             m_groundCheck = false;
-            m_groundWaterCheck = false;
             m_jumpGravity = m_playerJump;
         }
 
@@ -695,11 +688,13 @@ public class Player : MonoBehaviour
                             HitType = eHitGroundType.Water;
                             floatingTime = 0.5f;//외부에서맞춰준시간대로맞춰줄것
                             m_fristWaterTouch = true;
-                            playerNoContinuityJunp = true;
-                            playerWaterJumpCheck = false;
-                            playerWaterJump = false;
-                            playerWaterCheck = true;
-                            m_groundWaterCheck = true;
+                            if (playerWaterJump == false)
+                            {
+                                playerNoContinuityJunp = true;
+                                playerWaterJumpCheck = false;
+                                playerWaterCheck = true;
+                            }
+
                         }
                         else if (_collision.gameObject.layer == LayerMask.NameToLayer("Lava"))
                         {
@@ -742,7 +737,8 @@ public class Player : MonoBehaviour
                         else if (_collision.gameObject.layer == LayerMask.NameToLayer("Water"))
                         {
                             HitType = eHitGroundType.None;
-                            m_groundWaterCheck = false;
+                            playerWaterJump = false;
+                            playerWaterJumpCheck = true;
                         }
                         else if (_collision.gameObject.layer == LayerMask.NameToLayer("Lava"))
                         {

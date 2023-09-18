@@ -7031,8 +7031,8 @@ Transform:
   - {fileID: 550002011}
   - {fileID: 1793032118}
   - {fileID: 998691434}
-  - {fileID: 1988208198}
-  - {fileID: 852427357}
+  - {fileID: 1861523541}
+  - {fileID: 1390143070}
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7097,11 +7097,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68a31c995a46792428a9b0cacdc98556, type: 3}
---- !u!4 &852427357 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3931196772455157568, guid: 68a31c995a46792428a9b0cacdc98556, type: 3}
-  m_PrefabInstance: {fileID: 852427356}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &867558860
 GameObject:
   m_ObjectHideFlags: 0
@@ -15394,6 +15389,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!4 &1390143070 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7675914170699599539, guid: 68a31c995a46792428a9b0cacdc98556, type: 3}
+  m_PrefabInstance: {fileID: 852427356}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1402853190
 GameObject:
   m_ObjectHideFlags: 0
@@ -18253,6 +18253,11 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.13987923, y: 1}
   m_EdgeRadius: 0
+--- !u!4 &1861523541 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3931196772455157568, guid: 5541fc574bc1f7b4bab6c98ff5b06c2d, type: 3}
+  m_PrefabInstance: {fileID: 1988208197}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1862882575
 GameObject:
   m_ObjectHideFlags: 0
@@ -18740,11 +18745,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5541fc574bc1f7b4bab6c98ff5b06c2d, type: 3}
---- !u!4 &1988208198 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7675914170699599539, guid: 5541fc574bc1f7b4bab6c98ff5b06c2d, type: 3}
-  m_PrefabInstance: {fileID: 1988208197}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1995833874
 GameObject:
   m_ObjectHideFlags: 0
@@ -20324,7 +20324,7 @@ MonoBehaviour:
   changeCoolTime: 1.5
   playerWaterJumpCheck: 0
   floatingTimer: 0.5
-  floatingMovingMax: 0.2
+  floatingMovingMax: 0.1
   m_speed: 6
   m_playerJump: 5
   m_playerInLavaJump: 3
@@ -20566,6 +20566,7 @@ MonoBehaviour:
   - {fileID: 346759190954941021, guid: 862b40d28afa3c94fbc03f6652069a5e, type: 3}
   - {fileID: -8809828132392210723, guid: 862b40d28afa3c94fbc03f6652069a5e, type: 3}
   playerCheck: 0
+  slimeAttackCheck: 0
   returnStart: 0
   m_forgetPlayerTime: 1.5
   m_forgetPlayerTimer: 0
