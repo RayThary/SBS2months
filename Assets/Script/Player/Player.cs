@@ -811,4 +811,9 @@ public class Player : MonoBehaviour
     {
         return PlayerType;
     }
+
+    public eGroundType GetPlayerGroundType()
+    {
+        return GroundType;
+    }
 }

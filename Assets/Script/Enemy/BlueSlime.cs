@@ -124,6 +124,12 @@ public class BlueSlime : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(m_vecStartPoint);
+        if (m_anim.GetBool("BlueDeath") == true)
+        {
+            m_rig2d.velocity = new Vector2(0, 0);
+            return;
+        }
         if (m_hitbox.GetBlueAttackCheck() == true)
         {
             blueSlimeAttackCherck();
@@ -209,6 +215,14 @@ public class BlueSlime : MonoBehaviour
                 returnStart = true;
             }
         }
+        if (playerCheck)
+        {
+            if(player.GetPlayerGroundType()!= Player.eGroundType.Water)
+            {
+                returnStart = true;
+            }
+        }
+        
 
     }
     private void blueSlimeSee()
@@ -235,8 +249,8 @@ public class BlueSlime : MonoBehaviour
             float distance = Vector2.Distance(slimePos, movePos);
             if (distance <= 0.1f)
             {
-                returnStart = false;
                 checkPlayerInBox2d = true;
+                returnStart = false;
                 m_anim.enabled = false;
                 slimeCheck = Random.Range(0, 2);
                 m_Spr.sprite = m_LWaterGrass[grassType];
@@ -274,7 +288,6 @@ public class BlueSlime : MonoBehaviour
                 playerOutCheck = true;
                 m_hiyboxCheck = true;
                 attackAfterReturn = false;
-                slimeCheck = Random.Range(0, 2);
             }
         }
     }
@@ -307,7 +320,7 @@ public class BlueSlime : MonoBehaviour
 
     private void slimeDestroy()
     {
-        //Destroy(gameObject);
+        Destroy(gameObject);
     }
 
 }
