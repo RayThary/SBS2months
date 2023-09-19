@@ -62,7 +62,7 @@ public class Player : MonoBehaviour
     private bool m_fristWaterTouch;
 
     private bool waterHightCheck;
-
+    [Header("기본기능")]
     //땅&기본기능
     [SerializeField] private float m_speed = 2.0f;
     private float m_gravity = 9.81f;
@@ -74,11 +74,11 @@ public class Player : MonoBehaviour
 
 
     //용암
-    private bool m_groundLavaCheck;//용암에서의 점프를담당할예정근데아마 용암밖에나갔을때 써줄예정
+    private bool m_groundLavaCheck = true;//용암에서의 점프를담당할예정근데아마 용암밖에나갔을때 써줄예정
     [SerializeField] private bool m_inLavaCheck;//용암안에있는지체크용 용암안에있을때 중력값정해줄용도의불값
     private bool m_lavaJumpCheck;//용암안에서의 점프를할거같음 
-    private bool m_lavaGravityCheck;
-
+    private bool m_lavaGravityCheck = true;
+    private bool m_lavaDownCheck;
 
     //대미지입는용도 부분
     [SerializeField] private float m_HitTime = 3.0f;
@@ -200,6 +200,16 @@ public class Player : MonoBehaviour
             {
                 m_lavaJumpCheck = true;
             }
+
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                m_lavaDownCheck = true;
+            }
+
+            if (Input.GetKeyUp(KeyCode.DownArrow))
+            {
+                m_lavaDownCheck = false;
+            }
         }
 
     }
@@ -264,6 +274,18 @@ public class Player : MonoBehaviour
         {
             if (m_inLavaCheck)
             {
+                if (m_lavaGravityCheck)//용암안에서의 기본중력
+                {
+                    if (m_lavaDownCheck)
+                    {
+                        m_jumpGravity = -0.8f;
+                    }
+                    else
+                    {
+                        m_jumpGravity = -0.4f;
+                    }
+                }
+
                 if (m_lavaJumpCheck)
                 {
                     m_lavaGravityCheck = false;
@@ -373,22 +395,24 @@ public class Player : MonoBehaviour
 
     private void playerLavefloating()
     {
-        RaycastHit2D lavaHit = Physics2D.Raycast(transform.position, Vector2.zero, 0, LayerMask.GetMask("Lava"));
-        if (lavaHit.collider != null)
-        {
-            m_inLavaCheck = true;
-        }
-        else
-        {
-            m_inLavaCheck = false;
-        }
-        if (m_inLavaCheck)
-        {
-            if (m_lavaGravityCheck)
-            {
-                m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, -0.4f);
-            }
-        }
+
+        //RaycastHit2D lavaHit = Physics2D.Raycast(transform.position, Vector2.zero, 0, LayerMask.GetMask("Lava"));
+        //if (lavaHit.collider != null)
+        //{
+        //    m_inLavaCheck = true;
+        //}
+        //else
+        //{
+        //    m_inLavaCheck = false;
+        //}
+        //if (m_inLavaCheck)
+        //{
+        //    if (m_lavaGravityCheck)
+        //    {
+        //        m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, -0.4f);
+        //    }
+        //}
+
     }
     private void playerCheckWaterHight()
     {
@@ -702,7 +726,7 @@ public class Player : MonoBehaviour
                             GroundType = eGroundType.Lava;
                             HitType = eHitGroundType.Lava;
                             playerWaterCheck = false;
-                            //m_inLavaCheck= true;
+                            m_inLavaCheck = true;
                         }
                         else if (_collision.gameObject.layer == LayerMask.NameToLayer("WaterCourse"))
                         {
@@ -744,7 +768,8 @@ public class Player : MonoBehaviour
                         else if (_collision.gameObject.layer == LayerMask.NameToLayer("Lava"))
                         {
                             HitType = eHitGroundType.None;
-                            //m_inLavaCheck = false;
+                            m_inLavaCheck = false;
+                            Debug.Log($"call = exit {_collision.transform.name}");
                         }
                         else if (_collision.gameObject.layer == LayerMask.NameToLayer("WaterCourse"))
                         {
