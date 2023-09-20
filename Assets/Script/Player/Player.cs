@@ -75,10 +75,12 @@ public class Player : MonoBehaviour
 
     //용암
     private bool m_groundLavaCheck = true;//용암에서의 점프를담당할예정근데아마 용암밖에나갔을때 써줄예정
-    [SerializeField] private bool m_inLavaCheck;//용암안에있는지체크용 용암안에있을때 중력값정해줄용도의불값
+    private bool m_inLavaCheck;//용암안에있는지체크용 용암안에있을때 중력값정해줄용도의불값
     private bool m_lavaJumpCheck;//용암안에서의 점프를할거같음 
     private bool m_lavaGravityCheck = true;
-    private bool m_lavaDownCheck;
+    private bool m_lavaDownCheck;//용암속에서 아래로갈때 좀더빠르게내려가는용도
+    private bool m_lavaJumpDelay=false;
+    private float m_lavaJumpDelayTime = 0.0f;
 
     //대미지입는용도 부분
     [SerializeField] private float m_HitTime = 3.0f;
@@ -121,10 +123,10 @@ public class Player : MonoBehaviour
         }
         playerMove();//이동
         playerJump();//모든점프를체크하는곳
+        lavaJumpDelay();//용암속점프할때 연속으로눌를때 딜레이
         playerGravity();//모든 점프를통한 중력값을 여기서정해준다 
         playerfloating();//물위에서 떠있을때 알고리즘을담았습니다
         floatingTimeChange();//물위에서떠다닐때 위아래움직임의 시간체크하는부분
-        playerLavefloating();//용암에있을때 어떻게떠있을지 
         playerChange();//플레이어슬라임타입을 바꾸는곳
         playerChaneTimer();//플레이어 슬라임타입의 쿨타임을정해주는곳
         playerCheckWaterHight();//물줄기를 만나면 솓아오르는용도로만들어줌
@@ -198,7 +200,11 @@ public class Player : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                m_lavaJumpCheck = true;
+                if (m_lavaJumpDelay==false)
+                {
+                    m_lavaJumpCheck = true;
+                    m_lavaJumpDelay = true;
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -212,6 +218,19 @@ public class Player : MonoBehaviour
             }
         }
 
+    }
+
+    private void lavaJumpDelay()
+    {
+        if (m_lavaJumpDelay)
+        {
+            m_lavaJumpDelayTime += Time.deltaTime;
+            if (m_lavaJumpDelayTime >= 0.3f)
+            {
+                m_lavaJumpDelay = false;
+                m_lavaJumpDelayTime = 0.0f;
+            }
+        }
     }
 
     private void playerGravity()
@@ -278,7 +297,7 @@ public class Player : MonoBehaviour
                 {
                     if (m_lavaDownCheck)
                     {
-                        m_jumpGravity = -0.8f;
+                        m_jumpGravity = -1f;
                     }
                     else
                     {
@@ -393,27 +412,7 @@ public class Player : MonoBehaviour
 
 
 
-    private void playerLavefloating()
-    {
 
-        //RaycastHit2D lavaHit = Physics2D.Raycast(transform.position, Vector2.zero, 0, LayerMask.GetMask("Lava"));
-        //if (lavaHit.collider != null)
-        //{
-        //    m_inLavaCheck = true;
-        //}
-        //else
-        //{
-        //    m_inLavaCheck = false;
-        //}
-        //if (m_inLavaCheck)
-        //{
-        //    if (m_lavaGravityCheck)
-        //    {
-        //        m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, -0.4f);
-        //    }
-        //}
-
-    }
     private void playerCheckWaterHight()
     {
         if (m_box2d.IsTouchingLayers(LayerMask.GetMask("WaterCourse")))
@@ -769,7 +768,6 @@ public class Player : MonoBehaviour
                         {
                             HitType = eHitGroundType.None;
                             m_inLavaCheck = false;
-                            Debug.Log($"call = exit {_collision.transform.name}");
                         }
                         else if (_collision.gameObject.layer == LayerMask.NameToLayer("WaterCourse"))
                         {
