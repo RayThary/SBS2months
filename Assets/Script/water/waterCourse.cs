@@ -1,9 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class waterCourse : MonoBehaviour
 {
+    [SerializeField] private bool tutorialText;
+    private TextMeshPro leverText;
+    private Transform leverTextTrs;
+
     private Transform TrsSpawnWater;
     private Transform TrsEndWater;
     [SerializeField] private GameObject m_waterHight;
@@ -26,6 +31,9 @@ public class waterCourse : MonoBehaviour
 
     private void Start()
     {
+        leverText = GetComponentInChildren<TextMeshPro>();
+        leverTextTrs = GetComponentInChildren<Transform>().Find("LeverText");
+
         m_box2d = GetComponent<BoxCollider2D>();
         m_anim = GetComponent<Animator>();
         TrsSpawnWater = GetComponentInChildren<Transform>().Find("Water");
@@ -34,13 +42,33 @@ public class waterCourse : MonoBehaviour
 
     void Update()
     {
+        leverTutorialText();
         CheckLever();
         checkZ();
     }
 
+    private void leverTutorialText()
+    {
+        if (tutorialText == false)
+        {
+            leverTextTrs.gameObject.SetActive(false);
+            return;
+        }
+
+        if (m_box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
+        {
+            leverText.text = "레버 작동 z키";
+        }
+        else
+        {
+            leverText.text = "";
+        }
+
+    }
+
     private void checkZ()
     {
-        
+
         if (noSpawn)
         {
             if (!leverReady && !leverCheck)
@@ -54,7 +82,6 @@ public class waterCourse : MonoBehaviour
             }
         }
     }
-
 
 
     private void CheckLever()

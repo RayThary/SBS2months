@@ -84,7 +84,7 @@ public class Player : MonoBehaviour
 
     //대미지입는용도 부분
     [SerializeField] private float m_HitTime = 3.0f;
-    private float m_hitTimer = 0.0f;
+    [SerializeField]private float m_hitTimer = 0.0f;
     private bool hitCheck;
     //대미지입는용도 잠시무적시간
     [SerializeField] private float m_HitInvincibilityTime = 1.0f;
@@ -588,7 +588,7 @@ public class Player : MonoBehaviour
 
     private void playerHitTime()
     {
-        if (!hitCheck)
+        if (!hitCheck || HitType == eHitGroundType.None) 
         {
             return;
         }
