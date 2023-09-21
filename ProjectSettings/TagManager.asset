@@ -29,6 +29,7 @@ TagManager:
   - DoorLock
   - Key
   - UseKey
+  - Trap
   - 
   - 
   - 
@@ -40,8 +41,7 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - BackGround
   - test
   m_SortingLayers:
   - name: Default

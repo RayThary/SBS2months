@@ -59,7 +59,7 @@ public class Door : MonoBehaviour
 
         if (box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
         {
-            doorText.text = "문열기 z키(열쇠있을때만가능)";
+            doorText.text = "문열기 z키\n(열쇠있을때만가능)";
         }
         else
         {

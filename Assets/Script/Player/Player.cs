@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
         Lava,
         Water,
         WaterCourse,
+        Trap,
     }
     public enum eHitGroundType//추가바람
     {
@@ -27,6 +28,7 @@ public class Player : MonoBehaviour
         Lava,
         Water,
         WaterCourse,
+        Trap,
     }
     //체크용으로만듬 나중에 3개serializeField삭제필요
     [SerializeField] private eGroundType GroundType;
@@ -79,17 +81,34 @@ public class Player : MonoBehaviour
     private bool m_lavaJumpCheck;//용암안에서의 점프를할거같음 
     private bool m_lavaGravityCheck = true;
     private bool m_lavaDownCheck;//용암속에서 아래로갈때 좀더빠르게내려가는용도
-    private bool m_lavaJumpDelay=false;
+    private bool m_lavaJumpDelay = false;
     private float m_lavaJumpDelayTime = 0.0f;
 
     //대미지입는용도 부분
     [SerializeField] private float m_HitTime = 3.0f;
-    [SerializeField]private float m_hitTimer = 0.0f;
+    private float m_hitTimer = 0.0f;
     private bool hitCheck;
+    private bool playerRightCheck;
+
     //대미지입는용도 잠시무적시간
     [SerializeField] private float m_HitInvincibilityTime = 1.0f;
     private float m_hitInvincibilityTimer = 0.0f;
     private bool m_hitInvincibility;
+
+    private BoxCollider2D m_groundCheckBox2d;
+    private bool m_trapHitCheck;
+    private bool m_trapHitInvincibility;
+    private bool m_trapGroundHit;
+
+    [SerializeField] private float m_TrapHitInvincibilityTime = 2.0f;
+    private float m_TrapHitInvincibilityTimer = 0.0f;
+
+    private bool m_trapHitAlphaChange=true;
+    [SerializeField] private float m_alphaChangeTime = 0.3f;
+    private float m_alphaChangeTimer = 0.0f;
+    private float m_alphaChangeTimeCheck;
+    private Color m_sprColor;
+
     //아이템부분 많이쓸거같으면 json으로 인벤토리구현을해줄필요있음 아니면 불값으로 on/off체크해주는방법이좋을듯함
     private bool PlayerIsKey = false;
     private bool doorLockisOpen = false;
@@ -97,6 +116,9 @@ public class Player : MonoBehaviour
 
     private bool playerStop = false;//플레이어가 멈춰있으라는용도 업데이트문맨위에있을예정이므로 움직이면안될경우에쓸필요있음
 
+    //플레이어의본인에서찾아올것들
+    private SpriteRenderer m_spr;
+    private Transform m_Trs;
     private BoxCollider2D m_box2d;
     private Animator m_anim;
     private Rigidbody2D m_rig2d;
@@ -105,9 +127,15 @@ public class Player : MonoBehaviour
     void Start()
     {
         floatingTime = floatingTimer;
+        m_Trs = GetComponent<Transform>();
+        m_groundCheckBox2d = m_Trs.Find("PlayerGroundCheck").GetComponent<BoxCollider2D>();
         m_rig2d = GetComponent<Rigidbody2D>();
         m_anim = GetComponent<Animator>();
         m_box2d = GetComponent<BoxCollider2D>();
+        m_spr = GetComponent<SpriteRenderer>();
+        m_sprColor = m_spr.color;
+        m_alphaChangeTimeCheck = m_alphaChangeTime;
+        
     }
 
 
@@ -131,7 +159,8 @@ public class Player : MonoBehaviour
         playerChaneTimer();//플레이어 슬라임타입의 쿨타임을정해주는곳
         playerCheckWaterHight();//물줄기를 만나면 솓아오르는용도로만들어줌
         playerHitCheck();//지형에따른피격판정
-        playerEnemyHitCheck();
+        playerTrapHitCheck();//트랩히트판정넣는부분
+        playerTrapHitInvincibility();
         playerKeyDel();//문열었는지확인후 키삭제불값보내주는용도
         playerHitTime();//맞은뒤 무적시간같은부분
         playerStopCheck();//움직이면안되는부분이있으면추가해줄필요있음
@@ -142,6 +171,8 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.RightArrow))
         {
             moveDir.x = 1;
+            m_Trs.localScale = new Vector3(1, 1, 1);
+            playerRightCheck = true;
         }
         else if (Input.GetKeyUp(KeyCode.RightArrow))
         {
@@ -151,11 +182,14 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             moveDir.x = -1;
+            m_Trs.localScale = new Vector3(-1, 1, 1);
+            playerRightCheck = false;
         }
         else if (Input.GetKeyUp(KeyCode.LeftArrow))
         {
             moveDir.x = 0;
         }
+
         if (m_inLavaCheck)
         {
             m_rig2d.velocity = moveDir * 0.5f * m_speed;
@@ -200,7 +234,7 @@ public class Player : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                if (m_lavaJumpDelay==false)
+                if (m_lavaJumpDelay == false)
                 {
                     m_lavaJumpCheck = true;
                     m_lavaJumpDelay = true;
@@ -344,10 +378,14 @@ public class Player : MonoBehaviour
 
         if (waterHightCheck)//물최고높이에있을때 다른곳에서 점프력이낮춰주는곳을 전부다체크해서 들어가게해줄것
         {
-            //m_jumpCheck = false;
-            // playerWaterJump = false;
             m_groundCheck = false;
             m_jumpGravity = m_playerJump;
+        }
+
+        if (m_trapGroundHit)//나중에 타입별로나눠줄생각있으면 위에서 각가맞는곳에 넣어서 값바꿔주면될듯
+        {
+            m_jumpGravity = 2;
+            m_trapGroundHit = false;
         }
 
         m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, m_jumpGravity);
@@ -537,9 +575,62 @@ public class Player : MonoBehaviour
             }
         }
     }
-    private void playerEnemyHitCheck()
+    private void playerTrapHitCheck()
     {
-        //적에맞았을때 체력다는부분을만들어줄것
+        if (m_trapHitInvincibility)
+        {
+            return;
+        }
+        if (m_groundCheckBox2d.IsTouchingLayers(LayerMask.GetMask("Trap")))
+        {
+            m_trapHitCheck = true;
+            playerHp -= 1;
+            m_trapGroundHit = true;
+        }
+
+    }
+
+    private void playerTrapHitInvincibility()
+    {
+        if (m_trapHitCheck)
+        {
+            m_trapHitInvincibility = true;
+            m_TrapHitInvincibilityTimer += Time.deltaTime;
+            if (m_TrapHitInvincibilityTimer >= m_TrapHitInvincibilityTime)
+            {
+                m_sprColor.a = 1f;
+                m_spr.color = m_sprColor;
+                m_trapHitInvincibility = false;
+                m_trapHitCheck = false;
+                m_TrapHitInvincibilityTimer = 0.0f;
+            }
+        }
+
+        if (m_trapHitInvincibility)
+        {
+            if (m_trapHitAlphaChange)
+            {
+                m_sprColor.a = 0.5f;
+                m_spr.color = m_sprColor;
+                m_alphaChangeTimer += Time.deltaTime;
+                if (m_alphaChangeTimer >= m_alphaChangeTime)
+                {
+                    m_trapHitAlphaChange = false;
+                    m_alphaChangeTimer = m_alphaChangeTimeCheck;
+                }
+            }
+            else
+            {
+                m_sprColor.a = 1f;
+                m_spr.color = m_sprColor;
+                m_alphaChangeTimer -= Time.deltaTime;
+                if (m_alphaChangeTimer <= 0)
+                {
+                    m_trapHitAlphaChange = true;
+                    m_alphaChangeTimer = 0.0f;
+                }
+            }
+        }
     }
 
     private void playerHitCheck()
@@ -588,7 +679,7 @@ public class Player : MonoBehaviour
 
     private void playerHitTime()
     {
-        if (!hitCheck || HitType == eHitGroundType.None) 
+        if (!hitCheck || HitType == eHitGroundType.None)
         {
             return;
         }
@@ -733,6 +824,11 @@ public class Player : MonoBehaviour
                             HitType = eHitGroundType.WaterCourse;
                         }
 
+                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Trap"))
+                        {
+                            m_groundCheck = true;
+                        }
+
                         break;
 
                     case PlayerHitBox.HitType.Item:
@@ -772,6 +868,11 @@ public class Player : MonoBehaviour
                         else if (_collision.gameObject.layer == LayerMask.NameToLayer("WaterCourse"))
                         {
                             HitType = eHitGroundType.None;
+                        }
+
+                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Trap"))
+                        {
+                            m_groundCheck = false;
                         }
                         break;
 
