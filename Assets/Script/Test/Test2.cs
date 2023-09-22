@@ -4,21 +4,18 @@ using UnityEngine;
 
 public class Test2 : MonoBehaviour
 {
-    public Test test;
-    public bool check;
+    public float speed=4;
+    private Transform m_trs;
     void Start()
     {
-        
+        m_trs= GetComponent<Transform>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        transform.position = new Vector3(transform.position.x + speed * Time.deltaTime, transform.position.y, transform.position.z);   
     }
 
-    public bool check2()
-    {
-        return check;
-    }
+    
 }

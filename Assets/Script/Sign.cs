@@ -29,12 +29,14 @@ public class Sign : MonoBehaviour
         {
             signText.text = "";
             tutorialUI.SetActive(false);
+            tutorialUICheck = false;
         }
 
     }
 
     private void checkTutorialUI()
     {
+        
         if (Input.GetKeyDown(KeyCode.Z) && !tutorialUICheck)
         {
             tutorialUI.SetActive(true);

@@ -1414,7 +1414,7 @@ TextureImporter:
         width: 72
         height: 72
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1422,6 +1422,48 @@ TextureImporter:
       bones: []
       spriteID: aaecbd0d2cb452f49a79e8f0683c1ac5
       internalID: 1018704307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: S_Water&Background_55
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 126
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b361e3d5c3a13604ea80405a5470e605
+      internalID: -802219920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: S_Water&Background_56
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 126
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 56424bec791f8ce4e929900662dcb31a
+      internalID: -1807501690
       vertices: []
       indices: 
       edges: []
@@ -1488,6 +1530,8 @@ TextureImporter:
       S_Water&Background_52: 4373209015617172998
       S_Water&Background_53: 8620436593443935461
       S_Water&Background_54: 1018704307
+      S_Water&Background_55: -802219920
+      S_Water&Background_56: -1807501690
       S_Water&Background_6: -8076787771891976772
       S_Water&Background_7: 4396437737547145737
       S_Water&Background_8: 8517503695476633765

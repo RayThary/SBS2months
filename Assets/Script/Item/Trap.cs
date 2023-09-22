@@ -39,14 +39,15 @@ public class Trap : MonoBehaviour
         {
             return;
         }
-        if (m_box2d.IsTouchingLayers(LayerMask.GetMask("Player")) && player.GetPlayerTrapHitCheck())
+
+        if (player.GetPlayerTrapHitCheck())
         {
             if (trapType == eTrapType.GreenTrap)
             {
                 if (player.GetPlayerType() == Player.eType.Green)
                 {
                     player.SetPlayerTrapHit(true);
-                    player.SetPlayerHp(1);
+                    player.SetTrapHpRemove(true);
                 }
             }
             else if (trapType == eTrapType.BlueTrap)
@@ -54,7 +55,7 @@ public class Trap : MonoBehaviour
                 if (player.GetPlayerType() == Player.eType.Blue)
                 {
                     player.SetPlayerTrapHit(true);
-
+                    player.SetTrapHpRemove(true);
                 }
             }
             else if (trapType == eTrapType.RedTrap)
@@ -62,7 +63,7 @@ public class Trap : MonoBehaviour
                 if (player.GetPlayerType() == Player.eType.Red)
                 {
                     player.SetPlayerTrapHit(true);
-
+                    player.SetTrapHpRemove(true);
                 }
             }
         }

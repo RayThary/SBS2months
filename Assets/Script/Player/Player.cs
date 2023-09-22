@@ -31,8 +31,8 @@ public class Player : MonoBehaviour
         Trap,
     }
     //체크용으로만듬 나중에 3개serializeField삭제필요
-    [SerializeField] private eGroundType GroundType;
     [SerializeField] private eType PlayerType;
+    [SerializeField] private eGroundType GroundType;
     [SerializeField] private eHitGroundType HitType;
 
     private eGroundType beforGroundType;
@@ -100,6 +100,7 @@ public class Player : MonoBehaviour
     private bool m_trapHitCheck;//플레이어에서 맞았는지 체크용도
     private bool m_trapHitInvincibility;
     private bool m_trapGroundHit;
+    private bool m_trapHpRemove;
 
     [SerializeField] private float m_TrapHitInvincibilityTime = 2.0f;
     private float m_TrapHitInvincibilityTimer = 0.0f;
@@ -118,9 +119,9 @@ public class Player : MonoBehaviour
     private bool playerStop = false;//플레이어가 멈춰있으라는용도 업데이트문맨위에있을예정이므로 움직이면안될경우에쓸필요있음
 
     //로드에서 페이드인아웃시 움직이지않을용도
-    [SerializeField] private bool fadeCheck;
-    [SerializeField] private bool fadeInCheck;
-    [SerializeField] private bool noMoveJump = false;
+    private bool fadeCheck;
+    private bool fadeInCheck;
+    private bool noMoveJump = false;
 
     //플레이어의본인에서찾아올것들
     private SpriteRenderer m_spr;
@@ -153,7 +154,8 @@ public class Player : MonoBehaviour
         playerInvincibilityTime();//피격시 무적시간
         if (playerStop)//플레이어가죽으면 끝
         {
-            m_rig2d.velocity = new Vector2(0, 0);
+            m_rig2d.velocity = new Vector2(0, m_rig2d.velocity.y);
+            playerGravity();//모든 점프를통한 중력값을 여기서정해준다 
             return;
         }
         playerMove();//이동
@@ -171,6 +173,7 @@ public class Player : MonoBehaviour
         playerKeyDel();//문열었는지확인후 키삭제불값보내주는용도
         playerHitTime();//맞은뒤 무적시간같은부분
         playerStopCheck();//움직이면안되는부분이있으면추가해줄필요있음
+        playerTrapHpRemove();//트랩대미지입는부분
     }
 
     private void playerMove()
@@ -463,7 +466,7 @@ public class Player : MonoBehaviour
         }
     }
 
-
+ 
 
 
     private void playerCheckWaterHight()
@@ -472,12 +475,14 @@ public class Player : MonoBehaviour
         {
             BeforGroundTypeCheck();
             GroundType = eGroundType.WaterCourse;
+            HitType = eHitGroundType.WaterCourse;
         }
         else
         {
             if (GroundType == eGroundType.WaterCourse)
             {
                 GroundType = beforGroundType;
+                HitType = eHitGroundType.None;
             }
         }
         if (m_box2d.IsTouchingLayers(LayerMask.GetMask("WaterHight")))
@@ -601,8 +606,8 @@ public class Player : MonoBehaviour
             m_playerTrapHit = true;
             m_trapGroundHit = true;
         }
-        
-        
+
+
 
     }
 
@@ -650,6 +655,14 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void playerTrapHpRemove()
+    {
+        if (m_trapHpRemove)
+        {
+            playerHp -= 1;
+            m_trapHpRemove = false;
+        }
+    }
     private void playerHitCheck()
     {
         if (PlayerType == eType.Green)
@@ -660,6 +673,10 @@ public class Player : MonoBehaviour
                 m_hitTimer = 0;
             }
             if (HitType != eHitGroundType.None && HitType != eHitGroundType.Ground)//그린일때 대미지를안입을경우 여기에추가
+            {
+                hitCheck = true;
+            }
+            else if(GroundType== eGroundType.WaterCourse)
             {
                 hitCheck = true;
             }
@@ -687,6 +704,10 @@ public class Player : MonoBehaviour
                 m_hitTimer = 0;
             }
             if (HitType != eHitGroundType.None && HitType != eHitGroundType.Lava)//레드일때 대미지를안입을경우 여기에추가
+            {
+                hitCheck = true;
+            }
+            else if (GroundType == eGroundType.WaterCourse)
             {
                 hitCheck = true;
             }
@@ -858,8 +879,8 @@ public class Player : MonoBehaviour
                         }
                         else if (_collision.gameObject.layer == LayerMask.NameToLayer("WaterCourse"))
                         {
-                            playerWaterCheck = false;
-                            HitType = eHitGroundType.WaterCourse;
+                            //playerWaterCheck = false;
+                            //HitType = eHitGroundType.WaterCourse;
                         }
 
                         if (_collision.gameObject.layer == LayerMask.NameToLayer("Trap"))
@@ -905,7 +926,7 @@ public class Player : MonoBehaviour
                         }
                         else if (_collision.gameObject.layer == LayerMask.NameToLayer("WaterCourse"))
                         {
-                            HitType = eHitGroundType.None;
+                            //HitType = eHitGroundType.None;
                         }
 
                         if (_collision.gameObject.layer == LayerMask.NameToLayer("Trap"))
@@ -984,6 +1005,11 @@ public class Player : MonoBehaviour
         return m_trapHitCheck;
     }
 
+    public void SetTrapHpRemove(bool _value)
+    {
+        m_trapHpRemove = _value;
+    }
+
     public eType GetPlayerType()
     {
         return PlayerType;
@@ -993,5 +1019,6 @@ public class Player : MonoBehaviour
     {
         return GroundType;
     }
+
 
 }
