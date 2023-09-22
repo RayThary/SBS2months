@@ -4,6 +4,7 @@ using System.Threading;
 using UnityEditorInternal;
 using UnityEngine;
 
+
 public class Test : MonoBehaviour
 {
     public float speed;
@@ -32,29 +33,7 @@ public class Test : MonoBehaviour
     void Update()
     {
 
-        if (x)
-        {
-            timer += Time.deltaTime;
-            color.a = 0.5f;
-            spr.color = color;
-            if (timer > time)
-            {
-                x = false;
-                timer = tx;
-            }
-        }
-        else
-        {
-            timer-= Time.deltaTime;
-            if (timer < 0.0f)
-            {
-                x = true;
-                timer = 0.0f;
-            }
-            color.a = 1f;
-            spr.color = color;
-        }
-
+        spr.sortingOrder = 10;
     
 
     }

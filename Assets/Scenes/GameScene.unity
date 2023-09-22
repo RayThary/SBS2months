@@ -6849,7 +6849,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 418821222}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9, y: -1.475, z: -10}
+  m_LocalPosition: {x: 8, y: 0.024999976, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7529,7 +7529,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9, y: -1.475, z: -10}
+  m_LocalPosition: {x: 8, y: 0.024999976, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12115,7 +12115,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1074467169}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 87c3df4873848e64897784e7781a2cf3, type: 2}
   m_CullingMode: 0
@@ -19356,9 +19356,9 @@ RectTransform:
   m_Father: {fileID: 49633203}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -38, y: -972.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -43, y: 124}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1311288359
@@ -21025,8 +21025,8 @@ GameObject:
   - component: {fileID: 1550250936}
   - component: {fileID: 1550250938}
   - component: {fileID: 1550250939}
-  m_Layer: 18
-  m_Name: SpikeTrap
+  m_Layer: 19
+  m_Name: GreenSpikeTrap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21074,7 +21074,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 511047070407591104, guid: 862b40d28afa3c94fbc03f6652069a5e, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.6745283, g: 1, b: 0.7233491, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -21157,6 +21157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b09c5216f53e5444b49d13af9092cdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trapType: 2
 --- !u!1 &1554619944
 GameObject:
   m_ObjectHideFlags: 0
@@ -25396,7 +25397,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5008534755221123553}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9, y: -1.475, z: 0}
+  m_LocalPosition: {x: 8, y: 0.024999976, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -25572,6 +25573,9 @@ MonoBehaviour:
   m_HitInvincibilityTime: 1
   m_TrapHitInvincibilityTime: 2
   m_alphaChangeTime: 0.3
+  fadeCheck: 0
+  fadeInCheck: 0
+  noMoveJump: 0
 --- !u!61 &5008534755221123559
 BoxCollider2D:
   m_ObjectHideFlags: 0

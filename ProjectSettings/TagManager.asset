@@ -10,6 +10,8 @@ TagManager:
   - Water
   - Lava
   - WaterEnd
+  - Ladder
+  - Platform
   layers:
   - Default
   - TransparentFX
@@ -29,11 +31,11 @@ TagManager:
   - DoorLock
   - Key
   - UseKey
+  - 
   - Trap
-  - 
-  - 
-  - 
-  - 
+  - RedTrap
+  - BlueTrap
+  - GreenTrap
   - 
   - 
   - 

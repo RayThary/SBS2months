@@ -96,14 +96,15 @@ public class Player : MonoBehaviour
     private bool m_hitInvincibility;
 
     private BoxCollider2D m_groundCheckBox2d;
-    private bool m_trapHitCheck;
+    private bool m_playerTrapHit;//트랩에서 맞았는지 체크용도
+    private bool m_trapHitCheck;//플레이어에서 맞았는지 체크용도
     private bool m_trapHitInvincibility;
     private bool m_trapGroundHit;
 
     [SerializeField] private float m_TrapHitInvincibilityTime = 2.0f;
     private float m_TrapHitInvincibilityTimer = 0.0f;
 
-    private bool m_trapHitAlphaChange=true;
+    private bool m_trapHitAlphaChange = true;
     [SerializeField] private float m_alphaChangeTime = 0.3f;
     private float m_alphaChangeTimer = 0.0f;
     private float m_alphaChangeTimeCheck;
@@ -115,6 +116,11 @@ public class Player : MonoBehaviour
     private bool doorKeyCheck = false;
 
     private bool playerStop = false;//플레이어가 멈춰있으라는용도 업데이트문맨위에있을예정이므로 움직이면안될경우에쓸필요있음
+
+    //로드에서 페이드인아웃시 움직이지않을용도
+    [SerializeField] private bool fadeCheck;
+    [SerializeField] private bool fadeInCheck;
+    [SerializeField] private bool noMoveJump = false;
 
     //플레이어의본인에서찾아올것들
     private SpriteRenderer m_spr;
@@ -135,13 +141,14 @@ public class Player : MonoBehaviour
         m_spr = GetComponent<SpriteRenderer>();
         m_sprColor = m_spr.color;
         m_alphaChangeTimeCheck = m_alphaChangeTime;
-        
+
     }
 
 
     void Update()
     {
 
+        playerFadeCheck();//페이드인아웃시 움직이지못하게하는부분
         playerDeathMotion();
         playerInvincibilityTime();//피격시 무적시간
         if (playerStop)//플레이어가죽으면 끝
@@ -168,6 +175,10 @@ public class Player : MonoBehaviour
 
     private void playerMove()
     {
+        if (noMoveJump)
+        {
+            return;
+        }
         if (Input.GetKey(KeyCode.RightArrow))
         {
             moveDir.x = 1;
@@ -202,6 +213,10 @@ public class Player : MonoBehaviour
 
     private void playerJump()
     {
+        if (noMoveJump)
+        {
+            return;
+        }
         if (m_groundCheck)//땅에있는지 체크하기위한용도
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -583,10 +598,11 @@ public class Player : MonoBehaviour
         }
         if (m_groundCheckBox2d.IsTouchingLayers(LayerMask.GetMask("Trap")))
         {
-            m_trapHitCheck = true;
-            playerHp -= 1;
+            m_playerTrapHit = true;
             m_trapGroundHit = true;
         }
+        
+        
 
     }
 
@@ -594,6 +610,7 @@ public class Player : MonoBehaviour
     {
         if (m_trapHitCheck)
         {
+            m_playerTrapHit = false;
             m_trapHitInvincibility = true;
             m_TrapHitInvincibilityTimer += Time.deltaTime;
             if (m_TrapHitInvincibilityTimer >= m_TrapHitInvincibilityTime)
@@ -759,6 +776,27 @@ public class Player : MonoBehaviour
             else if (PlayerType == eType.Green)
             {
                 m_anim.SetTrigger("GreenDeath");
+            }
+        }
+    }
+
+    private void playerFadeCheck()
+    {
+        fadeCheck = LoadManager.instance.GetStageChange();
+        if (fadeCheck)
+        {
+            fadeInCheck = true;
+        }
+        if (fadeInCheck)
+        {
+            if (HitType == eHitGroundType.None)
+            {
+                noMoveJump = true;
+            }
+            else
+            {
+                noMoveJump = false;
+                fadeInCheck = false;
             }
         }
     }
@@ -932,6 +970,20 @@ public class Player : MonoBehaviour
         playerStop = _value;
     }
 
+    public bool GetPlayerTrapHitCheck()
+    {
+        return m_playerTrapHit;
+    }
+
+    public void SetPlayerTrapHit(bool _value)
+    {
+        m_trapHitCheck = _value;
+    }
+    public bool GetPlayerTrapHit()
+    {
+        return m_trapHitCheck;
+    }
+
     public eType GetPlayerType()
     {
         return PlayerType;
@@ -941,4 +993,5 @@ public class Player : MonoBehaviour
     {
         return GroundType;
     }
+
 }
