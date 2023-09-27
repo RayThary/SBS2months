@@ -32,6 +32,7 @@ public class LoadManager : MonoBehaviour
     }
     void Start()
     {
+        imgFade.gameObject.SetActive(false);
         fadeColor = imgFade.color;
         playerTrs = GameManager.instance.GetPlayerTransform();
         player = playerTrs.GetComponent<Player>();
@@ -48,6 +49,7 @@ public class LoadManager : MonoBehaviour
     {
         if (stageChange)
         {
+            imgFade.gameObject.SetActive(true);
             fadeColor.a = 1;
             imgFade.color = fadeColor;
             player.SetPlayerStop(true);
@@ -76,6 +78,7 @@ public class LoadManager : MonoBehaviour
         {
             fadeOffCheck = false;
             player.SetPlayerStop(false);
+            imgFade.gameObject.SetActive(false);
         }
 
     }

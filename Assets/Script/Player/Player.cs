@@ -6,7 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [Header("테스트용 hit 로 체력감소만안달게하기")]
-    public bool NoHit = false;
+    public bool NoHit = false;//나중에 무적시간에 트루로넣어놓으면될듯 일단테스트용도로자주쓰일예정
     public enum eType
     {
         Red,
@@ -617,11 +617,13 @@ public class Player : MonoBehaviour
     {
         if (m_trapHitCheck)
         {
+            NoHit = true;
             m_playerTrapHit = false;
             m_trapHitInvincibility = true;
             m_TrapHitInvincibilityTimer += Time.deltaTime;
             if (m_TrapHitInvincibilityTimer >= m_TrapHitInvincibilityTime)
             {
+                NoHit = false;
                 m_sprColor.a = 1f;
                 m_spr.color = m_sprColor;
                 m_trapHitInvincibility = false;
@@ -659,6 +661,10 @@ public class Player : MonoBehaviour
 
     private void playerTrapHpRemove()
     {
+        if (NoHit)
+        {
+            return;
+        }
         if (m_trapHpRemove)
         {
             playerHp -= 1;
@@ -978,6 +984,10 @@ public class Player : MonoBehaviour
     //체력깍는용도 벨류값만큼 대미지를입는다 대부분1일듯함h
     public void SetPlayerHp(int _value)
     {
+        if (NoHit)
+        {
+            return;
+        }
         playerHp -= _value;
         m_rig2d.velocity = new Vector2(0, 0);
         m_hitInvincibility = true;

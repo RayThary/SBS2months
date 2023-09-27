@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,12 +16,16 @@ public class GameManager : MonoBehaviour
     }
     [SerializeField]private eStage stage;//현재스테이지를 표현해줌 이거에따라 나오는위치가달라짐 나중에 삭제해도될듯
     public static GameManager instance;
-    
+
+    [SerializeField] private GameObject GameMenu;
+
     private Player player;
 
     private void Awake()
     {
-        if(instance == null)
+
+        GameMenu.SetActive(false);
+        if (instance == null)
         {
             instance = this;
         }
@@ -39,7 +44,16 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        
+        gameMenu();
+    }
+
+    private void gameMenu()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            GameMenu.SetActive(true);
+            Time.timeScale = 0;
+        }
     }
 
     public Transform GetPlayerTransform()

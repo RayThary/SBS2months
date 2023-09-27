@@ -29,6 +29,7 @@ public class ButtonController : MonoBehaviour
     {
         SceneManager.LoadSceneAsync((int)_value);
     }
+
     private void endGame()
     {
 #if UNITY_EDITOR
