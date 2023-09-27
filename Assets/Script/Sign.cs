@@ -8,7 +8,8 @@ public class Sign : MonoBehaviour
     private BoxCollider2D box2d;
 
     private TextMeshPro signText;
-    private bool tutorialUICheck = false;
+    [SerializeField] private bool tutorialUICheck = false;
+    private bool tutorialUISet;
     [SerializeField] private GameObject tutorialUI;
 
     void Start()
@@ -22,11 +23,13 @@ public class Sign : MonoBehaviour
     {
         if (box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
         {
-            checkTutorialUI();
+
             signText.text = "표지판 열기 z키";
+            checkTutorialUI();
         }
         else
         {
+            tutorialUISet = false;
             signText.text = "";
             tutorialUI.SetActive(false);
             tutorialUICheck = false;
@@ -36,13 +39,13 @@ public class Sign : MonoBehaviour
 
     private void checkTutorialUI()
     {
-        
+
         if (Input.GetKeyDown(KeyCode.Z) && !tutorialUICheck)
         {
             tutorialUI.SetActive(true);
             tutorialUICheck = true;
         }
-        else if (tutorialUICheck && Input.GetKeyDown(KeyCode.Z))
+        else if (Input.GetKeyDown(KeyCode.Z) && tutorialUICheck)
         {
             tutorialUI.SetActive(false);
             tutorialUICheck = false;

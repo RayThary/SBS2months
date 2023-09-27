@@ -274,7 +274,6 @@ GameObject:
   - component: {fileID: 179905763}
   - component: {fileID: 179905762}
   - component: {fileID: 179905761}
-  - component: {fileID: 179905766}
   m_Layer: 0
   m_Name: BackGroundTile (1)
   m_TagString: Untagged
@@ -1036,19 +1035,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!114 &179905766
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 179905759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1c225e8751128b4f99591a5c9a996f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 20
 --- !u!1 &511061878
 GameObject:
   m_ObjectHideFlags: 0
@@ -1745,7 +1731,6 @@ GameObject:
   - component: {fileID: 1651471540}
   - component: {fileID: 1651471539}
   - component: {fileID: 1651471538}
-  - component: {fileID: 1651471541}
   m_Layer: 0
   m_Name: BackGroundTile
   m_TagString: Untagged
@@ -2507,19 +2492,6 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
---- !u!114 &1651471541
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1651471533}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1c225e8751128b4f99591a5c9a996f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 20
 --- !u!1 &1685427610
 GameObject:
   m_ObjectHideFlags: 0
@@ -2534,7 +2506,6 @@ GameObject:
   - component: {fileID: 1685427614}
   - component: {fileID: 1685427613}
   - component: {fileID: 1685427612}
-  - component: {fileID: 1685427617}
   m_Layer: 0
   m_Name: BackGroundTile (2)
   m_TagString: Untagged
@@ -3296,19 +3267,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!114 &1685427617
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1685427610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1c225e8751128b4f99591a5c9a996f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 20
 --- !u!1 &1955964243
 GameObject:
   m_ObjectHideFlags: 0

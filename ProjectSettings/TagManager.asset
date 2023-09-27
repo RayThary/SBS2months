@@ -21,7 +21,7 @@ TagManager:
   - UI
   - Player
   - Lava
-  - 
+  - MoveGround
   - WaterCourse
   - WaterHight
   - GreenSlime
@@ -31,7 +31,7 @@ TagManager:
   - DoorLock
   - Key
   - UseKey
-  - 
+  - FallTrap
   - Trap
   - RedTrap
   - BlueTrap

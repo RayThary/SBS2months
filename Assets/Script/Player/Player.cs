@@ -98,6 +98,7 @@ public class Player : MonoBehaviour
     private BoxCollider2D m_groundCheckBox2d;
     private bool m_playerTrapHit;//트랩에서 맞았는지 체크용도
     private bool m_trapHitCheck;//플레이어에서 맞았는지 체크용도
+    private bool m_fallTrapHitCheck;//플레이어에서 떨어지는걸 맞았는지체크이후 삭제용도
     private bool m_trapHitInvincibility;
     private bool m_trapGroundHit;
     private bool m_trapHpRemove;
@@ -152,6 +153,7 @@ public class Player : MonoBehaviour
         playerFadeCheck();//페이드인아웃시 움직이지못하게하는부분
         playerDeathMotion();
         playerInvincibilityTime();//피격시 무적시간
+        playerTrapHpRemove();//트랩대미지입는부분
         if (playerStop)//플레이어가죽으면 끝
         {
             m_rig2d.velocity = new Vector2(0, m_rig2d.velocity.y);
@@ -173,7 +175,6 @@ public class Player : MonoBehaviour
         playerKeyDel();//문열었는지확인후 키삭제불값보내주는용도
         playerHitTime();//맞은뒤 무적시간같은부분
         playerStopCheck();//움직이면안되는부분이있으면추가해줄필요있음
-        playerTrapHpRemove();//트랩대미지입는부분
     }
 
     private void playerMove()
@@ -466,7 +467,7 @@ public class Player : MonoBehaviour
         }
     }
 
- 
+
 
 
     private void playerCheckWaterHight()
@@ -609,6 +610,7 @@ public class Player : MonoBehaviour
 
 
 
+
     }
 
     private void playerTrapHitInvincibility()
@@ -661,6 +663,18 @@ public class Player : MonoBehaviour
         {
             playerHp -= 1;
             m_trapHpRemove = false;
+            if (PlayerType == eType.Blue)
+            {
+                m_anim.SetTrigger("BlueHit");
+            }
+            else if (PlayerType == eType.Red)
+            {
+                m_anim.SetTrigger("RedHit");
+            }
+            else if (PlayerType == eType.Green)
+            {
+                m_anim.SetTrigger("GreenHit");
+            }
         }
     }
     private void playerHitCheck()
@@ -676,7 +690,7 @@ public class Player : MonoBehaviour
             {
                 hitCheck = true;
             }
-            else if(GroundType== eGroundType.WaterCourse)
+            else if (GroundType == eGroundType.WaterCourse)
             {
                 hitCheck = true;
             }
@@ -849,7 +863,7 @@ public class Player : MonoBehaviour
                 {
                     case PlayerHitBox.HitType.Ground:
 
-                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground") || _collision.gameObject.layer == LayerMask.NameToLayer("MoveGround"))
                         {
                             GroundType = eGroundType.Ground;
                             HitType = eHitGroundType.Ground;
@@ -900,6 +914,11 @@ public class Player : MonoBehaviour
                             doorLockisOpen = true;
                         }
 
+                        if (_collision.gameObject.layer == LayerMask.NameToLayer("FallTrap"))
+                        {
+                            m_trapGroundHit = true;
+                            m_trapHitCheck = true;
+                        }
                         break;
                 }
                 break;
@@ -908,7 +927,7 @@ public class Player : MonoBehaviour
                 switch (_hitType)
                 {
                     case PlayerHitBox.HitType.Ground:
-                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground") || _collision.gameObject.layer == LayerMask.NameToLayer("MoveGround"))
                         {
                             HitType = eHitGroundType.None;
                             m_groundCheck = false;
@@ -932,6 +951,7 @@ public class Player : MonoBehaviour
                         if (_collision.gameObject.layer == LayerMask.NameToLayer("Trap"))
                         {
                             m_groundCheck = false;
+                            HitType = eHitGroundType.None;
                         }
                         break;
 
@@ -999,6 +1019,8 @@ public class Player : MonoBehaviour
     public void SetPlayerTrapHit(bool _value)
     {
         m_trapHitCheck = _value;
+
+
     }
     public bool GetPlayerTrapHit()
     {
