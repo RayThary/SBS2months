@@ -14,7 +14,7 @@ public class EscButtonControl : MonoBehaviour
     private Transform m_TrsExit;
 
     private Button m_BtnContinue;
-    private Button m_BtnReStart;
+    [SerializeField]private Button m_BtnSound;
     private Button m_BtnController;
     private Button m_BtnExit;
 
@@ -25,12 +25,12 @@ public class EscButtonControl : MonoBehaviour
         m_parentTrs = transform.parent;
 
         m_TrsContinue = GetComponentInChildren<Transform>().Find("Continue");
-        m_TrsReStart = GetComponentInChildren<Transform>().Find("ReStart");
+        m_TrsReStart = GetComponentInChildren<Transform>().Find("Sound");
         m_TrsController = GetComponentInChildren<Transform>().Find("Controller");
         m_TrsExit = GetComponentInChildren<Transform>().Find("Exit");
 
         m_BtnContinue = m_TrsContinue.GetComponent<Button>();
-        m_BtnReStart = m_TrsReStart.GetComponent<Button>();
+        m_BtnSound = m_TrsReStart.GetComponent<Button>();
         m_BtnController = m_TrsController.GetComponent<Button>();
         m_BtnExit = m_TrsExit.GetComponent<Button>();
 

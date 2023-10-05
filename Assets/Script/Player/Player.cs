@@ -6,7 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [Header("테스트용 hit 로 체력감소만안달게하기")]
-    public bool NoHit = false;//나중에 무적시간에 트루로넣어놓으면될듯 일단테스트용도로자주쓰일예정
+    [SerializeField] private bool NoHit = false;//나중에 무적시간에 트루로넣어놓으면될듯 일단테스트용도로자주쓰일예정
     public enum eType
     {
         Red,
@@ -73,7 +73,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float m_playerInLavaJump = 3f;//용암속에서의 점프력 아마 저항있는부분에서의 점프력일듯 다른곳에서 사용시 이름바꿀필요가있음
     private bool m_jumpCheck = false;
     private bool m_groundCheck;
-
+    private bool m_deathCheck = false;
+    private bool m_oneDeathCheck = false;//데스트리거한번체크용
 
     //용암
     private bool m_groundLavaCheck = true;//용암에서의 점프를담당할예정근데아마 용암밖에나갔을때 써줄예정
@@ -88,7 +89,6 @@ public class Player : MonoBehaviour
     [SerializeField] private float m_HitTime = 3.0f;
     private float m_hitTimer = 0.0f;
     private bool hitCheck;
-    private bool playerRightCheck;
 
     //대미지입는용도 잠시무적시간
     [SerializeField] private float m_HitInvincibilityTime = 1.0f;
@@ -117,7 +117,7 @@ public class Player : MonoBehaviour
     private bool doorLockisOpen = false;
     private bool doorKeyCheck = false;
 
-    private bool playerStop = false;//플레이어가 멈춰있으라는용도 업데이트문맨위에있을예정이므로 움직이면안될경우에쓸필요있음
+    [SerializeField]private bool playerStop = false;//플레이어가 멈춰있으라는용도 업데이트문맨위에있을예정이므로 움직이면안될경우에쓸필요있음
 
     //로드에서 페이드인아웃시 움직이지않을용도
     private bool fadeCheck;
@@ -149,7 +149,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-
         playerFadeCheck();//페이드인아웃시 움직이지못하게하는부분
         playerDeathMotion();
         playerInvincibilityTime();//피격시 무적시간
@@ -176,33 +175,38 @@ public class Player : MonoBehaviour
         playerHitTime();//맞은뒤 무적시간같은부분
         playerStopCheck();//움직이면안되는부분이있으면추가해줄필요있음
     }
-
+    
     private void playerMove()
     {
         if (noMoveJump)
         {
             return;
         }
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            moveDir.x = 1;
-            m_Trs.localScale = new Vector3(1, 1, 1);
-            playerRightCheck = true;
-        }
-        else if (Input.GetKeyUp(KeyCode.RightArrow))
-        {
-            moveDir.x = 0;
-        }
+        //if (Input.GetKey(KeyCode.RightArrow))
+        //{
+        //    moveDir.x = 1;
+        //    m_Trs.localScale = new Vector3(1, 1, 1);
+        //}
+        //else if (Input.GetKeyUp(KeyCode.RightArrow))
+        //{
+        //    moveDir.x = 0;
+        //}
 
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            moveDir.x = -1;
-            m_Trs.localScale = new Vector3(-1, 1, 1);
-            playerRightCheck = false;
-        }
-        else if (Input.GetKeyUp(KeyCode.LeftArrow))
-        {
-            moveDir.x = 0;
+        //if (Input.GetKey(KeyCode.LeftArrow))
+        //{
+        //    moveDir.x = -1;
+        //    m_Trs.localScale = new Vector3(-1, 1, 1);
+
+        //}
+        //else if (Input.GetKeyUp(KeyCode.LeftArrow))
+        //{
+        //    moveDir.x = 0;
+        //}
+
+        moveDir.x = Input.GetAxisRaw("Horizontal");
+        if (moveDir.x != 0)
+        { 
+            m_Trs.localScale = new Vector3(moveDir.x == 1 ? 1 : -1 , 1, 1);
         }
 
         if (m_inLavaCheck)
@@ -799,10 +803,18 @@ public class Player : MonoBehaviour
         {
             playerStop = true;
         }
+        else
+        {
+            playerStop = false;
+        }
     }
 
     private void playerDeathMotion()
     {
+        if (m_oneDeathCheck)
+        {
+            return;
+        }
         if (playerHp <= 0)
         {
             m_rig2d.velocity = new Vector2(0, 0);
@@ -818,6 +830,7 @@ public class Player : MonoBehaviour
             {
                 m_anim.SetTrigger("GreenDeath");
             }
+            m_oneDeathCheck = true;
         }
     }
 
@@ -845,7 +858,7 @@ public class Player : MonoBehaviour
     //애니메이터용은 이아래로 애니메이터에서 체크해줄부분임 
     private void playerDeath()
     {
-        Destroy(gameObject);// 플레이어 데스모션에서 죽음모션일때 마지막이벤트에넣어놈 
+        m_deathCheck = true;
     }
 
     private void playerHit()
@@ -982,13 +995,12 @@ public class Player : MonoBehaviour
     }
 
     //체력깍는용도 벨류값만큼 대미지를입는다 대부분1일듯함h
-    public void SetPlayerHp(int _value)
+    public void EnmeyPlayerRemoveHp()
     {
         if (NoHit)
         {
             return;
         }
-        playerHp -= _value;
         m_rig2d.velocity = new Vector2(0, 0);
         m_hitInvincibility = true;
         if (PlayerType == eType.Blue)
@@ -1052,5 +1064,33 @@ public class Player : MonoBehaviour
         return GroundType;
     }
 
+    public bool GetNoHitCheck()
+    {
+        return NoHit;
+    }
 
+    public bool GetDeathCheck()
+    {
+        return m_deathCheck;
+    }
+    public void SetDeathCheck(bool _value)
+    {
+        m_deathCheck = _value;
+    }
+    public void SetPlayerReset()
+    {
+        playerHp = 3;
+        PlayerType = eType.Green;
+        NoHit = false;
+        playerStop = false;
+        m_sprColor.a = 1f;
+        m_spr.color = m_sprColor;
+        m_trapHitInvincibility = false;
+        m_trapHitCheck = false;
+        m_TrapHitInvincibilityTimer = 0.0f;
+    }
+    public void SetOneDeathReturn()
+    {
+        m_oneDeathCheck = false;
+    }
 }

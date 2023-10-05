@@ -9,7 +9,7 @@ public class Sign : MonoBehaviour
 
     private TextMeshPro signText;
     [SerializeField] private bool tutorialUICheck = false;
-    private bool tutorialUISet;
+
     [SerializeField] private GameObject tutorialUI;
 
     void Start()
@@ -23,13 +23,11 @@ public class Sign : MonoBehaviour
     {
         if (box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
         {
-
             signText.text = "표지판 열기 z키";
             checkTutorialUI();
         }
         else
         {
-            tutorialUISet = false;
             signText.text = "";
             tutorialUI.SetActive(false);
             tutorialUICheck = false;

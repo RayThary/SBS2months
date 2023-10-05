@@ -11,7 +11,8 @@ public class CamChange : MonoBehaviour
     private GameManager.eStage m_stage; // 게임매니저에서 가져올스테이지를알아보는곳
     private CinemachineConfiner2D m_cineConfiner2d;//시네머신
     private PolygonCollider2D m_poly2d;// 시네머신으로 제한을 폴리곤으로해야함 그래서 바뀌게된다면 폴리곤콜라이더를 바꿔주는형태
-
+     
+    
     void Start()
     {
         GameManager.instance.SetStage(GameManager.eStage.Tutorial);
@@ -40,12 +41,9 @@ public class CamChange : MonoBehaviour
         {
             m_poly2d = m_LStage[2].GetComponent<PolygonCollider2D>();
         }
-        else if (m_stage == GameManager.eStage.Stage3)
-        {
-            m_poly2d = m_LStage[3].GetComponent<PolygonCollider2D>();
-        }
+
 
         m_cineConfiner2d.m_BoundingShape2D = m_poly2d;
     }
-
+   
 }

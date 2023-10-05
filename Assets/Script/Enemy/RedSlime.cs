@@ -43,7 +43,7 @@ public class RedSlime : MonoBehaviour
     [Header("좌우면 체크해제 올라가면체크")]
     [SerializeField] private bool up = false;
     [SerializeField] private float moveMax;
-    [SerializeField]private float objSpeed = 2.0f;
+    [SerializeField] private float objSpeed = 2.0f;
     private Vector3 m_startPos;
     private Vector3 m_endPos;
     private bool m_endPosCheck = false;
@@ -95,11 +95,8 @@ public class RedSlime : MonoBehaviour
             m_endPos = new Vector3(m_startPos.x + moveMax, m_startPos.y, m_startPos.z);
         }
 
-        if (checkSlime == 0)
-        {
-            //슬라임일땐 딱히건들게없음 나중에생각나면 적어줄필요있음
-        }
-        else if (checkSlime == 1)
+
+        if (checkSlime == 1)
         {
             m_box2d.enabled = false;
         }
@@ -174,17 +171,19 @@ public class RedSlime : MonoBehaviour
     }
     private void playerCheck()
     {
-        if (m_box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
+        if (m_box2d.IsTouchingLayers(LayerMask.GetMask("Player")) && player.GetPlayerGroundType() == Player.eGroundType.Lava)
         {
             if (player.GetPlayerType() != Player.eType.Red)
             {
                 return;
             }
+
             PlayerCheck = true;
             m_objMoveCheck = false;
             returnStart = false;
             m_poly2d.enabled = true;
             m_anim.enabled = true;
+
             //시간관련 잊어버리는부분 다시들어왔을땐 작동x 그리고 시간초기화부분
             m_timerStart = false;
             m_timer = 0.0f;
@@ -193,11 +192,14 @@ public class RedSlime : MonoBehaviour
                 m_vecStartPoint = transform.position;
                 m_oneCheckVector = true;
             }
+
+
         }
         else
         {
             if (PlayerCheck)
             {
+
                 PlayerCheck = false;
                 m_timerStart = true;
             }
@@ -220,6 +222,7 @@ public class RedSlime : MonoBehaviour
 
         if (m_timerStart)
         {
+            m_rig2d.velocity = Vector2.zero;
             m_timer += Time.deltaTime;
             if (m_timer >= m_forgetPlayerTime)
             {

@@ -71,7 +71,7 @@ public class LoadManager : MonoBehaviour
     }
     IEnumerator fadeOffStart()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(3f);
         fadeColor.a -= speed * Time.deltaTime;
         imgFade.color = fadeColor;
         if (fadeColor.a <= 0)

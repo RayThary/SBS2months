@@ -12,19 +12,32 @@ public class GameManager : MonoBehaviour
         Tutorial,
         Stage1,
         Stage2,
-        Stage3,
     }
     [SerializeField]private eStage stage;//현재스테이지를 표현해줌 이거에따라 나오는위치가달라짐 나중에 삭제해도될듯
     public static GameManager instance;
 
     [SerializeField] private GameObject GameMenu;
+    [SerializeField] private GameObject PlayerDeathMenu;
+    private bool deathCheck = false;
+    private Player _player;
+    private Player player
+    {
+        get 
+        {
+            if (_player == null) 
+            {
 
-    private Player player;
+                _player = FindObjectOfType<Player>();
+            }
+            return _player;
+        }
+    }
 
     private void Awake()
     {
 
         GameMenu.SetActive(false);
+        PlayerDeathMenu.SetActive(false);
         if (instance == null)
         {
             instance = this;
@@ -32,29 +45,43 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
-        } 
-        player = FindObjectOfType<Player>();
-        
+        }
     }
 
-    void Start()
-    {
-        
-    }
 
     private void Update()
     {
+
         gameMenu();
+        playerDeathCheck();
     }
 
     private void gameMenu()
     {
+        if (deathCheck)
+        {
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             GameMenu.SetActive(true);
             Time.timeScale = 0;
         }
     }
+
+    private void playerDeathCheck()
+    {
+        if (player.GetDeathCheck() == true) 
+        {
+            PlayerDeathMenu.SetActive(true);
+            deathCheck = true;
+            Time.timeScale = 0;
+        }
+    }
+
+
+
+
 
     public Transform GetPlayerTransform()
     {
@@ -70,4 +97,8 @@ public class GameManager : MonoBehaviour
         stage = _stage;
     }
     
+    public void SetDeathMenu(bool _value)
+    {
+        PlayerDeathMenu.SetActive(_value);
+    }
 }

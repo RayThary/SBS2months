@@ -12,6 +12,7 @@ public class FallTrap : MonoBehaviour
 
     [SerializeField] private float fallCheckDistance = 6;
     [SerializeField] private float fallSpeed = 3;
+    private bool oneHit = false;
 
     private RaycastHit2D checkPlayer;
     private BoxCollider2D box2d;
@@ -21,31 +22,13 @@ public class FallTrap : MonoBehaviour
         Gizmos.color = Color.black;
         Gizmos.DrawLine(transform.position, new Vector3(transform.position.x, -fallCheckDistance, transform.position.z));
     }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            Destroy(gameObject);
-            player.SetTrapHpRemove(true);
-        }
-        if (collision.gameObject.tag == "Ground" && outGround)
-        {
-            Destroy(gameObject);
-        }
-    }
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Ground")
-        {
-            outGround = true;
-        }
-    }
     void Start()
     {
         Transform playerTrs = GameManager.instance.GetPlayerTransform();
-        player =  playerTrs.GetComponent<Player>(); 
+        player = playerTrs.GetComponent<Player>();
         box2d = GetComponent<BoxCollider2D>();
+        box2d.enabled = false;
     }
 
 
@@ -53,6 +36,7 @@ public class FallTrap : MonoBehaviour
     {
         playerCheck();
         fallTrapMove();
+        hitCheck();
     }
 
     private void playerCheck()
@@ -61,6 +45,7 @@ public class FallTrap : MonoBehaviour
         if (checkPlayer.collider != null)
         {
             fallCheck = true;
+            box2d.enabled = true;
         }
     }
 
@@ -71,5 +56,17 @@ public class FallTrap : MonoBehaviour
             return;
         }
         transform.position += Vector3.down * Time.deltaTime * fallSpeed;
+    }
+
+    private void hitCheck()
+    {
+        if (box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
+        {
+            Destroy(gameObject);
+            if (player.GetNoHitCheck() == false)
+            {
+                player.SetTrapHpRemove(true);
+            }
+        }
     }
 }

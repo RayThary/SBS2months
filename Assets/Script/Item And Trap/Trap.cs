@@ -15,8 +15,6 @@ public class Trap : MonoBehaviour
 
     private SpriteRenderer m_spr;
     private BoxCollider2D m_box2d;
-    private bool playerHpRemove = false;
-    private bool hitNoCheck;
 
     void Start()
     {

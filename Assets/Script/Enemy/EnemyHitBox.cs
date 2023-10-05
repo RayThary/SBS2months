@@ -40,6 +40,10 @@ public class EnemyHitBox : MonoBehaviour
         {
             greenSlime = GetComponentInParent<GreenSlime>();
             poly2D = GetComponent<PolygonCollider2D>();//그린슬라임은 닿았는지체크용도
+            if (greenSlime.GetSlimeType() == 1)
+            {
+                poly2D.enabled = false;
+            }
         }
         else if (slimeType == SlimeType.BlueSlime)
         {
@@ -74,9 +78,14 @@ public class EnemyHitBox : MonoBehaviour
     {
         if (playerGreenSlimeHitCheck)
         {
-            player.SetPlayerHp(1);
+            if (oneHitCheck)
+            {
+                return;
+            }
+            player.EnmeyPlayerRemoveHp();
             m_anim2d.SetTrigger("Death");
             Destroy(gameObject);
+            oneHitCheck = true;
         }
 
         if (blueSlimeAttackCheck)
@@ -86,7 +95,7 @@ public class EnemyHitBox : MonoBehaviour
             {
                 if (!oneHitCheck)
                 {
-                    player.SetPlayerHp(1);
+                    player.EnmeyPlayerRemoveHp();
                     oneHitCheck = true;
                     m_anim2d.SetBool("BlueDeath", true);
                 }
@@ -96,7 +105,7 @@ public class EnemyHitBox : MonoBehaviour
 
         if (playerRedSlimeHitCheck)
         {
-            player.SetPlayerHp(1);
+            player.EnmeyPlayerRemoveHp();
             m_anim2d.SetTrigger("Death");
             Destroy(gameObject);
         }

@@ -101,13 +101,17 @@ public class GreenSlime : MonoBehaviour
         if (checkSlime == 1)
         {
             m_box2d.enabled = false;
-            GetComponentInChildren<EnemyHitBox>().enabled = false;
+            GetComponentInChildren<EnemyHitBox>().gameObject.SetActive(false);
             GetComponent<GreenSlime>().enabled = false;
         }
     }
 
     void Update()
     {
+        if (checkSlime == 1)
+        {
+            return;
+        }
         if (enemyDeathCheck)
         {
             return;
@@ -123,7 +127,8 @@ public class GreenSlime : MonoBehaviour
         if (checkSlime == 1)
         {
             m_box2d.enabled = false;
-            GetComponent<GreenSlime>().enabled = false;
+            m_anim.enabled = false;
+            GetComponentInChildren<EnemyHitBox>().gameObject.SetActive(false);
         }
     }
     private void checkPlayerAndSlimeMove()
