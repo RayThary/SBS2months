@@ -350,7 +350,7 @@ public class Player : MonoBehaviour
                 {
                     if (m_lavaDownCheck)
                     {
-                        m_jumpGravity = -1f;
+                        m_jumpGravity = -2f;
                     }
                     else
                     {

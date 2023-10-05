@@ -20,7 +20,7 @@ public class MoveTile : MonoBehaviour
 
 	private bool moveStart = false;
 
-	private BoxCollider2D m_timeMoveBox2d;
+	private BoxCollider2D m_tieMoveBox2d;
 	private bool oneCheck = false;
 
 	private Animator m_anim;
@@ -41,7 +41,7 @@ public class MoveTile : MonoBehaviour
         m_anim = GetComponent<Animator>();
 		m_moveTileTrs = GetComponent<Transform>().Find("MoveTile");
 		m_box2d = GetComponent<BoxCollider2D>();
-		m_timeMoveBox2d = m_moveTileTrs.GetComponent<BoxCollider2D>();
+		m_tieMoveBox2d = m_moveTileTrs.GetComponent<BoxCollider2D>();
 
 		playerTrs = GameManager.instance.GetPlayerTransform();
 
@@ -80,7 +80,7 @@ public class MoveTile : MonoBehaviour
     }
     private void playeSetParent()
 	{
-		if (m_timeMoveBox2d.IsTouchingLayers(LayerMask.GetMask("Player")))
+		if (m_tieMoveBox2d.IsTouchingLayers(LayerMask.GetMask("Player")))
 		{
 			playerTrs.parent = m_moveTileTrs;
 			oneCheck = true;

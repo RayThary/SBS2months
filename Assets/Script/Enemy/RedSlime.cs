@@ -38,6 +38,18 @@ public class RedSlime : MonoBehaviour
     private PolygonCollider2D m_poly2d;
     private Animator m_anim;
 
+
+    //오브젝트일때의움직임 
+    [Header("좌우면 체크해제 올라가면체크")]
+    [SerializeField] private bool up = false;
+    [SerializeField] private float moveMax;
+    [SerializeField]private float objSpeed = 2.0f;
+    private Vector3 m_startPos;
+    private Vector3 m_endPos;
+    private bool m_endPosCheck = false;
+    private bool m_objMoveCheck = true;
+
+    private Rigidbody2D m_rig2d;
     private Player player;
     private Transform playerTrs;
     private EnemyHitBox hitBox;
@@ -64,12 +76,24 @@ public class RedSlime : MonoBehaviour
         m_box2d = GetComponent<BoxCollider2D>();
         m_poly2d = GetComponent<PolygonCollider2D>();
         m_Spr = GetComponent<SpriteRenderer>();
+        m_rig2d = GetComponent<Rigidbody2D>();
 
         m_anim.enabled = false;
         m_poly2d.enabled = false;
 
         //hitBox = GetComponentInChildren<EnemyHitBox>();
 
+
+        m_startPos = transform.position;
+        if (up)
+        {
+            m_endPos = new Vector3(m_startPos.x, m_startPos.y + moveMax, m_startPos.z);
+
+        }
+        else
+        {
+            m_endPos = new Vector3(m_startPos.x + moveMax, m_startPos.y, m_startPos.z);
+        }
 
         if (checkSlime == 0)
         {
@@ -78,38 +102,92 @@ public class RedSlime : MonoBehaviour
         else if (checkSlime == 1)
         {
             m_box2d.enabled = false;
-            //잔디일땐 스프라이트를제외한모든걸작동중지or삭제필요
         }
     }
 
 
     void Update()
     {
-        if (enemyDeathCheck)
+        if (checkSlime == 1)
+        {
+            objMove();
+            return;
+        }
+        else
+        {
+            if (enemyDeathCheck)
+            {
+                return;
+            }
+            playerCheck();
+            objMove();
+            slimeMove();
+            slimeMoveStartPos();
+        }
+    }
+    private void objMove()
+    {
+        if (m_objMoveCheck == false)
         {
             return;
         }
-        playerCheck();
-        slimeMove();
-        slimeMoveStartPos();
-    }
 
+        if (up)
+        {
+            if (m_endPosCheck == false)
+            {
+                m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, objSpeed);
+                if (transform.position.y >= m_endPos.y)
+                {
+                    m_endPosCheck = true;
+                }
+            }
+            else
+            {
+                m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, -objSpeed);
+                if (transform.position.y <= m_startPos.y)
+                {
+                    m_endPosCheck = false;
+                }
+            }
+        }
+        else
+        {
+            if (m_endPosCheck == false)
+            {
+                m_rig2d.velocity = new Vector2(objSpeed, m_rig2d.velocity.y);
+                if (transform.position.x >= m_endPos.x)
+                {
+                    m_endPosCheck = true;
+                }
+            }
+            else
+            {
+                m_rig2d.velocity = new Vector2(-objSpeed, m_rig2d.velocity.y);
+                if (transform.position.x <= m_startPos.x)
+                {
+                    m_endPosCheck = false;
+                }
+            }
+        }
+
+    }
     private void playerCheck()
     {
         if (m_box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
         {
-            if (player.GetPlayerType() != Player.eType.Red) 
+            if (player.GetPlayerType() != Player.eType.Red)
             {
                 return;
             }
             PlayerCheck = true;
+            m_objMoveCheck = false;
             returnStart = false;
             m_poly2d.enabled = true;
             m_anim.enabled = true;
             //시간관련 잊어버리는부분 다시들어왔을땐 작동x 그리고 시간초기화부분
             m_timerStart = false;
             m_timer = 0.0f;
-
             if (m_oneCheckVector == false)
             {
                 m_vecStartPoint = transform.position;
@@ -139,6 +217,7 @@ public class RedSlime : MonoBehaviour
             transform.position = Vector2.MoveTowards(transform.position, playerTrs.position, m_slimeSpeed * Time.deltaTime);
         }
 
+
         if (m_timerStart)
         {
             m_timer += Time.deltaTime;
@@ -146,7 +225,7 @@ public class RedSlime : MonoBehaviour
             {
                 returnStart = true;
                 m_timer = 0.0f;
-                
+
             }
         }
     }
@@ -167,6 +246,17 @@ public class RedSlime : MonoBehaviour
 
                 m_anim.enabled = false;
                 m_poly2d.enabled = false;
+
+                m_startPos = transform.position;
+                if (up)
+                {
+                    m_endPos = new Vector2(startPos.x, startPos.y + moveMax);
+                }
+                else
+                {
+                    m_endPos = new Vector2(startPos.x + moveMax, startPos.y);
+                }
+                m_objMoveCheck = true;
 
                 m_Spr.sprite = m_SprHideing;
                 redSlimeReturn = false;
@@ -190,7 +280,7 @@ public class RedSlime : MonoBehaviour
         enemyDeathCheck = _value;
     }
 
-   private void SetDestorySlime()
+    private void SetDestorySlime()
     {
         Destroy(gameObject);
     }
