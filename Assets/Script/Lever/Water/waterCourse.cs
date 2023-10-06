@@ -6,6 +6,7 @@ using TMPro;
 public class waterCourse : MonoBehaviour
 {
     [SerializeField] private bool tutorialText;
+    [SerializeField] private AudioClip clip;
     private TextMeshPro leverText;
     private Transform leverTextTrs;
 
@@ -45,6 +46,8 @@ public class waterCourse : MonoBehaviour
         leverTutorialText();
         CheckLever();
         checkZ();
+
+        
     }
 
     private void leverTutorialText()
@@ -99,6 +102,7 @@ public class waterCourse : MonoBehaviour
                     leverCheck = true;
                     leverReady = false;
                     m_anim.SetBool("Lever", true);
+                    SoundManager.instance.SoundPlayer("WaterLever", clip,0.1f);
                     Invoke("CheckWaterMove", m_waterFallTimer);
                     spawnWaterCourse();
                 }
@@ -113,6 +117,7 @@ public class waterCourse : MonoBehaviour
                     leverCheck = true;
                     leverReady = false;
                     m_anim.SetBool("Lever", true);
+                    SoundManager.instance.SoundPlayer("WaterLever", clip,0.1f);
                     Invoke("CheckWaterMove", m_waterFallTimer);
                 }
             }

@@ -297,6 +297,10 @@ public class BlueSlime : MonoBehaviour
     }
 
   
+    public int GetBlueSlimeType()
+    {
+        return slimeCheck;
+    }
 
     private void slimeDestroy()
     {

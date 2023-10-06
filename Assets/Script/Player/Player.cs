@@ -113,7 +113,7 @@ public class Player : MonoBehaviour
     private Color m_sprColor;
 
     //아이템부분 많이쓸거같으면 json으로 인벤토리구현을해줄필요있음 아니면 불값으로 on/off체크해주는방법이좋을듯함
-    private bool PlayerIsKey = false;
+    [SerializeField]private bool PlayerIsKey = false;//테스트용 삭제필요
     private bool doorLockisOpen = false;
     private bool doorKeyCheck = false;
 

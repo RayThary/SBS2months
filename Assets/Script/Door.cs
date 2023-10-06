@@ -11,13 +11,14 @@ public class Door : MonoBehaviour
     private TextMeshPro doorText;
     private Transform doorTextTrs;
 
-    [SerializeField]private Transform doorPillarTrs;
+    [SerializeField] private Transform doorPillarTrs;
     private BoxCollider2D doorPillarBox2d;
 
     private bool playerKeyCheck;
-    private bool OpenDoor = false;
-    private BoxCollider2D box2d;
-    [SerializeField]private BoxCollider2D box2dchile;
+    [SerializeField] private bool OpenDoor = false;
+    private bool DoorKeyCheck=false;
+    [SerializeField] private BoxCollider2D box2d;
+    [SerializeField] private BoxCollider2D box2dchile;
 
     [SerializeField] private float speed = 4;
 
@@ -39,11 +40,22 @@ public class Door : MonoBehaviour
     {
         doorTutorialText();
         playerKeyCheck = player.PlayerKeyCheck();
-        if (box2d.IsTouchingLayers(LayerMask.GetMask("Player")) && playerKeyCheck)
+
+        if (playerKeyCheck)
         {
-            if (Input.GetKeyDown(KeyCode.Z))
+            DoorKeyCheck = true;
+        }
+
+        
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            if (DoorKeyCheck)
             {
-                OpenDoor = true;
+                if (box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
+                {
+                    OpenDoor = true;
+                    DoorKeyCheck = false;
+                }
             }
         }
         DoorCheck();

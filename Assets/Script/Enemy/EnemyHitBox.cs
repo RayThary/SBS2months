@@ -51,6 +51,11 @@ public class EnemyHitBox : MonoBehaviour
             box2d = GetComponent<BoxCollider2D>();
             poly2D = GetComponent<PolygonCollider2D>();//블루슬라임의 공격범위
             poly2D.enabled = false;
+            if (blueSlime.GetBlueSlimeType() == 1)
+            {
+                box2d.enabled = false;
+            }
+
         }
         else if (slimeType == SlimeType.RedSlime)
         {
