@@ -15,7 +15,6 @@ public class ButtonController : MonoBehaviour
 
     void Start()
     {
-        DontDestroyOnLoad(this);
         m_start = transform.Find("Start");
         m_end = transform.Find("End");
 
