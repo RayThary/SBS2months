@@ -16,9 +16,11 @@ public class GameManager : MonoBehaviour
     }
     [SerializeField]private eStage stage;//현재스테이지를 표현해줌 이거에따라 나오는위치가달라짐 나중에 삭제해도될듯
     public static GameManager instance;
+    private TrsUI trsUI;
+    private Transform m_TrsUI;
 
-    [SerializeField] private GameObject GameMenu;
-    [SerializeField] private GameObject PlayerDeathMenu;
+    private GameObject GameMenu;
+    private GameObject PlayerDeathMenu;
     private bool deathCheck = false;
     private Player _player;
 
@@ -41,8 +43,8 @@ public class GameManager : MonoBehaviour
 
 
 
-        GameMenu.SetActive(false);
-        PlayerDeathMenu.SetActive(false);
+        //GameMenu.SetActive(false);
+        //PlayerDeathMenu.SetActive(false);
 
         DontDestroyOnLoad(this);
 
@@ -59,7 +61,14 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        
+        if (SceneManager.GetActiveScene().name == "GameScene")
+        {
+            trsUI = FindObjectOfType<TrsUI>();
+            m_TrsUI = trsUI.GetTrsUI();
+            GameMenu = m_TrsUI.GetComponentInChildren<Transform>().Find("GameMenuBackGround").gameObject;
+            PlayerDeathMenu = m_TrsUI.GetComponentInChildren<Transform>().Find("PlayerDeathMenu").gameObject;
+
+        }
         gameMenu();
         playerDeathCheck();
     }

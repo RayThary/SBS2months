@@ -15,6 +15,7 @@ public class EscButtonControl : MonoBehaviour
 
     private Button m_BtnContinue;
     [SerializeField]private Button m_BtnSound;
+    [SerializeField] private AudioClip m_btnClip;
     private Button m_BtnController;
     private Button m_BtnExit;
 
@@ -47,23 +48,25 @@ public class EscButtonControl : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         m_parentTrs.gameObject.SetActive(false);
+        SoundManager.instance.SoundPlayer("StartBtn", m_btnClip);
     }
 
     private void btnController()
     {
         m_TrsControllerMenu.gameObject.SetActive(true);
-        //transform.gameObject.SetActive(false);
+        SoundManager.instance.SoundPlayer("StartBtn", m_btnClip);
     }
 
     private void btnSound()
     {
         m_TrsSoundMenu.gameObject.SetActive(true);
-        //transform.gameObject.SetActive(false);
+        SoundManager.instance.SoundPlayer("StartBtn", m_btnClip);
     }
 
     private void exitButton(int _value)
     {
         SceneManager.LoadSceneAsync((int)_value);
+        SoundManager.instance.SoundPlayer("StartBtn", m_btnClip);
     }
     void Update()
     {
