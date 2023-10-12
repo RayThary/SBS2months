@@ -11,7 +11,7 @@ public class BlueSlime : MonoBehaviour
         Slime,
     }
     [SerializeField] private SlimeType eSlimeType;
-    private int slimeCheck;
+    [SerializeField]private int slimeCheck;
     [SerializeField] private float m_moveSpeed = 2.0f;
 
     [SerializeField] private List<Sprite> m_LWaterGrass = new List<Sprite>();
@@ -60,6 +60,14 @@ public class BlueSlime : MonoBehaviour
             {
                 eSlimeType = SlimeType.Grass;
             }
+        }
+        else if(eSlimeType== SlimeType.Slime) 
+        {
+            slimeCheck = 0;
+        }
+        else if(eSlimeType== SlimeType.Grass)
+        {
+            slimeCheck = 1;
         }
 
         player = GameManager.instance.GetPlayerTransform().GetComponent<Player>();

@@ -55,7 +55,7 @@ public class EnemyHitBox : MonoBehaviour
             {
                 box2d.enabled = false;
             }
-
+           
         }
         else if (slimeType == SlimeType.RedSlime)
         {
@@ -156,7 +156,7 @@ public class EnemyHitBox : MonoBehaviour
             else
             {
                 blueSlimeAttackCheck = false;
-                blueSlime.SetReturnStart(true);
+                //blueSlime.SetReturnStart(true);
             }
         }
     }

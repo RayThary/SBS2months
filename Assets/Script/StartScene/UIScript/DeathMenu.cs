@@ -48,6 +48,7 @@ public class DeathMenu : MonoBehaviour
         player.SetDeathCheck(false);
         player.SetPlayerReset();
         player.SetOneDeathReturn();
+        
         m_anim2d.SetTrigger("DeathReturn");
 
         GameManager.instance.SetDeathMenu(false);
@@ -55,6 +56,7 @@ public class DeathMenu : MonoBehaviour
 
     private void exitButton(int _value)
     {
+        Time.timeScale = 1.0f;
         SceneManager.LoadSceneAsync((int)_value);
     }
 

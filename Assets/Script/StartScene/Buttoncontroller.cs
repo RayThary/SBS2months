@@ -9,7 +9,9 @@ public class ButtonController : MonoBehaviour
     private Transform m_start;
     private Transform m_end;
     private Button m_btnStart;
+    [SerializeField] private AudioClip m_btnClip;
     private Button m_btnEnd;
+    
 
     void Start()
     {
@@ -28,6 +30,7 @@ public class ButtonController : MonoBehaviour
     private void startButton(int _value)
     {
         SceneManager.LoadSceneAsync((int)_value);
+        SoundManager.instance.SoundPlayer("StartBtn", m_btnClip);
     }
 
     private void endGame()

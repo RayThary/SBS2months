@@ -102,7 +102,7 @@ public class waterCourse : MonoBehaviour
                     leverCheck = true;
                     leverReady = false;
                     m_anim.SetBool("Lever", true);
-                    SoundManager.instance.SoundPlayer("WaterLever", clip,0.1f);
+                    SoundManager.instance.SoundPlayer("WaterLever", clip);
                     Invoke("CheckWaterMove", m_waterFallTimer);
                     spawnWaterCourse();
                 }
@@ -117,7 +117,7 @@ public class waterCourse : MonoBehaviour
                     leverCheck = true;
                     leverReady = false;
                     m_anim.SetBool("Lever", true);
-                    SoundManager.instance.SoundPlayer("WaterLever", clip,0.1f);
+                    SoundManager.instance.SoundPlayer("WaterLever", clip);
                     Invoke("CheckWaterMove", m_waterFallTimer);
                 }
             }

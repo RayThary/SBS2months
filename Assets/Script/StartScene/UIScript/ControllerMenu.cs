@@ -7,7 +7,7 @@ public class ControllerMenu : MonoBehaviour
 {
     [SerializeField] private Transform m_GameMenu;
     private Transform m_TrsControllerMenu;
-    [SerializeField]private Button m_BtnControllerExit;
+    private Button m_BtnControllerExit;
 
     void Start()
     {
@@ -24,13 +24,9 @@ public class ControllerMenu : MonoBehaviour
 
     private void BtnControllerMenuExit()
     {
-        m_TrsControllerMenu.gameObject.SetActive(false); 
+        m_TrsControllerMenu.gameObject.SetActive(false);
         m_GameMenu.gameObject.SetActive(true);
     }
 
 
-    void Update()
-    {
-        
-    }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 public class GameManager : MonoBehaviour
@@ -20,6 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject PlayerDeathMenu;
     private bool deathCheck = false;
     private Player _player;
+
     private Player player
     {
         get 
@@ -35,9 +37,15 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        
+
+
 
         GameMenu.SetActive(false);
         PlayerDeathMenu.SetActive(false);
+
+        DontDestroyOnLoad(this);
+
         if (instance == null)
         {
             instance = this;
@@ -51,13 +59,17 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-
+        
         gameMenu();
         playerDeathCheck();
     }
 
     private void gameMenu()
     {
+        if (SceneManager.GetActiveScene().name == "StartScene")
+        {
+            return;
+        }
         if (deathCheck)
         {
             return;
@@ -71,6 +83,11 @@ public class GameManager : MonoBehaviour
 
     private void playerDeathCheck()
     {
+        if (SceneManager.GetActiveScene().name == "StartScene")
+        {
+            return;
+        }
+        
         if (player.GetDeathCheck() == true) 
         {
             PlayerDeathMenu.SetActive(true);

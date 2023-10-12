@@ -20,7 +20,9 @@ public class FallTrap : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.black;
-        Gizmos.DrawLine(transform.position, new Vector3(transform.position.x, -fallCheckDistance, transform.position.z));
+        Vector2 to = transform.position;
+        to.y = transform.position.y - fallCheckDistance;
+        Gizmos.DrawLine(transform.position, to);
     }
 
     void Start()

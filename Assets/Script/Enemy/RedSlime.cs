@@ -263,6 +263,8 @@ public class RedSlime : MonoBehaviour
 
                 m_Spr.sprite = m_SprHideing;
                 redSlimeReturn = false;
+
+                checkSlime = Random.Range(0, 2);
             }
         }
     }

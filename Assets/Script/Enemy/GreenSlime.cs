@@ -108,10 +108,7 @@ public class GreenSlime : MonoBehaviour
 
     void Update()
     {
-        if (checkSlime == 1)
-        {
-            return;
-        }
+        
         if (enemyDeathCheck)
         {
             return;

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,11 +12,13 @@ public class LoadManager : MonoBehaviour
     private Transform playerTrs;
     private Player player;
 
-    [SerializeField] private Image imgFade;
+    [SerializeField] private Image imgFade;    
+    [SerializeField]private TextMeshProUGUI loadText;
+
     private Color fadeColor;
     private float speed = 1f;
 
-    private bool fadeOffCheck;
+    [SerializeField]private bool fadeOffCheck;
     private bool stageChange;
 
     private void Awake()
@@ -36,6 +39,10 @@ public class LoadManager : MonoBehaviour
         fadeColor = imgFade.color;
         playerTrs = GameManager.instance.GetPlayerTransform();
         player = playerTrs.GetComponent<Player>();
+        stageChange = true;
+        
+        
+        loadText.enabled = false;
     }
 
 
@@ -54,6 +61,7 @@ public class LoadManager : MonoBehaviour
             imgFade.color = fadeColor;
             player.SetPlayerStop(true);
             fadeOffCheck = true;
+            loadText.enabled = true;
             stageChange = false;
         }
     }
@@ -66,6 +74,7 @@ public class LoadManager : MonoBehaviour
         int fps = (int)(1.0f / Time.deltaTime);
         if (fps >= 43)
         {
+            loadText.enabled = false;
             StartCoroutine("fadeOffStart");
         }
     }

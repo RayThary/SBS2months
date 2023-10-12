@@ -19,6 +19,7 @@ public class EscButtonControl : MonoBehaviour
     private Button m_BtnExit;
 
     [SerializeField]private Transform m_TrsControllerMenu;
+    [SerializeField] private Transform m_TrsSoundMenu;
 
     void Start()
     {
@@ -37,7 +38,7 @@ public class EscButtonControl : MonoBehaviour
 
 
         m_BtnContinue.onClick.AddListener(() => btnCountinue());
-
+        m_BtnSound.onClick.AddListener(() => btnSound());
         m_BtnController.onClick.AddListener(()=> btnController());
         m_BtnExit.onClick.AddListener(() => exitButton(0));
     }
@@ -51,7 +52,13 @@ public class EscButtonControl : MonoBehaviour
     private void btnController()
     {
         m_TrsControllerMenu.gameObject.SetActive(true);
-        transform.gameObject.SetActive(false);
+        //transform.gameObject.SetActive(false);
+    }
+
+    private void btnSound()
+    {
+        m_TrsSoundMenu.gameObject.SetActive(true);
+        //transform.gameObject.SetActive(false);
     }
 
     private void exitButton(int _value)

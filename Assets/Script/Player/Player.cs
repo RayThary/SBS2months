@@ -124,6 +124,8 @@ public class Player : MonoBehaviour
     private bool fadeInCheck;
     private bool noMoveJump = false;
 
+    [SerializeField] private Transform StartPos;
+
     //플레이어의본인에서찾아올것들
     private SpriteRenderer m_spr;
     private Transform m_Trs;
@@ -144,6 +146,8 @@ public class Player : MonoBehaviour
         m_sprColor = m_spr.color;
         m_alphaChangeTimeCheck = m_alphaChangeTime;
 
+        m_deathCheck = false;//안죽었음
+        transform.position = StartPos.position;//시작지점
     }
 
 
@@ -831,6 +835,7 @@ public class Player : MonoBehaviour
                 m_anim.SetTrigger("GreenDeath");
             }
             m_oneDeathCheck = true;
+            
         }
     }
 
@@ -859,6 +864,9 @@ public class Player : MonoBehaviour
     private void playerDeath()
     {
         m_deathCheck = true;
+        GroundType = eGroundType.Ground;
+        PlayerType = eType.Green;
+        animSetBool("Green");
     }
 
     private void playerHit()
@@ -871,6 +879,8 @@ public class Player : MonoBehaviour
         m_rig2d.velocity = new Vector2(0, 0);
         m_hitInvincibility = true;
     }
+
+ 
     //여기까지
 
     public void OnTriggerPlayer(PlayerHitBox.HitBoxType _state, PlayerHitBox.HitType _hitType, Collider2D _collision)
