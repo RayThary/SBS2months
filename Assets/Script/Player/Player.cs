@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [Header("테스트용 hit 로 체력감소만안달게하기")]
+    
     [SerializeField] private bool NoHit = false;//나중에 무적시간에 트루로넣어놓으면될듯 일단테스트용도로자주쓰일예정
     public enum eType
     {
@@ -30,12 +30,13 @@ public class Player : MonoBehaviour
         WaterCourse,
         Trap,
     }
-    //체크용으로만듬 나중에 3개serializeField삭제필요
-    [SerializeField] private eType PlayerType;
-    [SerializeField] private eGroundType GroundType;
-    [SerializeField] private eHitGroundType HitType;
+    
+    private eType PlayerType;
+    private eGroundType GroundType;
+    private eHitGroundType HitType;
 
     private eGroundType beforGroundType;
+    [SerializeField] private Transform[] m_StartPos;
 
     [SerializeField, Range(0, 3)] private int playerHp = 3;
     //플레이어 슬라임 변경딜레이시간
@@ -48,7 +49,7 @@ public class Player : MonoBehaviour
     private bool playerGreenCheck = true;
 
     //물에서점프를하기위한용도
-    [SerializeField] private bool playerWaterJumpCheck = false;
+     private bool playerWaterJumpCheck = false;
     private bool playerWaterCheck = false;
     private bool playerNoContinuityJunp;
 
@@ -113,18 +114,17 @@ public class Player : MonoBehaviour
     private Color m_sprColor;
 
     //아이템부분 많이쓸거같으면 json으로 인벤토리구현을해줄필요있음 아니면 불값으로 on/off체크해주는방법이좋을듯함
-    [SerializeField]private bool PlayerIsKey = false;//테스트용 삭제필요
+    private bool PlayerIsKey = false;
     private bool doorLockisOpen = false;
     private bool doorKeyCheck = false;
 
-    [SerializeField]private bool playerStop = false;//플레이어가 멈춰있으라는용도 업데이트문맨위에있을예정이므로 움직이면안될경우에쓸필요있음
+    private bool playerStop = false;//플레이어가 멈춰있으라는용도 업데이트문맨위에있을예정이므로 움직이면안될경우에쓸필요있음
 
     //로드에서 페이드인아웃시 움직이지않을용도
     private bool fadeCheck;
     private bool fadeInCheck;
     private bool noMoveJump = false;
 
-    [SerializeField] private Transform StartPos;
 
     //플레이어의본인에서찾아올것들
     private SpriteRenderer m_spr;
@@ -147,7 +147,24 @@ public class Player : MonoBehaviour
         m_alphaChangeTimeCheck = m_alphaChangeTime;
 
         m_deathCheck = false;//안죽었음
-        transform.position = StartPos.position;//시작지점
+
+        if(GameManager.instance.GetReStart()== true)
+        {
+            m_anim.SetTrigger("DeathReturn");   
+        }
+        if (GameManager.instance.GetStage() == GameManager.eStage.Tutorial)
+        {
+            transform.position = m_StartPos[0].position;
+        }
+        if (GameManager.instance.GetStage() == GameManager.eStage.Stage1)
+        {
+            transform.position = m_StartPos[1].position;
+        }
+        if (GameManager.instance.GetStage() == GameManager.eStage.Stage2)
+        {
+            transform.position = m_StartPos[2].position;
+        }
+        
     }
 
 

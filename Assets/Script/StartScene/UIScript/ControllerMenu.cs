@@ -26,6 +26,7 @@ public class ControllerMenu : MonoBehaviour
     {
         m_TrsControllerMenu.gameObject.SetActive(false);
         m_GameMenu.gameObject.SetActive(true);
+
     }
 
 

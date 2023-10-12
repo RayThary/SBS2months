@@ -15,8 +15,6 @@ public class CamChange : MonoBehaviour
     
     void Start()
     {
-        GameManager.instance.SetStage(GameManager.eStage.Tutorial);
-
         m_cineConfiner2d = GetComponent<CinemachineConfiner2D>();
     }
 

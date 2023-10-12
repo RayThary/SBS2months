@@ -125,7 +125,6 @@ public class GreenSlime : MonoBehaviour
         {
             m_box2d.enabled = false;
             m_anim.enabled = false;
-            GetComponentInChildren<EnemyHitBox>().gameObject.SetActive(false);
         }
     }
     private void checkPlayerAndSlimeMove()

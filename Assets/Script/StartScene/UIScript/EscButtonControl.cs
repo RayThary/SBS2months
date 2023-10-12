@@ -48,25 +48,25 @@ public class EscButtonControl : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         m_parentTrs.gameObject.SetActive(false);
-        SoundManager.instance.SoundPlayer("StartBtn", m_btnClip);
+        SoundManager.instance.ButtonPlay( m_btnClip);
     }
 
     private void btnController()
     {
         m_TrsControllerMenu.gameObject.SetActive(true);
-        SoundManager.instance.SoundPlayer("StartBtn", m_btnClip);
+        SoundManager.instance.ButtonPlay( m_btnClip);
     }
 
     private void btnSound()
     {
         m_TrsSoundMenu.gameObject.SetActive(true);
-        SoundManager.instance.SoundPlayer("StartBtn", m_btnClip);
+        SoundManager.instance.ButtonPlay(m_btnClip);
     }
 
     private void exitButton(int _value)
     {
         SceneManager.LoadSceneAsync((int)_value);
-        SoundManager.instance.SoundPlayer("StartBtn", m_btnClip);
+        SoundManager.instance.ButtonPlay(m_btnClip);
     }
     void Update()
     {

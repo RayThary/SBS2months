@@ -10,8 +10,7 @@ public class DeathMenu : MonoBehaviour
     private Player player;
     [SerializeField] private Button m_BtnReStart;
     [SerializeField] private Button m_BtnExit;
-    [SerializeField] private List<Transform> m_startTrs = new List<Transform>();
-
+    [SerializeField] private AudioClip m_btnClip;
     private Animator m_anim2d;
     
 
@@ -24,40 +23,22 @@ public class DeathMenu : MonoBehaviour
         player = playerTrs.GetComponent<Player>();
         m_anim2d = player.GetComponent<Animator>();
 
-        m_BtnReStart.onClick.AddListener(() => reStartButton());
+        m_BtnReStart.onClick.AddListener(() => reStartButton(2));
         m_BtnExit.onClick.AddListener(() => exitButton(0));
     }
 
-
-    private void reStartButton()
+  
+    private void reStartButton(int _value)
     {
-
-        if (GameManager.instance.GetStage() == GameManager.eStage.Tutorial)
-        {
-            player.transform.position = m_startTrs[0].transform.position;
-        }
-        else if (GameManager.instance.GetStage() == GameManager.eStage.Stage1)
-        {
-            player.transform.position = m_startTrs[1].transform.position;
-        }
-        else if (GameManager.instance.GetStage() == GameManager.eStage.Stage2)
-        {
-            player.transform.position = m_startTrs[2].transform.position;
-        }
-        Time.timeScale = 1.0f;
-        player.SetDeathCheck(false);
-        player.SetPlayerReset();
-        player.SetOneDeathReturn();
-        
-        m_anim2d.SetTrigger("DeathReturn");
-
-        GameManager.instance.SetDeathMenu(false);
+        SceneManager.LoadSceneAsync((int)_value);
+        SoundManager.instance.ButtonPlay(m_btnClip);
     }
 
     private void exitButton(int _value)
     {
         Time.timeScale = 1.0f;
         SceneManager.LoadSceneAsync((int)_value);
+        SoundManager.instance.ButtonPlay(m_btnClip);
     }
 
 }

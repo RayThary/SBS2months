@@ -44,6 +44,7 @@ public class Item : MonoBehaviour
 
     void Update()
     {
+       
         ItemMove();
 
         if (itemName == ItemName.Key)

@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -10,9 +11,10 @@ public class SoundManager : MonoBehaviour
 {
     public static SoundManager instance;
 
-    [SerializeField]private AudioSource m_backGroundSound;
+    [SerializeField] private AudioSource m_backGroundSound;
     [SerializeField] private AudioMixer m_mixer;
     [SerializeField] private AudioClip m_backGroundClip;
+    [SerializeField] private AudioSource m_btnAudioSource;
     private void Awake()
     {
         if (instance == null)
@@ -30,7 +32,7 @@ public class SoundManager : MonoBehaviour
         StartCoroutine("bgStart");
     }
 
- 
+
 
     IEnumerator bgStart()
     {
@@ -40,16 +42,16 @@ public class SoundManager : MonoBehaviour
 
     public void BackGroundVolume(float _volume)
     {
-        m_mixer.SetFloat("BackGround", Mathf.Log10(_volume)*20);
+        m_mixer.SetFloat("BackGround", Mathf.Log10(_volume) * 20);
     }
 
     public void SFXVolume(float _volume)
     {
         m_mixer.SetFloat("SFX", Mathf.Log10(_volume) * 20);
     }
-    
 
-    public void SoundPlayer(string soundName,AudioClip clip)
+
+    public void SoundPlayer(string soundName, AudioClip clip)
     {
         GameObject go = new GameObject(soundName + "Sound");
         AudioSource audiosoutce = go.AddComponent<AudioSource>();
@@ -59,6 +61,16 @@ public class SoundManager : MonoBehaviour
         audiosoutce.Play();
 
         Destroy(go, clip.length);
+    }
+
+    public void ButtonPlay(AudioClip clip)
+    {
+        m_btnAudioSource.outputAudioMixerGroup = m_mixer.FindMatchingGroups("SFX")[0];
+        m_btnAudioSource.clip = clip;
+        m_btnAudioSource.loop = false;
+        m_btnAudioSource.volume = 0.5f;
+        m_btnAudioSource.Play();
+        
     }
 
     public void bgSoundPlay(AudioClip clip)

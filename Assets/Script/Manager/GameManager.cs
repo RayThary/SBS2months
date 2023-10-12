@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
         Stage1,
         Stage2,
     }
-    [SerializeField]private eStage stage;//현재스테이지를 표현해줌 이거에따라 나오는위치가달라짐 나중에 삭제해도될듯
+    [SerializeField] private eStage stage;//현재스테이지를 표현해줌 이거에따라 나오는위치가달라짐 나중에 삭제해도될듯
     public static GameManager instance;
     private TrsUI trsUI;
     private Transform m_TrsUI;
@@ -23,12 +23,16 @@ public class GameManager : MonoBehaviour
     private GameObject PlayerDeathMenu;
     private bool deathCheck = false;
     private Player _player;
+    private bool playerReStartCheck = false;
 
+  
+    
+    
     private Player player
     {
-        get 
+        get
         {
-            if (_player == null) 
+            if (_player == null)
             {
 
                 _player = FindObjectOfType<Player>();
@@ -37,14 +41,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
     private void Awake()
     {
-        
-
-
-
-        //GameMenu.SetActive(false);
-        //PlayerDeathMenu.SetActive(false);
 
         DontDestroyOnLoad(this);
 
@@ -68,17 +67,23 @@ public class GameManager : MonoBehaviour
             GameMenu = m_TrsUI.GetComponentInChildren<Transform>().Find("GameMenuBackGround").gameObject;
             PlayerDeathMenu = m_TrsUI.GetComponentInChildren<Transform>().Find("PlayerDeathMenu").gameObject;
 
+            reStart();
         }
         gameMenu();
         playerDeathCheck();
+
+
     }
+
+   
 
     private void gameMenu()
     {
-        if (SceneManager.GetActiveScene().name == "StartScene")
+        if (SceneManager.GetActiveScene().name != "GameScene")
         {
             return;
         }
+
         if (deathCheck)
         {
             return;
@@ -92,12 +97,12 @@ public class GameManager : MonoBehaviour
 
     private void playerDeathCheck()
     {
-        if (SceneManager.GetActiveScene().name == "StartScene")
+        if (SceneManager.GetActiveScene().name != "GameScene")
         {
             return;
         }
-        
-        if (player.GetDeathCheck() == true) 
+
+        if (player.GetDeathCheck() == true)
         {
             PlayerDeathMenu.SetActive(true);
             deathCheck = true;
@@ -105,7 +110,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void reStart()
+    {
+        if (playerReStartCheck == true)
+        {
+            player.SetDeathCheck(false);
+            player.SetPlayerReset();
+            player.SetOneDeathReturn();
 
+            PlayerDeathMenu.SetActive(false);
+            playerReStartCheck = false;
+        }
+    }
+
+    
 
 
 
@@ -122,9 +140,19 @@ public class GameManager : MonoBehaviour
     {
         stage = _stage;
     }
-    
+
     public void SetDeathMenu(bool _value)
     {
         PlayerDeathMenu.SetActive(_value);
+    }
+
+    public bool GetReStart()
+    {
+        return playerReStartCheck;
+    }
+
+    public void SetReStart(bool _value)
+    {
+        playerReStartCheck = _value;
     }
 }

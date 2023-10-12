@@ -13,12 +13,11 @@ public class LoadManager : MonoBehaviour
     private Player player;
 
     [SerializeField] private Image imgFade;    
-    [SerializeField]private TextMeshProUGUI loadText;
 
     private Color fadeColor;
     private float speed = 1f;
 
-    [SerializeField]private bool fadeOffCheck;
+    private bool fadeOffCheck;
     private bool stageChange;
 
     private void Awake()
@@ -41,8 +40,6 @@ public class LoadManager : MonoBehaviour
         player = playerTrs.GetComponent<Player>();
         stageChange = true;
         
-        
-        loadText.enabled = false;
     }
 
 
@@ -61,7 +58,6 @@ public class LoadManager : MonoBehaviour
             imgFade.color = fadeColor;
             player.SetPlayerStop(true);
             fadeOffCheck = true;
-            loadText.enabled = true;
             stageChange = false;
         }
     }
@@ -74,7 +70,7 @@ public class LoadManager : MonoBehaviour
         int fps = (int)(1.0f / Time.deltaTime);
         if (fps >= 43)
         {
-            loadText.enabled = false;
+            
             StartCoroutine("fadeOffStart");
         }
     }
