@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,20 +12,26 @@ public class PlayerHp : MonoBehaviour
     [SerializeField] private Sprite m_HpOn;
     [SerializeField] private Sprite m_HpOff;
 
+    [SerializeField] private CinemachineImpulseSource _source;
 
     private Transform m_HP1;
     private Transform m_HP2;
     private Transform m_HP3;
 
-   private Image m_imgHP1;
-   private Image m_imgHP2;
+    private Image m_imgHP1;
+    private Image m_imgHP2;
     private Image m_imgHP3;
+
+    private bool playerHitCheck = false;
+    private bool oneImpulse = false;
+    private bool twoImpulse = false;
+    private bool threeImpulse = false;
     void Start()
     {
 
         playerTrs = GameManager.instance.GetPlayerTransform();
         player = playerTrs.GetComponent<Player>();
-        
+
         m_HP1 = GetComponentInChildren<Transform>().Find("HP1");
         m_HP2 = GetComponentInChildren<Transform>().Find("HP2");
         m_HP3 = GetComponentInChildren<Transform>().Find("HP3");
@@ -35,7 +42,7 @@ public class PlayerHp : MonoBehaviour
 
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         m_playerHp = player.GetPlayerHp();
@@ -44,24 +51,60 @@ public class PlayerHp : MonoBehaviour
             m_imgHP1.sprite = m_HpOn;
             m_imgHP2.sprite = m_HpOn;
             m_imgHP3.sprite = m_HpOn;
-        }   
+        }
         else if (m_playerHp == 2)
         {
+            if (oneImpulse == false)
+            {
+                playerHitCheck = true;
+            }
             m_imgHP1.sprite = m_HpOn;
             m_imgHP2.sprite = m_HpOn;
             m_imgHP3.sprite = m_HpOff;
         }
         else if (m_playerHp == 1)
         {
+            if (twoImpulse == false)
+            {
+                playerHitCheck = true;
+            }
             m_imgHP1.sprite = m_HpOn;
             m_imgHP2.sprite = m_HpOff;
             m_imgHP3.sprite = m_HpOff;
         }
         else if (m_playerHp == 0)
         {
+            if (threeImpulse == false)
+            {
+                playerHitCheck = true;
+            }
             m_imgHP1.sprite = m_HpOff;
             m_imgHP2.sprite = m_HpOff;
             m_imgHP3.sprite = m_HpOff;
+        }
+        playerImpulse();
+    }
+
+
+    private void playerImpulse()
+    {
+        if (playerHitCheck && oneImpulse == false) 
+        {
+            _source.GenerateImpulse();
+            playerHitCheck = false;
+            oneImpulse = true;
+        }
+        else if (playerHitCheck && twoImpulse == false)
+        {
+            _source.GenerateImpulse();
+            playerHitCheck = false;
+            twoImpulse = true;
+        }
+        else if (playerHitCheck && threeImpulse == false)
+        {
+            _source.GenerateImpulse();
+            playerHitCheck = false;
+            threeImpulse = true;
         }
     }
 }

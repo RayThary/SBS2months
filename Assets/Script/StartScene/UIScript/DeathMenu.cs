@@ -31,14 +31,14 @@ public class DeathMenu : MonoBehaviour
     private void reStartButton(int _value)
     {
         SceneManager.LoadSceneAsync((int)_value);
-        SoundManager.instance.ButtonPlay(m_btnClip);
+        SoundManager.instance.SFXPlay(m_btnClip);
     }
 
     private void exitButton(int _value)
     {
         Time.timeScale = 1.0f;
         SceneManager.LoadSceneAsync((int)_value);
-        SoundManager.instance.ButtonPlay(m_btnClip);
+        SoundManager.instance.SFXPlay(m_btnClip);
     }
 
 }

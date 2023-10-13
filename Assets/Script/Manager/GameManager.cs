@@ -5,6 +5,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
+using static Cinemachine.CinemachineCore;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,9 +23,10 @@ public class GameManager : MonoBehaviour
     private GameObject GameMenu;
     private GameObject PlayerDeathMenu;
     private bool deathCheck = false;
+    private bool fadCheck = false;
     private Player _player;
     private bool playerReStartCheck = false;
-
+    [SerializeField] private AudioClip btnEscSound;
   
     
     
@@ -44,7 +46,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-
+        stage = eStage.Tutorial; 
         DontDestroyOnLoad(this);
 
         if (instance == null)
@@ -84,12 +86,13 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        if (deathCheck)
+        if (deathCheck || fadCheck) 
         {
             return;
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            SoundManager.instance.SFXPlay(btnEscSound);
             GameMenu.SetActive(true);
             Time.timeScale = 0;
         }
@@ -154,5 +157,9 @@ public class GameManager : MonoBehaviour
     public void SetReStart(bool _value)
     {
         playerReStartCheck = _value;
+    }
+    public void SetFadeCheck(bool _value)
+    {
+        fadCheck = _value;
     }
 }

@@ -8,6 +8,7 @@ public class ControllerMenu : MonoBehaviour
     [SerializeField] private Transform m_GameMenu;
     private Transform m_TrsControllerMenu;
     private Button m_BtnControllerExit;
+    [SerializeField] protected AudioClip m_btnExitSound;
 
     void Start()
     {
@@ -24,6 +25,7 @@ public class ControllerMenu : MonoBehaviour
 
     private void BtnControllerMenuExit()
     {
+        SoundManager.instance.SFXPlay(m_btnExitSound);
         m_TrsControllerMenu.gameObject.SetActive(false);
         m_GameMenu.gameObject.SetActive(true);
 

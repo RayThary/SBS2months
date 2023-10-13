@@ -36,7 +36,7 @@ Transform:
   m_Children:
   - {fileID: 639396143697538622}
   m_Father: {fileID: 0}
-  m_RootOrder: 22
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8640465780042467514
 SpriteRenderer:
@@ -106,6 +106,9 @@ MonoBehaviour:
   m_SprHideing: {fileID: -3151927882528563032, guid: 862b40d28afa3c94fbc03f6652069a5e, type: 3}
   m_slimeSpeed: 2
   m_forgetPlayerTime: 3
+  up: 1
+  moveMax: 1
+  objSpeed: 1
 --- !u!95 &2268433329573484618
 Animator:
   serializedVersion: 5
@@ -232,7 +235,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8113751558241974395}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0

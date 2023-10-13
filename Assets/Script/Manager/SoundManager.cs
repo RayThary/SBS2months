@@ -12,9 +12,10 @@ public class SoundManager : MonoBehaviour
     public static SoundManager instance;
 
     [SerializeField] private AudioSource m_backGroundSound;
+    [SerializeField] private AudioSource m_btnAudioSource;
     [SerializeField] private AudioMixer m_mixer;
     [SerializeField] private AudioClip m_backGroundClip;
-    [SerializeField] private AudioSource m_btnAudioSource;
+    
     private void Awake()
     {
         if (instance == null)
@@ -51,19 +52,9 @@ public class SoundManager : MonoBehaviour
     }
 
 
-    public void SoundPlayer(string soundName, AudioClip clip)
-    {
-        GameObject go = new GameObject(soundName + "Sound");
-        AudioSource audiosoutce = go.AddComponent<AudioSource>();
-        audiosoutce.outputAudioMixerGroup = m_mixer.FindMatchingGroups("SFX")[0];
-        audiosoutce.clip = clip;
-        audiosoutce.volume = 0.5f;
-        audiosoutce.Play();
+  
 
-        Destroy(go, clip.length);
-    }
-
-    public void ButtonPlay(AudioClip clip)
+    public void SFXPlay(AudioClip clip)
     {
         m_btnAudioSource.outputAudioMixerGroup = m_mixer.FindMatchingGroups("SFX")[0];
         m_btnAudioSource.clip = clip;

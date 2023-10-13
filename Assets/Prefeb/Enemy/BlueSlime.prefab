@@ -47,7 +47,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slimeType: 2
-  blueSlimeAttackCheck: 0
 --- !u!61 &8576945421352444901
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -181,7 +180,7 @@ Transform:
   - {fileID: 8809371255440796528}
   - {fileID: 8503938422711867363}
   m_Father: {fileID: 0}
-  m_RootOrder: 20
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2893040614253069698
 SpriteRenderer:
@@ -269,6 +268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eSlimeType: 2
+  slimeCheck: 0
   m_moveSpeed: 2
   m_LWaterGrass:
   - {fileID: 7032438533087545838, guid: 862b40d28afa3c94fbc03f6652069a5e, type: 3}

@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
         Trap,
     }
     
-    private eType PlayerType;
+    [SerializeField]private eType PlayerType;
     private eGroundType GroundType;
     private eHitGroundType HitType;
 

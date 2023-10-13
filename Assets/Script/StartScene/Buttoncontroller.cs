@@ -29,7 +29,7 @@ public class ButtonController : MonoBehaviour
     private void startButton(int _value)
     {
         SceneManager.LoadSceneAsync((int)_value);
-        SoundManager.instance.ButtonPlay(m_btnClip);
+        SoundManager.instance.SFXPlay(m_btnClip);
     }
 
     private void endGame()

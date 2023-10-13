@@ -133,7 +133,7 @@ Transform:
   m_Children:
   - {fileID: 4623069452923183540}
   m_Father: {fileID: 0}
-  m_RootOrder: 26
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4201158698419849227
 SpriteRenderer:
@@ -224,7 +224,6 @@ MonoBehaviour:
   m_SprHideing: {fileID: 7144461970232622469, guid: 862b40d28afa3c94fbc03f6652069a5e, type: 3}
   m_moveSpeed: 4
   m_forgetPlayerTime: 1
-  returnStart: 0
 --- !u!50 &7321191853256991798
 Rigidbody2D:
   serializedVersion: 4
