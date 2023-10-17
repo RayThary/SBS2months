@@ -4,22 +4,32 @@ using UnityEngine;
 
 public class CloudMove : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> m_listCloud;
+    [SerializeField] private float m_CloudSpeed;
+
+    private CloudSpawn cloudspawn;
+    private Transform m_trsEnd;
+    private Rigidbody2D m_rigd2d;
+
     void Start()
     {
-        
+        m_rigd2d = GetComponent<Rigidbody2D>();
+        cloudspawn = GetComponentInParent<CloudSpawn>();
+        m_trsEnd = cloudspawn.GetEndTrs();
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
-        
+        cloudMove();
     }
 
-    private void spawnCloud()
+    private void cloudMove()
     {
-        int iRand = Random.Range(0, m_listCloud.Count);
-        GameObject objCloud = m_listCloud[iRand];
-        
+        m_rigd2d.velocity = new Vector2(m_CloudSpeed, m_rigd2d.velocity.y);
+        if (transform.position.x > m_trsEnd.position.x)
+        {
+            Destroy(gameObject);
+        }
+
     }
 }

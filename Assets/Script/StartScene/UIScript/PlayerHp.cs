@@ -13,7 +13,7 @@ public class PlayerHp : MonoBehaviour
     [SerializeField] private Sprite m_HpOff;
 
     [SerializeField] private CinemachineImpulseSource _source;
-
+    [SerializeField] private AudioClip m_hitSound;
     private Transform m_HP1;
     private Transform m_HP2;
     private Transform m_HP3;
@@ -26,6 +26,8 @@ public class PlayerHp : MonoBehaviour
     private bool oneImpulse = false;
     private bool twoImpulse = false;
     private bool threeImpulse = false;
+    private bool hitSoundCheck = false;
+
     void Start()
     {
 
@@ -83,6 +85,7 @@ public class PlayerHp : MonoBehaviour
             m_imgHP3.sprite = m_HpOff;
         }
         playerImpulse();
+        playerHitSound();
     }
 
 
@@ -91,20 +94,31 @@ public class PlayerHp : MonoBehaviour
         if (playerHitCheck && oneImpulse == false) 
         {
             _source.GenerateImpulse();
+            hitSoundCheck = true;
             playerHitCheck = false;
             oneImpulse = true;
         }
         else if (playerHitCheck && twoImpulse == false)
         {
             _source.GenerateImpulse();
+            hitSoundCheck = true;
             playerHitCheck = false;
             twoImpulse = true;
         }
         else if (playerHitCheck && threeImpulse == false)
         {
             _source.GenerateImpulse();
+            hitSoundCheck = true;
             playerHitCheck = false;
             threeImpulse = true;
+        }
+    }
+    private void playerHitSound()
+    {
+        if (hitSoundCheck)
+        {
+            SoundManager.instance.SFXPlay(m_hitSound);
+            hitSoundCheck = false;
         }
     }
 }
