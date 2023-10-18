@@ -26,8 +26,9 @@ public class GameManager : MonoBehaviour
     private Player _player;
     private bool playerReStartCheck = false;
     [SerializeField] private AudioClip btnEscSound;
-  
-    
+
+    private bool oneTalkCheck = false;
+    private string[] talkdata;
     
     private Player player
     {
@@ -72,7 +73,7 @@ public class GameManager : MonoBehaviour
         }
         gameMenu();
         playerDeathCheck();
-
+        OneTalk();
 
     }
 
@@ -125,7 +126,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    
+    private void OneTalk()
+    {
+        if (SceneManager.GetActiveScene().name == "GameScene")
+        {
+            if (LoadManager.instance.GetStageChange() == true)
+            {
+                return;
+            }
+            oneTalkCheck = true;
+        }
+    }
 
 
 
@@ -160,5 +171,10 @@ public class GameManager : MonoBehaviour
     public void SetFadeCheck(bool _value)
     {
         fadCheck = _value;
+    }
+
+    public bool GetTalkCheck()
+    {
+        return oneTalkCheck;
     }
 }

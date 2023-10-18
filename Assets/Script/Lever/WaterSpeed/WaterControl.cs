@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class WaterControl : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] private AnimatorController m_WaterAnim2d;
+    private Animator m_anim2d;
     void Start()
     {
-        
+        m_anim2d.SetFloat("WaterSpeed", 3f);
     }
 
     // Update is called once per frame

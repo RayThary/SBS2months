@@ -170,6 +170,10 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (TextManager.instance.GetTextObj() == true || LoadManager.instance.GetStageChange() == true) 
+        {
+            return;
+        }
         playerFadeCheck();//페이드인아웃시 움직이지못하게하는부분
         playerDeathMotion();
         playerInvincibilityTime();//피격시 무적시간
