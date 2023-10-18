@@ -7,19 +7,23 @@ public class MoveTrap : MonoBehaviour
 {
     [Header("위아래로움직이면 체크 : 아래에서 시작해야함 \n좌우로움직이면 체크해제 :왼쪽에서 시작해야함")]
     [SerializeField] private bool m_MoveType;
+    [SerializeField] private bool m_MoveReversal = false;//반대로움직이는지체크용도 반대방향에서 시작할땐 moveMax를 -로 써주고 체크
     [SerializeField] private float m_MoveMax;
     [SerializeField] private float m_MoveSpeed;
+
 
     private bool m_endVecCheck = false;
 
     private Vector3 m_startVec;
     private Vector3 m_endVec;
 
-    
+
     private Player m_player;
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.white;
+
+
         if (m_MoveType)
         {
             Gizmos.DrawLine(transform.position, new Vector2(transform.position.x, transform.position.y + m_MoveMax));
@@ -28,11 +32,12 @@ public class MoveTrap : MonoBehaviour
         {
             Gizmos.DrawLine(transform.position, new Vector2(transform.position.x + m_MoveMax, transform.position.y));
         }
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "Player")
         {
             m_player.SetPlayerTrapHit(true);
             m_player.SetTrapHpRemove(true);
@@ -43,7 +48,7 @@ public class MoveTrap : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            
+
             m_player.SetTrapHpRemove(false);
 
         }
@@ -77,21 +82,44 @@ public class MoveTrap : MonoBehaviour
         {
             return;
         }
-        if (m_endVecCheck == false)
+        if (m_MoveReversal == true)
         {
-            transform.position = Vector2.MoveTowards(transform.position, m_endVec, m_MoveSpeed * Time.deltaTime);
-            if (transform.position.x >= m_endVec.x)
+            if (m_endVecCheck == false)
             {
-                m_endVecCheck = true;
+                transform.position = Vector2.MoveTowards(transform.position, m_endVec, m_MoveSpeed * Time.deltaTime);
+                if (transform.position.x <= m_endVec.x)
+                {
+                    m_endVecCheck = true;
+                }
+            }
+            else
+            {
+                transform.position = Vector2.MoveTowards(transform.position, m_startVec, m_MoveSpeed * Time.deltaTime);
+                if (transform.position.x >= m_startVec.x)
+                {
+                    m_endVecCheck = false;
+                }
             }
         }
         else
         {
-            transform.position = Vector2.MoveTowards(transform.position, m_startVec, m_MoveSpeed * Time.deltaTime);
-            if (transform.position.x <= m_startVec.x)
+            if (m_endVecCheck == false)
             {
-                m_endVecCheck = false;
+                transform.position = Vector2.MoveTowards(transform.position, m_endVec, m_MoveSpeed * Time.deltaTime);
+                if (transform.position.x >= m_endVec.x)
+                {
+                    m_endVecCheck = true;
+                }
             }
+            else
+            {
+                transform.position = Vector2.MoveTowards(transform.position, m_startVec, m_MoveSpeed * Time.deltaTime);
+                if (transform.position.x <= m_startVec.x)
+                {
+                    m_endVecCheck = false;
+                }
+            }
+
         }
     }
     private void trapUpAndDownMove()
@@ -100,21 +128,42 @@ public class MoveTrap : MonoBehaviour
         {
             return;
         }
-
-        if (m_endVecCheck == false)
+        if (m_MoveReversal == true)
         {
-            transform.position = Vector2.MoveTowards(transform.position, m_endVec, m_MoveSpeed * Time.deltaTime);
-            if (transform.position.y >= m_endVec.y)
+            if (m_endVecCheck == false)
             {
-                m_endVecCheck = true;
+                transform.position = Vector2.MoveTowards(transform.position, m_endVec, m_MoveSpeed * Time.deltaTime);
+                if (transform.position.y <= m_endVec.y)
+                {
+                    m_endVecCheck = true;
+                }
+            }
+            else
+            {
+                transform.position = Vector2.MoveTowards(transform.position, m_startVec, m_MoveSpeed * Time.deltaTime);
+                if (transform.position.y >= m_startVec.y)
+                {
+                    m_endVecCheck = false;
+                }
             }
         }
         else
         {
-            transform.position = Vector2.MoveTowards(transform.position, m_startVec, m_MoveSpeed * Time.deltaTime);
-            if (transform.position.y <= m_startVec.y)
+            if (m_endVecCheck == false)
             {
-                m_endVecCheck = false;
+                transform.position = Vector2.MoveTowards(transform.position, m_endVec, m_MoveSpeed * Time.deltaTime);
+                if (transform.position.y >= m_endVec.y)
+                {
+                    m_endVecCheck = true;
+                }
+            }
+            else
+            {
+                transform.position = Vector2.MoveTowards(transform.position, m_startVec, m_MoveSpeed * Time.deltaTime);
+                if (transform.position.y <= m_startVec.y)
+                {
+                    m_endVecCheck = false;
+                }
             }
         }
     }
