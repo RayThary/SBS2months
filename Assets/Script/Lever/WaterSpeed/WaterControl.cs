@@ -9,7 +9,7 @@ public class WaterControl : MonoBehaviour
     private Animator m_anim2d;
     void Start()
     {
-        m_anim2d.SetFloat("WaterSpeed", 3f);
+        //m_anim2d.SetFloat("WaterSpeed", 3f);
     }
 
     // Update is called once per frame

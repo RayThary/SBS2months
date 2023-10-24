@@ -15,7 +15,10 @@ public class TextManager : MonoBehaviour
     [SerializeField] private string[] m_talkData;
     [SerializeField] private float typingSpeed = 0.5f;
     [SerializeField] private int m_talkNumber = 0;
-    private bool m_textObjCheck;
+     private bool m_textObjCheck;
+
+    private Rigidbody2D m_rig2d;
+    
     private void Awake()
     {
         if (instance == null)
@@ -29,6 +32,9 @@ public class TextManager : MonoBehaviour
     }
     void Start()
     {
+        Transform playerTrs = GameManager.instance.GetPlayerTransform();
+        m_rig2d = playerTrs.GetComponent<Rigidbody2D>();
+
         m_textObjCheck = false;
         textObj.SetActive(false);
     }
@@ -37,17 +43,18 @@ public class TextManager : MonoBehaviour
     {
         talkCheck();
         firstTalking();
+        playerNotMove();
     }
     private void talkCheck()
     {
-        if (m_firstTalk == false)
+        if (GameManager.instance.GetFirstTalk()== true)
         {
             return;
         }
         if (GameManager.instance.GetTalkCheck() == true)
         {
             m_textObjCheck = true;
-            textObj.SetActive(true);
+            textObj.SetActive(true);            
             StartCoroutine(talk(m_talkData[m_talkNumber]));
             m_firstTalk = false;
         }
@@ -66,7 +73,7 @@ public class TextManager : MonoBehaviour
         {
             if (m_talkNumber >= m_talkData.Length)
             {
-                m_textObjCheck = false;
+                m_textObjCheck = false;                
                 textObj.SetActive(false);
                 return;
             }
@@ -95,9 +102,25 @@ public class TextManager : MonoBehaviour
 
     }
 
+    private void playerNotMove()
+    {
+        if (m_textObjCheck)
+        {
+            m_rig2d.velocity = Vector2.zero;
+        }
+    }
+
+
     public bool GetTextObj()
     {
         return m_textObjCheck;
     }
+
+    public bool GetFirstTalk()
+    {
+        return m_firstTalk;
+    }
+    
+
 }
 

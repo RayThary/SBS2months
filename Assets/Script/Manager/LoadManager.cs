@@ -45,6 +45,7 @@ public class LoadManager : MonoBehaviour
 
     void Update()
     {
+        
         isFade();
         fadeOff();
     }

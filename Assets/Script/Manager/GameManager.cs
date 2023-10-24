@@ -28,8 +28,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioClip btnEscSound;
 
     private bool oneTalkCheck = false;
+    private bool firstTalk = false;
     private string[] talkdata;
     
+
+
     private Player player
     {
         get
@@ -134,7 +137,12 @@ public class GameManager : MonoBehaviour
             {
                 return;
             }
+            
             oneTalkCheck = true;
+            if (TextManager.instance.GetFirstTalk() == false)
+            {
+                firstTalk = true;
+            }
         }
     }
 
@@ -176,5 +184,10 @@ public class GameManager : MonoBehaviour
     public bool GetTalkCheck()
     {
         return oneTalkCheck;
+    }
+
+    public bool GetFirstTalk()
+    {
+        return firstTalk;
     }
 }
