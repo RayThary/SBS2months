@@ -20651,7 +20651,7 @@ MonoBehaviour:
   - "\uADF8\uB7EC\uACE0 \uBCF4\uB2C8 \uBCF4\uB77C\uC0C9 \uBB3C\uC774 \uC800\uC8FC\uB97C
     \uD480\uC5B4\uC900\uB2E4\uACE0 \uD588\uB358 \uAC70 \uAC19\uC740\uB370 \uCC3E\uC73C\uB7EC
     \uAC00\uBCF4\uC790"
-  typingSpeed: 0.3
+  typingSpeed: 0.1
   m_talkNumber: 0
 --- !u!1 &720598616
 GameObject:
@@ -95379,6 +95379,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5954947970615594726, guid: 4c1f85f85b1fc164496ee48409dd0cb0, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5973340395570621075, guid: 4c1f85f85b1fc164496ee48409dd0cb0, type: 3}
       propertyPath: m_Name
       value: Player
