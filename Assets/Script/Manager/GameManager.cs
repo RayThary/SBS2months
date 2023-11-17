@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     }
     [SerializeField] private eStage stage;//현재스테이지를 표현해줌 이거에따라 나오는위치가달라짐 나중에 삭제해도될듯
     public static GameManager instance;
+
     private TrsUI trsUI;
     private Transform m_TrsUI;
 

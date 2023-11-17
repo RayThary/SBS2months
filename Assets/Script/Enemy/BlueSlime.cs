@@ -70,7 +70,8 @@ public class BlueSlime : MonoBehaviour
             slimeCheck = 1;
         }
 
-        player = GameManager.instance.GetPlayerTransform().GetComponent<Player>();
+        Transform playerTrs = GameManager.instance.GetPlayerTransform();
+            player = playerTrs.GetComponent<Player>();
 
         m_Spr = GetComponent<SpriteRenderer>();
         m_anim = GetComponent<Animator>();
@@ -103,6 +104,8 @@ public class BlueSlime : MonoBehaviour
         {
             m_box2d.enabled = false;
         }
+
+
     }
 
 
