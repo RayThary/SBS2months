@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
     private bool oneTalkCheck = false;
     private bool firstTalk = false;
     private string[] talkdata;
-    
+
 
 
     private Player player
@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        stage = eStage.Tutorial; 
+        stage = eStage.Tutorial;
         DontDestroyOnLoad(this);
 
         if (instance == null)
@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-   
+
 
     private void gameMenu()
     {
@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        if (deathCheck || fadCheck) 
+        if (deathCheck || fadCheck)
         {
             return;
         }
@@ -132,19 +132,11 @@ public class GameManager : MonoBehaviour
 
     private void OneTalk()
     {
-        if (SceneManager.GetActiveScene().name == "GameScene")
+        if (SceneManager.GetActiveScene().name == "StartScene")
         {
-            if (LoadManager.instance.GetStageChange() == true)
-            {
-                return;
-            }
-            
             oneTalkCheck = true;
-            if (TextManager.instance.GetFirstTalk() == false)
-            {
-                firstTalk = true;
-            }
         }
+
     }
 
 
@@ -182,13 +174,13 @@ public class GameManager : MonoBehaviour
         fadCheck = _value;
     }
 
+    public void SetTalkCheck(bool _value)
+    {
+        oneTalkCheck = _value;
+    }
     public bool GetTalkCheck()
     {
         return oneTalkCheck;
     }
 
-    public bool GetFirstTalk()
-    {
-        return firstTalk;
-    }
 }

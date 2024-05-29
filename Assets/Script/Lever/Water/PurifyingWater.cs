@@ -9,7 +9,7 @@ public class PurifyingWater : MonoBehaviour
 
     void Start()
     {
-        m_box2d = GetComponentInChildren<BoxCollider2D>();
+        m_box2d = GetComponent<BoxCollider2D>();
     }
 
     // Update is called once per frame
@@ -17,7 +17,7 @@ public class PurifyingWater : MonoBehaviour
     {
         if (m_box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
         {
-            
+            SceneManager.LoadSceneAsync(3);
         }
     }
 }

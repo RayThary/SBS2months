@@ -9,16 +9,16 @@ public class TextManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI m_talkText;
     [SerializeField] private GameObject textObj;
-    private bool m_firstTalk = true;
+    
     private bool m_talking = false;
     private string m_text;
     [SerializeField] private string[] m_talkData;
     [SerializeField] private float typingSpeed = 0.5f;
     [SerializeField] private int m_talkNumber = 0;
-     private bool m_textObjCheck;
+    private bool m_textObjCheck;
 
     private Rigidbody2D m_rig2d;
-    
+
     private void Awake()
     {
         if (instance == null)
@@ -47,16 +47,17 @@ public class TextManager : MonoBehaviour
     }
     private void talkCheck()
     {
-        if (GameManager.instance.GetFirstTalk()== true)
+        if (LoadManager.instance.GetStageChange() == true)
         {
             return;
         }
+
         if (GameManager.instance.GetTalkCheck() == true)
         {
             m_textObjCheck = true;
-            textObj.SetActive(true);            
+            textObj.SetActive(true);
             StartCoroutine(talk(m_talkData[m_talkNumber]));
-            m_firstTalk = false;
+            GameManager.instance.SetTalkCheck(false);
         }
     }
     private void firstTalking()
@@ -73,7 +74,7 @@ public class TextManager : MonoBehaviour
         {
             if (m_talkNumber >= m_talkData.Length)
             {
-                m_textObjCheck = false;                
+                m_textObjCheck = false;
                 textObj.SetActive(false);
                 return;
             }
@@ -116,11 +117,8 @@ public class TextManager : MonoBehaviour
         return m_textObjCheck;
     }
 
-    public bool GetFirstTalk()
-    {
-        return m_firstTalk;
-    }
-    
+
+
 
 }
 
