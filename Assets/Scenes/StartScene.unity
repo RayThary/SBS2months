@@ -534,6 +534,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   imgSign: {fileID: 1052644936}
+  textTitle: {fileID: 916225613}
   moveSpeed: 1
 --- !u!212 &535152843
 SpriteRenderer:
@@ -1216,8 +1217,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4283681372
-  m_fontColor: {r: 0.36115268, g: 0.7924528, b: 0.3252047, a: 1}
+    rgba: 5491292
+  m_fontColor: {r: 0.36115268, g: 0.7924528, b: 0.3252047, a: 0}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1985,7 +1986,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -140.5}
+  m_AnchoredPosition: {x: 0, y: -205}
   m_SizeDelta: {x: 200, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2057682041
